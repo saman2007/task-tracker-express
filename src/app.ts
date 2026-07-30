@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 
 import dashboardRouter from "./routes/dashboard";
+import notFoundRouter from "./routes/notFound";
 
 dotenv.config({ path: path.join(process.cwd(), ".env") });
 
@@ -15,5 +16,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(dashboardRouter);
+app.use(notFoundRouter);
+app.use((_, res) => {
+  res.redirect("/404");
+});
 
 app.listen(process.env.PORT || 3000);

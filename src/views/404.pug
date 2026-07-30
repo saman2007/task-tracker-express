@@ -1,0 +1,16 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/404.css")
+
+block content
+  .error-container
+    .error-card
+      .error-code 404
+      .error-badge Page Not Found
+      h1 Oops! You're In Uncharted Territory
+      p The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+      
+      .error-actions
+        a.btn-primary(href="/") &larr; Back to Dashboard
+        a.btn-secondary(href="/tasks") View All Tasks
