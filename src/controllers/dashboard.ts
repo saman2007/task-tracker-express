@@ -1,5 +1,5 @@
 import { Controller } from "../types/types";
 
 export const getDashboardPage: Controller = (_, res) => {
-  res.render("dashboard", { pageTitle: "dashboard" });
+  res.render("dashboard", { pageTitle: "Dashboard" });
 };

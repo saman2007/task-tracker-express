@@ -1,0 +1,49 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/add-task.css")
+
+block content
+  .form-container
+    .form-card
+      .form-header
+        .form-icon 🎯
+        h1 Create New Task
+        p Add a new task to your workspace and stay organized.
+
+      form(action="/tasks/add", method="POST")
+        .form-group
+          label(for="title") Task Title
+          .input-wrapper
+            input#title.form-control(type="text", name="title", required=true, placeholder="e.g., Complete Node.js module", autocomplete="off")
+
+        .form-group
+          label(for="priority") Priority Level
+          .priority-selector
+            label.priority-option.low
+              input(type="radio", name="priority", value="low")
+              span.priority-card
+                span.badge-icon 🌱
+                span.badge-text Low
+            
+            label.priority-option.medium
+              input(type="radio", name="priority", value="medium", checked=true)
+              span.priority-card
+                span.badge-icon ⚡
+                span.badge-text Medium
+            
+            label.priority-option.high
+              input(type="radio", name="priority", value="high")
+              span.priority-card
+                span.badge-icon 🔥
+                span.badge-text High
+
+        .form-group
+          label(for="note") Notes & Details
+          textarea#note.form-control(name="note", rows="4", placeholder="Add extra details, sub-tasks, or context here...")
+
+        .form-actions
+          button.btn-primary(type="submit")
+            span Create Task
+            span.btn-arrow &rarr;
+          a.btn-secondary(href="/tasks") Cancel

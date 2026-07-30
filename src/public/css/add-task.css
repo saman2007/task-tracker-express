@@ -1,0 +1,211 @@
+/* ===================================
+   Add Task Form Specific Styles
+   =================================== */
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.form-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-glass);
+    padding: 2.5rem 3rem;
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background gradient glow */
+.form-card::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 180px;
+    height: 180px;
+    background: rgba(99, 102, 241, 0.12);
+    filter: blur(40px);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 0.3rem;
+}
+
+.form-header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* Input Fields */
+.form-group {
+    margin-bottom: 1.6rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--text-main);
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 110px;
+}
+
+/* Custom Priority Selector Cards */
+.priority-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+}
+
+.priority-option {
+    cursor: pointer;
+}
+
+.priority-option input[type="radio"] {
+    display: none;
+}
+
+.priority-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.6);
+    transition: all 0.25s ease;
+    user-select: none;
+}
+
+.badge-icon {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.badge-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+/* Active Priority States */
+.priority-option input[type="radio"]:checked+.priority-card {
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.priority-option.low input[type="radio"]:checked+.priority-card {
+    border-color: var(--priority-low);
+}
+
+.priority-option.low input[type="radio"]:checked+.priority-card .badge-text {
+    color: var(--priority-low);
+}
+
+.priority-option.medium input[type="radio"]:checked+.priority-card {
+    border-color: var(--priority-medium);
+}
+
+.priority-option.medium input[type="radio"]:checked+.priority-card .badge-text {
+    color: var(--priority-medium);
+}
+
+.priority-option.high input[type="radio"]:checked+.priority-card {
+    border-color: var(--priority-high);
+}
+
+.priority-option.high input[type="radio"]:checked+.priority-card .badge-text {
+    color: var(--priority-high);
+}
+
+/* Form Action Buttons */
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+}
+
+.form-actions .btn-primary {
+    flex: 2;
+    justify-content: center;
+    padding: 0.85rem 1.4rem;
+    font-size: 0.95rem;
+}
+
+.btn-arrow {
+    transition: transform 0.2s ease;
+}
+
+.form-actions .btn-primary:hover .btn-arrow {
+    transform: translateX(4px);
+}
+
+.form-actions .btn-secondary {
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+    padding: 0.85rem 1.4rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.form-actions .btn-secondary:hover {
+    background: #ffffff;
+    color: var(--text-main);
+}
