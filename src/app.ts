@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
 
 import path from "path";
 
@@ -15,6 +16,7 @@ const app = express();
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(dashboardRouter);
@@ -24,12 +26,12 @@ app.use((_, res) => {
   res.redirect("/404");
 });
 
-console.log("Initializing...");
+console.log("initializing...");
 
 Task.initialize(() => {
   const port = process.env.PORT || 3000;
 
-  console.log("Done!");
+  console.log("done!");
 
   app.listen(port);
 

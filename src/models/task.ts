@@ -71,13 +71,13 @@ class Task {
       if (err) {
         if (err.code === "ENOENT") {
           Task.tasks = [];
-          
+
           fs.writeFile(JSON_TASKS_PATH, "[]", { encoding: "utf-8" }, () => {
             onSuccess();
           });
         } else {
           console.error("SOMETHING WENT WRONG WHILE INITIALIZING THE PROJECT.");
-          console.error("error:", err);
+          console.error("ERROR:", err);
           process.exit();
         }
       } else {
@@ -85,6 +85,29 @@ class Task {
         onSuccess();
       }
     });
+  }
+
+  public static addTask(
+    task: Task,
+    cb: (err: NodeJS.ErrnoException | null) => void,
+  ) {
+    const taskObj: TaskItem = {
+      id: task.id,
+      title: task.title,
+      note: task.note,
+      priority: task.priority,
+      isCompleted: task.isCompleted,
+      createdAt: task.createdAt,
+    };
+
+    Task.tasks.push(taskObj);
+
+    fs.writeFile(
+      JSON_TASKS_PATH,
+      JSON.stringify(Task.tasks),
+      { encoding: "utf-8" },
+      cb,
+    );
   }
 }
 
