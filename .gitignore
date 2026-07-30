@@ -6,8 +6,8 @@ dist/
 build/
 
 # Application data files
-data/*.json
-!data/tasks.json.example
+src/data/*.json
+!src/data/tasks.json.example
 
 # Environment variables
 .env
