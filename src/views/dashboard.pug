@@ -1,0 +1,34 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/dashboard.css")
+
+block content
+  .page-header
+    h1 Welcome Back! 👋
+    p Here is an overview of your current activities and progress.
+
+  .stats-grid
+    .stat-card
+      span.stat-title Total Tasks
+      span.stat-number #{totalTasks || 0}
+      
+    .stat-card.success
+      span.stat-title Completed
+      span.stat-number(style="color: var(--priority-low);") #{completedCount || 0}
+      
+    .stat-card.warning
+      span.stat-title Pending
+      span.stat-number(style="color: var(--priority-high);") #{pendingCount || 0}
+
+  .recent-section-header
+    h2 Recent Tasks
+    a.view-all-link(href="/tasks") View All Tasks &rarr;
+
+  if recentTasks && recentTasks.length > 0
+    .empty-state
+      p Task cards will be rendered here...
+  else
+    .empty-state
+      p No tasks found!
+      a.btn-primary(href="/tasks/add", style="display: inline-block; margin-top: 1.5rem;") Create Your First Task

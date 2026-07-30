@@ -1,0 +1,87 @@
+/* ===================================
+   Dashboard Specific Styles
+   =================================== */
+
+/* Stat Cards Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3.5rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-glass);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Left accent bar on stat cards for LTR layout */
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary);
+    border-radius: 20px 0 0 20px;
+}
+
+.stat-card.success::before {
+    background: var(--priority-low);
+}
+
+.stat-card.warning::before {
+    background: var(--priority-high);
+}
+
+.stat-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.stat-number {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: var(--text-main);
+    margin-top: 0.5rem;
+    line-height: 1;
+}
+
+/* Recent Tasks Section Header */
+.recent-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.recent-section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.view-all-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.view-all-link:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,24 @@
+doctype html
+html(lang="en", dir="ltr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title #{pageTitle} | Task Tracker
+    
+    link(rel="stylesheet", href="/css/global.css")
+    
+    block head-tags
+
+  body
+    header.navbar
+      .nav-container
+        a.nav-logo(href="/")
+          span ⚡ TaskTracker
+        nav.nav-menu
+          a.btn-primary(href="/tasks/add") + New Task
+
+    main.main-wrapper
+      block content
+
+    footer(style="text-align: center; color: #94a3b8; padding: 2rem 0; margin-top: 3rem;")
+      p Powered by Node.js & Pug &hearts;
