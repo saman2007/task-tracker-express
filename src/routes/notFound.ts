@@ -1,8 +1,12 @@
 import express from "express";
-import { getNotFoundPage } from "../controllers/notFound";
+import {
+  notFoundCatchAllController,
+  notFoundGetController,
+} from "../controllers/notFound";
 
 const notFoundRouter = express.Router();
 
-notFoundRouter.get("/404", getNotFoundPage);
+notFoundRouter.get("/404", notFoundGetController);
+notFoundRouter.use(notFoundCatchAllController);
 
 export default notFoundRouter;

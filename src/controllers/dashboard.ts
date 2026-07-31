@@ -1,7 +1,7 @@
 import Task from "../models/task";
 import { Controller } from "../types/types";
 
-export const getDashboardPage: Controller = (_, res) => {
+export const dashboardGetController: Controller = (_, res) => {
   const recentTasks = Task.getRenderingTasks().slice(-3).reverse();
 
   res.render("dashboard", {
