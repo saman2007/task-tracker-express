@@ -65,5 +65,8 @@ export const taskDetailsGetController: Controller = (req, res) => {
     return res.redirect("/404");
   }
 
-  res.render("task-detail", { task: Task.toRenderingTask(task) });
+  res.render("task-detail", {
+    pageTitle: task.title,
+    task: Task.toRenderingTask(task),
+  });
 };
