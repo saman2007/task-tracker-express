@@ -8,7 +8,6 @@ block content
     .header-content
       h1 All Tasks
       p Manage, filter, and track all your ongoing and completed tasks.
-    a.btn-primary(href="/tasks/add") + New Task
 
   .filter-bar
     a.filter-btn(href="/tasks", class=!currentFilter || currentFilter === '3' ? 'active' : '')
@@ -30,7 +29,8 @@ block content
         .task-card(class=`${task.isCompleted ? 'completed' : ''} priority-${task.priority}`)
           .task-card-header
             .title-wrapper
-              h3.task-title #{task.title}
+              a.task-card-link(href=`/tasks/${task.id}`)
+                h3.task-title #{task.title}
             span.badge(class=`badge-${task.priority}`)
               if task.priority === 2
                 | 🔥 High
@@ -45,7 +45,6 @@ block content
           .task-card-footer
             .task-date
               span.date-icon 🗓️
-              //- Only show YYYY-MM-DD instead of full ISO string
               span #{task.createdAt ? task.date + ' • ' + task.time : ''}
             
             .task-actions

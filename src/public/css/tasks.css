@@ -2,6 +2,7 @@
    Tasks List Page Specific Styles
    =================================== */
 
+/* Page Header Layout */
 .tasks-header {
   display: flex;
   justify-content: space-between;
@@ -53,9 +54,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
+  align-items: stretch;
 }
 
+/* Task Card Component (Clickable Container) */
 .task-card {
+  position: relative;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -67,29 +71,36 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
   overflow: hidden;
+  min-width: 0;
 }
 
 .task-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.12);
+  cursor: pointer;
 }
 
-/* Left Accent Line based on Priority */
-.task-card::before {
+/* Stretched Link Effect for Entire Card */
+.task-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.task-card-link::after {
   content: '';
   position: absolute;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
-  width: 5px;
-  height: 100%;
-  transition: background 0.3s ease;
+  z-index: 1;
 }
 
-.task-card.priority-high::before { background: var(--priority-high); }
-.task-card.priority-medium::before { background: var(--priority-medium); }
-.task-card.priority-low::before { background: var(--priority-low); }
+.task-card-link:hover .task-title {
+  color: var(--primary);
+}
 
 /* Completed Task State */
 .task-card.completed {
@@ -102,20 +113,34 @@
   color: var(--text-muted);
 }
 
-/* Card Header */
+/* Card Header Section */
 .task-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 0.75rem;
   margin-bottom: 0.8rem;
+  min-width: 0;
 }
 
+.title-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Title - Truncate after 2 lines */
 .task-title {
   font-size: 1.1rem;
   font-weight: 700;
   color: #0f172a;
   line-height: 1.4;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
 }
 
 .badge {
@@ -124,22 +149,29 @@
   font-size: 0.75rem;
   font-weight: 700;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.badge-high { background: #fee2e2; color: var(--priority-high); }
-.badge-medium { background: #fef3c7; color: var(--priority-medium); }
-.badge-low { background: #d1fae5; color: var(--priority-low); }
+.badge-2 { background: #fee2e2; color: var(--priority-high); }
+.badge-1 { background: #fef3c7; color: var(--priority-medium); }
+.badge-0 { background: #d1fae5; color: var(--priority-low); }
 
-/* Card Body Note */
+/* Note - Truncate after 3 lines */
 .task-note {
   color: #475569;
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
   line-height: 1.5;
   white-space: pre-line;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Card Footer & Modern Action Buttons */
+/* Card Footer & Elevated Buttons */
 .task-card-footer {
   display: flex;
   justify-content: space-between;
@@ -156,12 +188,21 @@
   font-size: 0.8rem;
   color: #94a3b8;
   font-weight: 600;
+  white-space: nowrap;
 }
 
+/* Action Buttons Layer (Above the stretched link) */
 .task-actions {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.task-actions form {
+  display: inline-block;
 }
 
 .btn-action {
