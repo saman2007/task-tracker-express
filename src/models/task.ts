@@ -1,4 +1,8 @@
-import type { RenderingTaskItem, TaskItem } from "../types/interfaces";
+import type {
+  RenderingTaskItem,
+  TaskItem,
+  TasksStatistic,
+} from "../types/interfaces";
 import { Priority } from "../types/types";
 
 import fs from "fs";
@@ -142,6 +146,20 @@ class Task {
     );
 
     return renderingTasks;
+  }
+
+  public static getTasksStatistic(): TasksStatistic {
+    const totalTasks = Task.tasks.length;
+    const pendingCount = Task.tasks.reduce(
+      (count, { isCompleted }) => (isCompleted ? count : count + 1),
+      0,
+    );
+
+    return {
+      totalTasks,
+      pendingCount,
+      completedCount: totalTasks - pendingCount,
+    };
   }
 }
 
