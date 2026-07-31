@@ -1,4 +1,5 @@
 extends layouts/main-layout.pug
+include mixins/task-card.pug
 
 block head-tags
   link(rel="stylesheet", href="/css/tasks.css")
@@ -26,38 +27,7 @@ block content
   if tasks && tasks.length > 0
     .tasks-grid
       each task in tasks
-        .task-card(class=`${task.isCompleted ? 'completed' : ''} priority-${task.priority}`)
-          .task-card-header
-            .title-wrapper
-              a.task-card-link(href=`/tasks/${task.id}`)
-                h3.task-title #{task.title}
-            span.badge(class=`badge-${task.priority}`)
-              if task.priority === 2
-                | 🔥 High
-              else if task.priority === 1
-                | ⚡ Medium
-              else if task.priority === 0
-                | 🌱 Low
-
-          if task.note
-            p.task-note #{task.note}
-
-          .task-card-footer
-            .task-date
-              span.date-icon 🗓️
-              span #{task.createdAt ? task.date + ' • ' + task.time : ''}
-            
-            .task-actions
-              form(action=`/tasks/${task.id}/toggle`, method="POST")
-                button.btn-action(type="submit", class=task.isCompleted ? "btn-undo" : "btn-toggle", title=task.isCompleted ? "Mark as Pending" : "Mark as Completed")
-                  if task.isCompleted
-                    span ↺ UnDone
-                  else
-                    span ✓ Done
-
-              form(action=`/tasks/${task.id}/delete`, method="POST")
-                button.btn-action.btn-delete(type="submit", title="Delete Task")
-                  span ✕
+        +taskCard(task)
   else
     .empty-state
       .empty-icon 🚀
