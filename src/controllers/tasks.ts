@@ -39,3 +39,11 @@ export const toggleTaskPostController: Controller = (req, res) => {
     res.redirect(req.header("referer") || "/tasks");
   });
 };
+
+export const deleteTaskPostController: Controller = (req, res) => {
+  const id = req.params.id as string;
+
+  Task.deleteTask(id, () => {
+    res.redirect(req.header("referer") || "/tasks");
+  });
+};

@@ -3,7 +3,7 @@ import type {
   TaskItem,
   TasksStatistic,
 } from "../types/interfaces";
-import { Priority } from "../types/types";
+import { FSCallback, Priority } from "../types/types";
 
 import fs from "fs";
 import { JSON_TASKS_PATH, PRIORITY_FILTERS } from "../utils/constants";
@@ -92,10 +92,7 @@ class Task {
     });
   }
 
-  public static addTask(
-    task: Task,
-    cb: (err: NodeJS.ErrnoException | null) => void,
-  ) {
+  public static addTask(task: Task, cb: FSCallback) {
     const taskObj: TaskItem = {
       id: task.id,
       title: task.title,
@@ -162,10 +159,7 @@ class Task {
     };
   }
 
-  public static toggleTask(
-    taskId: string,
-    cb: (err: NodeJS.ErrnoException | null) => void,
-  ): void {
+  public static toggleTask(taskId: string, cb: FSCallback): void {
     const task = Task.tasks.find(({ id }) => id === taskId)!;
 
     task.isCompleted = !task.isCompleted;
@@ -176,6 +170,14 @@ class Task {
       { encoding: "utf-8" },
       cb,
     );
+  }
+
+  public static deleteTask(taskId: string, cb: FSCallback) {
+    const index = Task.tasks.findIndex(({ id }) => id === taskId)!;
+
+    Task.tasks.splice(index, 1);
+
+    fs.writeFile(JSON_TASKS_PATH, JSON.stringify(Task.tasks), cb);
   }
 }
 

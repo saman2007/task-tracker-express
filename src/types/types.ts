@@ -17,3 +17,5 @@ export type CreateTaskInput = Omit<
   TaskItem,
   "id" | "createdAt" | "isCompleted"
 >;
+
+export type FSCallback = (err: NodeJS.ErrnoException | null) => void;
