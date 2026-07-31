@@ -1,8 +1,9 @@
-import type { TaskItem } from "../types/interfaces";
+import type { RenderingTaskItem, TaskItem } from "../types/interfaces";
 import { Priority } from "../types/types";
 
 import fs from "fs";
-import { JSON_TASKS_PATH } from "../utils/constants";
+import { JSON_TASKS_PATH, PRIORITY_FILTERS } from "../utils/constants";
+import { getDateByISOString, getTimeByISOString } from "../utils/utils";
 
 class Task {
   private readonly id: string;
@@ -108,6 +109,39 @@ class Task {
       { encoding: "utf-8" },
       cb,
     );
+  }
+
+  /**
+   * @param priorityFilter possible values
+   * - `0`: for low priority filter
+   * - `1`: for medium priority filter
+   * - `2`: for high priority filter
+   * - `3`: for all priorities
+   */
+  public static getRenderingTasks(
+    priorityFilter?: string | number,
+  ): RenderingTaskItem[] {
+    const priorityNumber =
+      priorityFilter && PRIORITY_FILTERS.includes(priorityFilter.toString())
+        ? +priorityFilter
+        : 3;
+
+    let tasks = Task.getTasks();
+
+    if (priorityNumber !== 3) {
+      tasks = tasks.filter(({ priority }) => priority === priorityNumber);
+    }
+
+    const renderingTasks: RenderingTaskItem[] = tasks.map(
+      ({ createdAt, ...other }) => ({
+        ...other,
+        createdAt,
+        date: getDateByISOString(createdAt),
+        time: getTimeByISOString(createdAt),
+      }),
+    );
+
+    return renderingTasks;
   }
 }
 
