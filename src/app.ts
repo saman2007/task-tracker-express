@@ -8,6 +8,7 @@ import dashboardRouter from "./routes/dashboard";
 import notFoundRouter from "./routes/notFound";
 import addTaskRouter from "./routes/addTask";
 import Task from "./models/task";
+import tasksRouter from "./routes/tasks";
 
 dotenv.config({ path: path.join(process.cwd(), ".env") });
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(dashboardRouter);
 app.use(addTaskRouter);
+app.use(tasksRouter);
 app.use(notFoundRouter);
 app.use((_, res) => {
   res.redirect("/404");

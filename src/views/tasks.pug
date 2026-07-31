@@ -1,0 +1,71 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/tasks.css")
+
+block content
+  .page-header.tasks-header
+    .header-content
+      h1 All Tasks
+      p Manage, filter, and track all your ongoing and completed tasks.
+    a.btn-primary(href="/tasks/add") + New Task
+
+  .filter-bar
+    a.filter-btn(href="/tasks", class=!currentFilter || currentFilter === '3' ? 'active' : '')
+      span.filter-icon 📂
+      span All Tasks
+    a.filter-btn(href="/tasks?priority=2", class=currentFilter === '2' ? 'active' : '')
+      span.filter-icon 🔥
+      span High
+    a.filter-btn(href="/tasks?priority=1", class=currentFilter === '1' ? 'active' : '')
+      span.filter-icon ⚡
+      span Medium
+    a.filter-btn(href="/tasks?priority=0", class=currentFilter === '0' ? 'active' : '')
+      span.filter-icon 🌱
+      span Low
+
+  if tasks && tasks.length > 0
+    .tasks-grid
+      each task in tasks
+        .task-card(class=`${task.isCompleted ? 'completed' : ''} priority-${task.priority}`)
+          .task-card-header
+            .title-wrapper
+              h3.task-title #{task.title}
+            span.badge(class=`badge-${task.priority}`)
+              if task.priority === 2
+                | 🔥 High
+              else if task.priority === 1
+                | ⚡ Medium
+              else if task.priority === 0
+                | 🌱 Low
+
+          if task.note
+            p.task-note #{task.note}
+
+          .task-card-footer
+            .task-date
+              span.date-icon 🗓️
+              //- Only show YYYY-MM-DD instead of full ISO string
+              span #{task.createdAt ? task.date + ' • ' + task.time : ''}
+            
+            .task-actions
+              form(action=`/tasks/${task.id}/toggle`, method="POST")
+                button.btn-action.btn-toggle(type="submit", title=task.isCompleted ? "Mark as Pending" : "Mark as Completed")
+                  if task.isCompleted
+                    span ↺ Undo
+                  else
+                    span ✓ Done
+
+              form(action=`/tasks/${task.id}/delete`, method="POST")
+                button.btn-action.btn-delete(type="submit", title="Delete Task")
+                  span ✕
+  else
+    .empty-state
+      .empty-icon 🚀
+      h2 No tasks found
+      if currentFilter && currentFilter !== 'all'
+        p No tasks match the selected priority filter.
+        a.btn-secondary(href="/tasks", style="display: inline-block; margin-top: 1rem;") Clear Filter
+      else
+        p You haven't added any tasks yet.
+        a.btn-primary(href="/tasks/add", style="display: inline-block; margin-top: 1.5rem;") + Create First Task
