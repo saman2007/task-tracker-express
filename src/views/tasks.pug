@@ -49,7 +49,7 @@ block content
             
             .task-actions
               form(action=`/tasks/${task.id}/toggle`, method="POST")
-                button.btn-action.btn-toggle(type="submit", title=task.isCompleted ? "Mark as Pending" : "Mark as Completed")
+                button.btn-action(type="submit", class=task.isCompleted ? "btn-undo" : "btn-toggle", title=task.isCompleted ? "Mark as Pending" : "Mark as Completed")
                   if task.isCompleted
                     span ↺ UnDone
                   else
