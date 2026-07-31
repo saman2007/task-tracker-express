@@ -235,3 +235,31 @@ body {
     background: #e2e8f0;
     color: #0f172a;
 }
+
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.badge-2 {
+  background: #fee2e2;
+  color: var(--priority-high);
+}
+
+.badge-1 {
+  background: #fef3c7;
+  color: var(--priority-medium);
+}
+
+.badge-0 {
+  background: #d1fae5;
+  color: var(--priority-low);
+}

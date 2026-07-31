@@ -1,0 +1,50 @@
+extends layouts/main-layout.pug
+include mixins/priority-badge.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/task-detail.css")
+
+block content
+  .detail-container
+    .back-nav
+      a.btn-back(href="/tasks") &larr; Back to Tasks
+
+    .task-detail-card(class=`${task.isCompleted ? 'completed' : ''} priority-${task.priority}`)
+
+      .detail-header
+        .detail-title-group
+          +priority-badge(task.priority)
+          
+          if task.isCompleted
+            span.status-badge.status-completed ✓ Completed
+          else
+            span.status-badge.status-pending ⏳ Pending
+
+        h1.detail-title #{task.title}
+
+        .detail-meta
+          span.meta-item
+            span.meta-icon 🗓️
+            span Created on #{task.date} at #{task.time}
+
+      hr.divider
+
+      .detail-body
+        h3.section-label Note
+        if task.note
+          .detail-note #{task.note}
+        else
+          p.no-note No description provided for this task.
+
+      .detail-footer
+        .action-buttons
+          form(action=`/tasks/${task.id}/toggle`, method="POST")
+            button.btn-action(type="submit", class=task.isCompleted ? "btn-undo" : "btn-toggle")
+              if task.isCompleted
+                span ↺ Undone
+              else
+                span ✓ Done
+
+          a.btn-action.btn-edit(href=`/tasks/${task.id}/edit`) ✏️ Edit
+
+          button.btn-action.btn-delete.js-trigger-delete(type="button", data-task-id=task.id) 🗑️ Delete

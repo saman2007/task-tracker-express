@@ -133,13 +133,8 @@ class Task {
       tasks = tasks.filter(({ priority }) => priority === priorityNumber);
     }
 
-    const renderingTasks: RenderingTaskItem[] = tasks.map(
-      ({ createdAt, ...other }) => ({
-        ...other,
-        createdAt,
-        date: getDateByISOString(createdAt),
-        time: getTimeByISOString(createdAt),
-      }),
+    const renderingTasks: RenderingTaskItem[] = tasks.map((task) =>
+      Task.toRenderingTask(task),
     );
 
     return renderingTasks;
@@ -160,7 +155,11 @@ class Task {
   }
 
   public static toggleTask(taskId: string, cb: FSCallback): void {
-    const task = Task.tasks.find(({ id }) => id === taskId)!;
+    const task = Task.findTaskById(taskId).task;
+
+    if (!task) {
+      throw new Error("Task doesn't exist.");
+    }
 
     task.isCompleted = !task.isCompleted;
 
@@ -173,11 +172,32 @@ class Task {
   }
 
   public static deleteTask(taskId: string, cb: FSCallback) {
-    const index = Task.tasks.findIndex(({ id }) => id === taskId)!;
+    const index = Task.findTaskById(taskId).index;
+
+    if (index === -1) {
+      throw new Error("Task doesn't exist.");
+    }
 
     Task.tasks.splice(index, 1);
 
     fs.writeFile(JSON_TASKS_PATH, JSON.stringify(Task.tasks), cb);
+  }
+
+  public static findTaskById(taskId: string): {
+    task: TaskItem | null;
+    index: number;
+  } {
+    const index = Task.tasks.findIndex(({ id }) => id === taskId)!;
+
+    return { task: index !== -1 ? Task.tasks[index] : null, index };
+  }
+
+  public static toRenderingTask(task: TaskItem): RenderingTaskItem {
+    return {
+      ...task,
+      date: getDateByISOString(task.createdAt),
+      time: getTimeByISOString(task.createdAt),
+    };
   }
 }
 

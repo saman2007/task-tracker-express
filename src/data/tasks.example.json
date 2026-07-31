@@ -1,0 +1,42 @@
+[
+  {
+    "id": "tsk_01h8x9a2k1v3m001",
+    "title": "Refactor Database Schema & Drizzle ORM Models",
+    "note": "Update the relational database models to support user-task mapping and add foreign key constraints for cascading deletes.",
+    "priority": 2,
+    "isCompleted": false,
+    "createdAt": "2026-07-28T09:15:00.000Z"
+  },
+  {
+    "id": "tsk_01h8x9a2k1v3m002",
+    "title": "Prepare Computer Networks Assignment 3",
+    "note": "Review RFC standards for TCP congestion control algorithms and complete problem set 4 regarding subnetting calculations.",
+    "priority": 2,
+    "isCompleted": false,
+    "createdAt": "2026-07-29T14:30:00.000Z"
+  },
+  {
+    "id": "tsk_01h8x9a2k1v3m003",
+    "title": "Design Delete Confirmation Modal in Pug",
+    "note": "Create a reusable mixin component for delete confirmation modal and style action buttons using modern CSS backdrop filters.",
+    "priority": 1,
+    "isCompleted": true,
+    "createdAt": "2026-07-30T11:00:00.000Z"
+  },
+  {
+    "id": "tsk_01h8x9a2k1v3m004",
+    "title": "Setup Next.js 15 Middleware for Auth Protection",
+    "note": "Implement JWT session verification inside edge middleware to handle protected dashboard routes effectively.",
+    "priority": 1,
+    "isCompleted": false,
+    "createdAt": "2026-07-31T08:20:00.000Z"
+  },
+  {
+    "id": "tsk_01h8x9a2k1v3m005",
+    "title": "Review Wireless Headset Market Deals",
+    "note": "Compare latency, battery life, and microphone quality between Cloud Flight and Cloud 3 Wireless models for over-ear setups.",
+    "priority": 0,
+    "isCompleted": true,
+    "createdAt": "2026-07-31T16:45:00.000Z"
+  }
+]

@@ -35,15 +35,35 @@ export const addTaskPostController: Controller = (req, res) => {
 export const toggleTaskPostController: Controller = (req, res) => {
   const id = req.params.id as string;
 
-  Task.toggleTask(id, () => {
-    res.redirect(req.header("referer") || "/tasks");
-  });
+  try {
+    Task.toggleTask(id, () => {
+      res.redirect(req.header("referer") || "/tasks");
+    });
+  } catch (error) {
+    res.redirect("/404");
+  }
 };
 
 export const deleteTaskPostController: Controller = (req, res) => {
   const id = req.params.id as string;
 
-  Task.deleteTask(id, () => {
-    res.redirect(req.header("referer") || "/tasks");
-  });
+  try {
+    Task.deleteTask(id, () => {
+      res.redirect(req.header("referer") || "/tasks");
+    });
+  } catch {
+    res.redirect("/404");
+  }
+};
+
+export const taskDetailsGetController: Controller = (req, res) => {
+  const id = req.params.id as string;
+
+  const task = Task.findTaskById(id).task;
+
+  if (!task) {
+    return res.redirect("/404");
+  }
+
+  res.render("task-detail", { task: Task.toRenderingTask(task) });
 };

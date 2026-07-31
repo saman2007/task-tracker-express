@@ -1,0 +1,8 @@
+mixin priority-badge(priority)
+   span.badge(class=`badge-${priority}`)
+     if priority === 2
+       | 🔥 High
+     else if priority === 1
+       | ⚡ Medium
+     else if priority === 0
+       | 🌱 Low

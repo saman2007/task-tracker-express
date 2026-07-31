@@ -1,16 +1,12 @@
+include priority-badge.pug
+
 mixin taskCard(task)
   .task-card(class=`${task.isCompleted ? 'completed' : ''} priority-${task.priority}`)
     .task-card-header
       .title-wrapper
         a.task-card-link(href=`/tasks/${task.id}`)
           h3.task-title #{task.title}
-      span.badge(class=`badge-${task.priority}`)
-        if task.priority === 2
-          | 🔥 High
-        else if task.priority === 1
-          | ⚡ Medium
-        else if task.priority === 0
-          | 🌱 Low
+      +priority-badge(task.priority)
 
     if task.note
       p.task-note #{task.note}

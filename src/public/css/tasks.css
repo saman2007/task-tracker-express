@@ -161,30 +161,6 @@
   transition: color 0.2s ease;
 }
 
-.badge {
-  padding: 0.25rem 0.6rem;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.badge-2 {
-  background: #fee2e2;
-  color: var(--priority-high);
-}
-
-.badge-1 {
-  background: #fef3c7;
-  color: var(--priority-medium);
-}
-
-.badge-0 {
-  background: #d1fae5;
-  color: var(--priority-low);
-}
-
 /* Note - Truncate after 3 lines */
 .task-note {
   color: #475569;
@@ -248,17 +224,20 @@
 }
 
 .btn-toggle {
-  background: var(--primary-light);
-  color: var(--primary);
+    background: #d1fae5;
+    color: #059669;
+    height: 2rem;
 }
 
 .btn-toggle:hover {
-  background: var(--primary);
-  color: #ffffff;
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 
 .btn-undo {
   background: #e0e7ff;
+  height: 2rem;
   color: var(--primary);
   border: 1px solid rgba(99, 102, 241, 0.2);
 }
@@ -270,6 +249,7 @@
 
 .btn-delete {
   background: #fee2e2;
+  height: 2rem;
   color: var(--priority-high);
   padding: 0.4rem 0.6rem;
 }
