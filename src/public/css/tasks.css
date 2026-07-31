@@ -102,15 +102,33 @@
   color: var(--primary);
 }
 
-/* Completed Task State */
+/* Completed Task State - Clean & Modern */
 .task-card.completed {
-  opacity: 0.65;
-  background: rgba(241, 245, 249, 0.6);
+  background: rgba(241, 245, 249, 0.55);
+  border-color: rgba(203, 213, 225, 0.6);
+  box-shadow: none;
+}
+
+.task-card.completed:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.04);
 }
 
 .task-card.completed .task-title {
   text-decoration: line-through;
-  color: var(--text-muted);
+  text-decoration-color: #94a3b8;
+  text-decoration-thickness: 2px;
+  color: #64748b;
+}
+
+.task-card.completed .task-note {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.task-card.completed .badge {
+  opacity: 0.6;
+  filter: grayscale(0.3);
 }
 
 /* Card Header Section */
@@ -152,9 +170,20 @@
   flex-shrink: 0;
 }
 
-.badge-2 { background: #fee2e2; color: var(--priority-high); }
-.badge-1 { background: #fef3c7; color: var(--priority-medium); }
-.badge-0 { background: #d1fae5; color: var(--priority-low); }
+.badge-2 {
+  background: #fee2e2;
+  color: var(--priority-high);
+}
+
+.badge-1 {
+  background: #fef3c7;
+  color: var(--priority-medium);
+}
+
+.badge-0 {
+  background: #d1fae5;
+  color: var(--priority-low);
+}
 
 /* Note - Truncate after 3 lines */
 .task-note {
@@ -224,6 +253,17 @@
 }
 
 .btn-toggle:hover {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.btn-undo {
+  background: #e0e7ff;
+  color: var(--primary);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.btn-undo:hover {
   background: var(--primary);
   color: #ffffff;
 }

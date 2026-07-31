@@ -31,3 +31,11 @@ export const addTaskPostController: Controller = (req, res) => {
     res.redirect("/tasks/add");
   });
 };
+
+export const toggleTaskPostController: Controller = (req, res) => {
+  const id = req.params.id as string;
+
+  Task.toggleTask(id, () => {
+    res.redirect(req.header("referer") || "/tasks");
+  });
+};

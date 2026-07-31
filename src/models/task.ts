@@ -161,6 +161,22 @@ class Task {
       completedCount: totalTasks - pendingCount,
     };
   }
+
+  public static toggleTask(
+    taskId: string,
+    cb: (err: NodeJS.ErrnoException | null) => void,
+  ): void {
+    const task = Task.tasks.find(({ id }) => id === taskId)!;
+
+    task.isCompleted = !task.isCompleted;
+
+    fs.writeFile(
+      JSON_TASKS_PATH,
+      JSON.stringify(Task.tasks),
+      { encoding: "utf-8" },
+      cb,
+    );
+  }
 }
 
 export default Task;

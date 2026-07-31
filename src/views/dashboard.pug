@@ -54,7 +54,7 @@ block content
               form(action=`/tasks/${task.id}/toggle`, method="POST")
                 button.btn-action.btn-toggle(type="submit", title=task.isCompleted ? "Mark as Pending" : "Mark as Completed")
                   if task.isCompleted
-                    span ↺ Undo
+                    span ↺ UnDone
                   else
                     span ✓ Done
 
