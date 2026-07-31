@@ -1,0 +1,11 @@
+mixin deleteModal()
+  .modal-overlay#deleteModalOverlay
+    .modal-card
+      .modal-icon ⚠️
+      h3 Delete Task
+      p Are you sure you want to delete this task? This action cannot be undone.
+      
+      .modal-actions
+        form#deleteTaskForm(method="POST")
+          button.btn-danger(type="submit") Yes, Delete
+        button.btn-secondary#cancelDeleteBtn(type="button") Cancel

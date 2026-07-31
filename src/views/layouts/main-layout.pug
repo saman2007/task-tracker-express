@@ -1,3 +1,5 @@
+include ../mixins/delete-modal.pug
+
 doctype html
 html(lang="en", dir="ltr")
   head
@@ -26,3 +28,7 @@ html(lang="en", dir="ltr")
         |Created by 
         a(href="https://github.com/saman2007" style="color: var(--primary); text-decoration: none;" target="blank") samii_dev with  
         span(style="color: var(--primary); font-size: 18px;") &hearts; #{"/>"}
+    
+    +deleteModal()
+
+    script(src="/js/delete-modal.js")

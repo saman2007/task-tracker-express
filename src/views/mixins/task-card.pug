@@ -28,6 +28,5 @@ mixin taskCard(task)
             else
               span ✓ Done
 
-        form(action=`/tasks/${task.id}/delete`, method="POST")
-          button.btn-action.btn-delete(type="submit", title="Delete Task")
-            span ✕
+        button.btn-action.btn-delete.js-trigger-delete(type="button", data-task-id=task.id, title="Delete Task")
+          span ✕
