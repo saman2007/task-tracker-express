@@ -7,12 +7,14 @@ import {
   toggleTaskPostController,
   deleteTaskPostController,
   taskDetailsGetController,
+  editTaskGetController,
 } from "../controllers/tasks";
 
 const tasksRouter = express.Router();
 
 tasksRouter.get("/tasks", tasksGetController);
 tasksRouter.get("/tasks/:id", taskDetailsGetController);
+tasksRouter.get("/tasks/:id/edit", editTaskGetController);
 tasksRouter.get("/tasks/add", addTaskGetController);
 tasksRouter.post("/tasks/add", addTaskPostController);
 tasksRouter.post("/tasks/:id/toggle", toggleTaskPostController);

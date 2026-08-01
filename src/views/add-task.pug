@@ -8,42 +8,42 @@ block content
     .form-card
       .form-header
         .form-icon 🎯
-        h1 Create New Task
-        p Add a new task to your workspace and stay organized.
+        h1 #{editing ? "Edit your Task" : "Create New Task"}
+        p #{editing ? "Here you can edit your task" : "Add a new task to your workspace and stay organized."}
 
-      form(action="/tasks/add", method="POST")
+      form(action=editing ? `/tasks/${task.id}/edit` : "/tasks/add", method="POST")
         .form-group
           label(for="title") Task Title
           .input-wrapper
-            input#title.form-control(type="text", name="title", required=true, placeholder="e.g., Complete Node.js module", autocomplete="off")
+            input#title.form-control(type="text", name="title", required=true, placeholder="e.g., Complete Node.js module", autocomplete="off", value=editing ? task.title : "")
 
         .form-group
           label(for="priority") Priority Level
           .priority-selector
             label.priority-option.low
-              input(type="radio", name="priority", value="0")
+              input(type="radio", name="priority", value="0" checked=editing ? task.priority === 0 : false)
               span.priority-card
                 span.badge-icon 🌱
                 span.badge-text Low
             
             label.priority-option.medium
-              input(type="radio", name="priority", value="1", checked=true)
+              input(type="radio", name="priority", value="1", checked=editing ? task.priority === 1 : true)
               span.priority-card
                 span.badge-icon ⚡
                 span.badge-text Medium
             
             label.priority-option.high
-              input(type="radio", name="priority", value="2")
+              input(type="radio", name="priority", value="2", checked=editing ? task.priority === 2 : false)
               span.priority-card
                 span.badge-icon 🔥
                 span.badge-text High
 
         .form-group
           label(for="note") Notes & Details
-          textarea#note.form-control(name="note", rows="4", placeholder="Add extra details, sub-tasks, or context here...")
+          textarea#note.form-control(name="note", rows="4", placeholder="Add extra details, sub-tasks, or context here...") #{editing ? task.note : ""}
 
         .form-actions
           button.btn-primary(type="submit")
-            span Create Task
+            span #{editing ? "Edit Task" : "Create Task"}
             span.btn-arrow &rarr;
-          a.btn-secondary(href="/tasks") Cancel
+          a.btn-secondary(href=editing ? `/tasks/${task.id}` : "/tasks") Cancel

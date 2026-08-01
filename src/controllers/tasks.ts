@@ -73,3 +73,19 @@ export const taskDetailsGetController: Controller = (req, res) => {
     task: Task.toRenderingTask(task),
   });
 };
+
+export const editTaskGetController: Controller = (req, res) => {
+  const id = req.params.id as string;
+
+  const task = Task.findTaskById(id).task;
+
+  if (!task) {
+    return res.redirect("/404");
+  }
+  console.log("here");
+  res.render("add-task", {
+    pageTitle: "Edit Task",
+    task,
+    editing: true,
+  });
+};
