@@ -1,3 +1,5 @@
+import url from "url";
+
 import Task from "../models/task";
 import { Controller, CreateTaskInput } from "../types/types";
 import { PRIORITY_FILTERS } from "../utils/constants";
@@ -28,7 +30,7 @@ export const addTaskPostController: Controller = (req, res) => {
   const task = new Task(taskData.title, taskData.note, taskData.priority);
 
   Task.addTask(task, (err) => {
-    res.redirect("/tasks/add");
+    res.redirect(req.header("referer") || "/");
   });
 };
 
@@ -48,8 +50,9 @@ export const deleteTaskPostController: Controller = (req, res) => {
   const id = req.params.id as string;
 
   try {
+    console.log(req.header("referer"));
     Task.deleteTask(id, () => {
-      res.redirect(req.header("referer") || "/tasks");
+      res.redirect("/tasks");
     });
   } catch {
     res.redirect("/404");
