@@ -80,7 +80,7 @@ Open your browser and visit `http://localhost:port` to interact with the applica
 ---
 
 # Purpose
-The purpose of developing this project is to practice what I have learned during learning node js backend development. As I learn more, I keep adding more feature to the project.
+The purpose of developing this project is to practice what I have learned during learning node js backend development. As I learn more, I keep adding more feature to the project. The focus of this project is on backend side, not the frontend side. But I have a look at frontend side too, to make it good looking.
 
 ---
 
