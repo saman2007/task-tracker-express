@@ -104,12 +104,7 @@ class Task {
 
     Task.tasks.push(taskObj);
 
-    fs.writeFile(
-      JSON_TASKS_PATH,
-      JSON.stringify(Task.tasks),
-      { encoding: "utf-8" },
-      cb,
-    );
+    Task.saveTasks(cb);
   }
 
   /**
@@ -163,12 +158,7 @@ class Task {
 
     task.isCompleted = !task.isCompleted;
 
-    fs.writeFile(
-      JSON_TASKS_PATH,
-      JSON.stringify(Task.tasks),
-      { encoding: "utf-8" },
-      cb,
-    );
+    Task.saveTasks(cb);
   }
 
   public static deleteTask(taskId: string, cb: FSCallback) {
@@ -180,7 +170,7 @@ class Task {
 
     Task.tasks.splice(index, 1);
 
-    fs.writeFile(JSON_TASKS_PATH, JSON.stringify(Task.tasks), cb);
+    Task.saveTasks(cb);
   }
 
   public static findTaskById(taskId: string): {
@@ -218,7 +208,16 @@ class Task {
       }
     }
 
-    fs.writeFile(JSON_TASKS_PATH, JSON.stringify(Task.tasks), cb);
+    Task.saveTasks(cb);
+  }
+
+  private static saveTasks(cb: FSCallback) {
+    fs.writeFile(
+      JSON_TASKS_PATH,
+      JSON.stringify(Task.tasks),
+      { encoding: "utf-8" },
+      cb,
+    );
   }
 }
 
