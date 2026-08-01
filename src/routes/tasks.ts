@@ -13,10 +13,10 @@ import {
 const tasksRouter = express.Router();
 
 tasksRouter.get("/tasks", tasksGetController);
-tasksRouter.get("/tasks/:id", taskDetailsGetController);
-tasksRouter.get("/tasks/:id/edit", editTaskGetController);
 tasksRouter.get("/tasks/add", addTaskGetController);
 tasksRouter.post("/tasks/add", addTaskPostController);
+tasksRouter.get("/tasks/:id", taskDetailsGetController);
+tasksRouter.get("/tasks/:id/edit", editTaskGetController);
 tasksRouter.post("/tasks/:id/toggle", toggleTaskPostController);
 tasksRouter.post("/tasks/:id/delete", deleteTaskPostController);
 

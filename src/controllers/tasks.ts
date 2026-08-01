@@ -30,7 +30,7 @@ export const addTaskPostController: Controller = (req, res) => {
   const task = new Task(taskData.title, taskData.note, taskData.priority);
 
   Task.addTask(task, (err) => {
-    res.redirect(req.header("referer") || "/");
+    res.redirect("/tasks");
   });
 };
 
