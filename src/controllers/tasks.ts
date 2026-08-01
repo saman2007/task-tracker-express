@@ -1,5 +1,3 @@
-import url from "url";
-
 import Task from "../models/task";
 import { Controller, CreateTaskInput } from "../types/types";
 import { PRIORITY_FILTERS } from "../utils/constants";
@@ -50,7 +48,6 @@ export const deleteTaskPostController: Controller = (req, res) => {
   const id = req.params.id as string;
 
   try {
-    console.log(req.header("referer"));
     Task.deleteTask(id, () => {
       res.redirect("/tasks");
     });
@@ -82,10 +79,26 @@ export const editTaskGetController: Controller = (req, res) => {
   if (!task) {
     return res.redirect("/404");
   }
-  console.log("here");
+
   res.render("add-task", {
     pageTitle: "Edit Task",
     task,
     editing: true,
   });
+};
+
+export const editTaskPostController: Controller = (req, res) => {
+  const id = req.params.id as string;
+
+  req.body.priority = +req.body.priority;
+
+  const taskData: CreateTaskInput = req.body;
+
+  try {
+    Task.editTask(id, taskData, () => {
+      res.redirect(`/tasks/${id}`);
+    });
+  } catch (e) {
+    res.redirect("/404");
+  }
 };

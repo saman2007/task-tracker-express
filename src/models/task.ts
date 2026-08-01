@@ -199,6 +199,27 @@ class Task {
       time: getTimeByISOString(task.createdAt),
     };
   }
+
+  public static editTask(
+    taskId: string,
+    newTask: Partial<Omit<TaskItem, "id" | "createdAt">>,
+    cb: FSCallback,
+  ): void {
+    const { task } = Task.findTaskById(taskId);
+
+    if (!task) {
+      throw new Error("Task doesn't exist.");
+    }
+
+    for (const key in newTask) {
+      const k = key as keyof typeof newTask;
+      if (newTask[k] !== undefined) {
+        (task as any)[k] = newTask[k];
+      }
+    }
+
+    fs.writeFile(JSON_TASKS_PATH, JSON.stringify(Task.tasks), cb);
+  }
 }
 
 export default Task;
