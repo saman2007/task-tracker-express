@@ -1,6 +1,7 @@
-import express from "express";
-import bodyParser from "body-parser";
 import path from "path";
+
+import bodyParser from "body-parser";
+import express from "express";
 
 import "./utils/env";
 import dashboardRouter from "./routes/dashboard";

@@ -1,224 +1,52 @@
-import type {
-  RenderingTaskItem,
-  TaskItem,
-  TasksStatistic,
-} from "../types/interfaces";
-import { FSCallback, Priority } from "../types/types";
+import {
+  CreationOptional,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+  DataTypes as t,
+} from "sequelize";
 
-import fs from "fs";
-import { JSON_TASKS_PATH, PRIORITY_FILTERS } from "../utils/constants";
-import { getDateByISOString, getTimeByISOString } from "../utils/utils";
+import { Priority } from "../types/types";
+import { sequelize } from "../utils/db";
 
-class Task {
-  private readonly id: string;
-  private title: string;
-  private note: string;
-  private priority: Priority;
-  private isCompleted: boolean;
-  private readonly createdAt: string;
-  private static tasks: TaskItem[] = [];
-
-  constructor(title: string, note = "", priority: Priority = Priority.MEDIUM) {
-    this.id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-    this.title = title;
-    this.note = note;
-    this.priority = priority;
-    this.isCompleted = false;
-    this.createdAt = new Date().toISOString();
-  }
-
-  public getId(): string {
-    return this.id;
-  }
-
-  public getTitle(): string {
-    return this.title;
-  }
-
-  public setTitle(title: string): void {
-    this.title = title;
-  }
-
-  public getNote(): string {
-    return this.note;
-  }
-
-  public setNote(note: string): void {
-    this.note = note;
-  }
-
-  public getPriority(): Priority {
-    return this.priority;
-  }
-
-  public setPriority(priority: Priority): void {
-    this.priority = priority;
-  }
-
-  public getIsCompleted(): boolean {
-    return this.isCompleted;
-  }
-
-  public setIsCompleted(isCompleted: boolean): void {
-    this.isCompleted = isCompleted;
-  }
-
-  public getCreatedAt(): string {
-    return this.createdAt;
-  }
-
-  public static getTasks(): TaskItem[] {
-    return Task.tasks;
-  }
-
-  public static initialize(onSuccess: () => void) {
-    fs.readFile(JSON_TASKS_PATH, { encoding: "utf-8" }, (err, data) => {
-      if (err) {
-        if (err.code === "ENOENT") {
-          Task.tasks = [];
-
-          fs.writeFile(JSON_TASKS_PATH, "[]", { encoding: "utf-8" }, () => {
-            onSuccess();
-          });
-        } else {
-          console.error("SOMETHING WENT WRONG WHILE INITIALIZING THE PROJECT.");
-          console.error("ERROR:", err);
-          process.exit();
-        }
-      } else {
-        Task.tasks = JSON.parse(data) as TaskItem[];
-        onSuccess();
-      }
-    });
-  }
-
-  public static addTask(task: Task, cb: FSCallback) {
-    const taskObj: TaskItem = {
-      id: task.id,
-      title: task.title,
-      note: task.note,
-      priority: task.priority,
-      isCompleted: task.isCompleted,
-      createdAt: task.createdAt,
-    };
-
-    Task.tasks.push(taskObj);
-
-    Task.saveTasks(cb);
-  }
-
-  /**
-   * @param priorityFilter possible values
-   * - `0`: for low priority filter
-   * - `1`: for medium priority filter
-   * - `2`: for high priority filter
-   * - `3`: for all priorities
-   */
-  public static getRenderingTasks(
-    priorityFilter?: string | number,
-  ): RenderingTaskItem[] {
-    const priorityNumber =
-      priorityFilter && PRIORITY_FILTERS.includes(priorityFilter.toString())
-        ? +priorityFilter
-        : 3;
-
-    let tasks = Task.getTasks();
-
-    if (priorityNumber !== 3) {
-      tasks = tasks.filter(({ priority }) => priority === priorityNumber);
-    }
-
-    const renderingTasks: RenderingTaskItem[] = tasks.map((task) =>
-      Task.toRenderingTask(task),
-    );
-
-    return renderingTasks;
-  }
-
-  public static getTasksStatistic(): TasksStatistic {
-    const totalTasks = Task.tasks.length;
-    const pendingCount = Task.tasks.reduce(
-      (count, { isCompleted }) => (isCompleted ? count : count + 1),
-      0,
-    );
-
-    return {
-      totalTasks,
-      pendingCount,
-      completedCount: totalTasks - pendingCount,
-    };
-  }
-
-  public static toggleTask(taskId: string, cb: FSCallback): void {
-    const task = Task.findTaskById(taskId).task;
-
-    if (!task) {
-      throw new Error("Task doesn't exist.");
-    }
-
-    task.isCompleted = !task.isCompleted;
-
-    Task.saveTasks(cb);
-  }
-
-  public static deleteTask(taskId: string, cb: FSCallback) {
-    const index = Task.findTaskById(taskId).index;
-
-    if (index === -1) {
-      throw new Error("Task doesn't exist.");
-    }
-
-    Task.tasks.splice(index, 1);
-
-    Task.saveTasks(cb);
-  }
-
-  public static findTaskById(taskId: string): {
-    task: TaskItem | null;
-    index: number;
-  } {
-    const index = Task.tasks.findIndex(({ id }) => id === taskId)!;
-
-    return { task: index !== -1 ? Task.tasks[index] : null, index };
-  }
-
-  public static toRenderingTask(task: TaskItem): RenderingTaskItem {
-    return {
-      ...task,
-      date: getDateByISOString(task.createdAt),
-      time: getTimeByISOString(task.createdAt),
-    };
-  }
-
-  public static editTask(
-    taskId: string,
-    newTask: Partial<Omit<TaskItem, "id" | "createdAt">>,
-    cb: FSCallback,
-  ): void {
-    const { task } = Task.findTaskById(taskId);
-
-    if (!task) {
-      throw new Error("Task doesn't exist.");
-    }
-
-    for (const key in newTask) {
-      const k = key as keyof typeof newTask;
-      if (newTask[k] !== undefined) {
-        (task as any)[k] = newTask[k];
-      }
-    }
-
-    Task.saveTasks(cb);
-  }
-
-  private static saveTasks(cb: FSCallback) {
-    fs.writeFile(
-      JSON_TASKS_PATH,
-      JSON.stringify(Task.tasks),
-      { encoding: "utf-8" },
-      cb,
-    );
-  }
+class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
+  declare id: CreationOptional<number>;
+  declare title: string;
+  declare note: string;
+  declare priority: keyof typeof Priority;
+  declare isCompleted: CreationOptional<boolean>;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 }
+
+Task.init(
+  {
+    id: {
+      autoIncrement: true,
+      primaryKey: true,
+      type: t.INTEGER,
+    },
+    title: {
+      allowNull: false,
+      type: t.STRING(255, false),
+    },
+    note: {
+      allowNull: true,
+      type: t.TEXT,
+    },
+    priority: {
+      allowNull: false,
+      type: t.ENUM("LOW", "MEDIUM", "HIGH"),
+    },
+    isCompleted: {
+      allowNull: false,
+      type: t.BOOLEAN,
+      defaultValue: false,
+    },
+    createdAt: t.DATE,
+    updatedAt: t.DATE,
+  },
+  { tableName: "tasks", sequelize },
+);
 
 export default Task;
