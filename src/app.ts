@@ -1,15 +1,12 @@
 import express from "express";
-import dotenv from "dotenv";
 import bodyParser from "body-parser";
-
 import path from "path";
 
+import "./utils/env";
 import dashboardRouter from "./routes/dashboard";
 import notFoundRouter from "./routes/notFound";
-import Task from "./models/task";
 import tasksRouter from "./routes/tasks";
-
-dotenv.config({ path: path.join(process.cwd(), ".env") });
+import { sequelize } from "./utils/db";
 
 const app = express();
 
@@ -23,14 +20,21 @@ app.use(dashboardRouter);
 app.use(tasksRouter);
 app.use(notFoundRouter);
 
-console.log("initializing...");
+console.log("Syncing DB...");
 
-Task.initialize(() => {
-  const port = process.env.PORT || 3000;
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Done!");
 
-  console.log("done!");
+    const port = process.env.PORT || 3000;
 
-  app.listen(port);
+    console.log("Initializing server...");
 
-  console.log("listening to port", port);
-});
+    app.listen(port);
+
+    console.log("Done, listening on port:", port);
+  })
+  .catch((err) => {
+    console.log("Failed to sync DB. Error:", err);
+  });
