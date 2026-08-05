@@ -3,11 +3,14 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  NonAttribute,
+  Op,
   DataTypes as t,
 } from "sequelize";
 
 import { Priority } from "../types/types";
 import { sequelize } from "../utils/db";
+import { TasksStatistic } from "../types/interfaces";
 
 class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   declare id: CreationOptional<number>;
@@ -17,6 +20,21 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   declare isCompleted: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  public static async getTasksStatistic(): Promise<
+    NonAttribute<TasksStatistic>
+  > {
+    const totalTasks = await Task.count();
+    const totalPendingTasks = await Task.count({
+      where: { isCompleted: { [Op.eq]: true } },
+    });
+
+    return {
+      totalTasks,
+      pendingCount: totalPendingTasks,
+      completedCount: totalTasks - totalPendingTasks,
+    };
+  }
 }
 
 Task.init(

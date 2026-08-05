@@ -1,12 +1,18 @@
 import Task from "../models/task";
 import { Controller } from "../types/types";
 
-export const dashboardGetController: Controller = (_, res) => {
-  const recentTasks = Task.getRenderingTasks().slice(-3).reverse();
+export const dashboardGetController: Controller = async (_, res) => {
+  const [recentTasks, statistic] = await Promise.all([
+    Task.findAll({
+      limit: 3,
+      order: [["createdAt", "DESC"]],
+    }),
+    Task.getTasksStatistic(),
+  ]);
 
   res.render("dashboard", {
     pageTitle: "Dashboard",
     recentTasks,
-    ...Task.getTasksStatistic(),
+    ...statistic,
   });
 };
