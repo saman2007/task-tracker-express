@@ -9,18 +9,18 @@ import {
   Utils,
 } from "sequelize";
 
+import { Priority } from "../types/types";
+import { sequelize } from "../utils/db";
+import { TasksStatistic } from "../types/interfaces";
+import { PRIORITY_FILTERS } from "../utils/constants";
+import { getFormattedDate, getFormattedTime } from "../utils/utils";
+
 export type SequelizeExpression = Utils.Literal | Utils.Fn | Utils.Col;
 export type UpdateTaskInput = {
   [K in keyof InferAttributes<Task>]?:
     | InferAttributes<Task>[K]
     | SequelizeExpression;
 };
-
-import { Priority, TaskItem } from "../types/types";
-import { sequelize } from "../utils/db";
-import { RenderingTaskItem, TasksStatistic } from "../types/interfaces";
-import { PRIORITY_FILTERS } from "../utils/constants";
-import { getFormattedDate, getFormattedTime } from "../utils/utils";
 
 class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   declare id: CreationOptional<number>;
@@ -38,7 +38,7 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   > {
     const totalTasks = await Task.count();
     const totalPendingTasks = await Task.count({
-      where: { isCompleted: { [Op.eq]: true } },
+      where: { isCompleted: { [Op.eq]: false } },
     });
 
     return {
@@ -68,9 +68,10 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
         where: {
           priority: { [Op.eq]: priority },
         },
+        order: [["createdAt", "DESC"]],
       });
     } else {
-      tasks = await Task.findAll();
+      tasks = await Task.findAll({ order: [["createdAt", "DESC"]] });
     }
 
     return tasks;

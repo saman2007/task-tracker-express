@@ -23,11 +23,7 @@ export const addTaskGetController: Controller = (_, res) => {
 };
 
 export const addTaskPostController: Controller = async (req, res) => {
-  req.body.priority = +req.body.priority;
-
-  const taskData: CreateTaskInput = req.body;
-
-  await Task.create(taskData);
+  await Task.create(req.body as CreateTaskInput);
 
   res.redirect("/tasks");
 };
@@ -94,12 +90,8 @@ export const editTaskGetController: Controller = async (req, res) => {
 export const editTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
-  req.body.priority = +req.body.priority;
-
-  const taskData: CreateTaskInput = req.body;
-
   try {
-    await Task.updateTask(+id, taskData);
+    await Task.updateTask(+id, req.body as CreateTaskInput);
 
     res.redirect(`/tasks/${id}`);
   } catch (e) {
