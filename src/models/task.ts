@@ -88,7 +88,7 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
 
   public static async toggleTask(id: number): Promise<void> {
     await Task.updateTask(id, {
-      isCompleted: sequelize.literal('NOT "isCompleted"'),
+      isCompleted: sequelize.literal("NOT isCompleted"),
     });
   }
 
@@ -136,14 +136,14 @@ Task.init(
     },
     createdDate: {
       type: t.VIRTUAL,
-      get(): string {
-        return getFormattedDate(this.createdAt);
+      get(): string | undefined {
+        return this.createdAt ? getFormattedDate(this.createdAt) : undefined;
       },
     },
     createdTime: {
       type: t.VIRTUAL,
-      get(): string {
-        return getFormattedTime(this.createdAt);
+      get(): string | undefined {
+        return this.createdAt ? getFormattedTime(this.createdAt) : undefined;
       },
     },
     createdAt: t.DATE,
