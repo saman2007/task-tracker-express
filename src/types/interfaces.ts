@@ -1,21 +1,7 @@
-import { Priority } from "./types";
+import Task from "../models/task";
+import { TaskItem } from "./types";
 
-export interface TaskItem {
-  readonly id: string;
-  title: string;
-  note: string;
-  priority: Priority;
-  isCompleted: boolean;
-  readonly createdAt: string;
-}
-
-export interface RenderingTaskItem {
-  readonly id: string;
-  title: string;
-  note: string;
-  priority: Priority;
-  isCompleted: boolean;
-  readonly createdAt: string;
+export interface RenderingTaskItem extends TaskItem {
   readonly date: string;
   readonly time: string;
 }

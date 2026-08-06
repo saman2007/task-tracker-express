@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-
-import { TaskItem } from "./interfaces";
+import { InferAttributes } from "sequelize";
+import Task from "../models/task";
 
 export type Controller = (
   req: Request,
@@ -13,6 +13,8 @@ export enum Priority {
   MEDIUM,
   HIGH,
 }
+
+export type TaskItem = Omit<InferAttributes<Task>, "updatedAt">;
 
 export type CreateTaskInput = Omit<
   TaskItem,

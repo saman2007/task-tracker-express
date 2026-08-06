@@ -8,9 +8,11 @@ import {
   DataTypes as t,
 } from "sequelize";
 
-import { Priority } from "../types/types";
+import { Priority, TaskItem } from "../types/types";
 import { sequelize } from "../utils/db";
-import { TasksStatistic } from "../types/interfaces";
+import { RenderingTaskItem, TasksStatistic } from "../types/interfaces";
+import { PRIORITY_FILTERS } from "../utils/constants";
+import { getFormattedDate, getFormattedTime } from "../utils/utils";
 
 class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   declare id: CreationOptional<number>;
@@ -33,6 +35,42 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
       totalTasks,
       pendingCount: totalPendingTasks,
       completedCount: totalTasks - totalPendingTasks,
+    };
+  }
+
+  public static async getTasks(
+    priorityFilter?: string | number,
+  ): Promise<RenderingTaskItem[]> {
+    const priorityNumber =
+      priorityFilter && PRIORITY_FILTERS.includes(priorityFilter.toString())
+        ? +priorityFilter
+        : 3;
+
+    const priority =
+      priorityNumber === 3
+        ? null
+        : (Priority[priorityNumber] as keyof typeof Priority);
+
+    let tasks: TaskItem[];
+
+    if (priority) {
+      tasks = await Task.findAll({
+        where: {
+          priority: { [Op.eq]: priority },
+        },
+      });
+    } else {
+      tasks = await Task.findAll();
+    }
+
+    return tasks.map((task) => Task.toRenderingTask(task));
+  }
+
+  public static toRenderingTask(task: TaskItem): RenderingTaskItem {
+    return {
+      ...task,
+      date: getFormattedDate(task.createdAt),
+      time: getFormattedTime(task.createdAt),
     };
   }
 }
@@ -64,7 +102,11 @@ Task.init(
     createdAt: t.DATE,
     updatedAt: t.DATE,
   },
-  { tableName: "tasks", sequelize },
+  {
+    tableName: "tasks",
+    sequelize,
+    defaultScope: { attributes: { exclude: ["updatedAt"] } },
+  },
 );
 
 export default Task;

@@ -2,7 +2,7 @@ import Task from "../models/task";
 import { Controller, CreateTaskInput } from "../types/types";
 import { PRIORITY_FILTERS } from "../utils/constants";
 
-export const tasksGetController: Controller = (req, res) => {
+export const tasksGetController: Controller = async (req, res) => {
   const priority = req.query.priority?.toString() || "3";
 
   if (!PRIORITY_FILTERS.includes(priority)) {
@@ -11,7 +11,7 @@ export const tasksGetController: Controller = (req, res) => {
 
   res.render("tasks", {
     pageTitle: "All Tasks",
-    tasks: Task.getRenderingTasks(priority),
+    tasks: await Task.getTasks(priority),
     currentFilter: priority,
   });
 };
