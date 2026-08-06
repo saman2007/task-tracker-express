@@ -6,7 +6,15 @@ import {
   NonAttribute,
   Op,
   DataTypes as t,
+  Utils,
 } from "sequelize";
+
+export type SequelizeExpression = Utils.Literal | Utils.Fn | Utils.Col;
+export type UpdateTaskInput = {
+  [K in keyof InferAttributes<Task>]?:
+    | InferAttributes<Task>[K]
+    | SequelizeExpression;
+};
 
 import { Priority, TaskItem } from "../types/types";
 import { sequelize } from "../utils/db";
@@ -96,10 +104,24 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   }
 
   public static async toggleTask(id: number): Promise<void> {
-    Task.update(
-      { isCompleted: sequelize.literal('NOT "isCompleted"') },
-      { where: { id: { [Op.eq]: id } } },
-    );
+    await Task.updateTask(id, {
+      isCompleted: sequelize.literal('NOT "isCompleted"'),
+    });
+  }
+
+  public static async getTask(id: number): Promise<TaskItem | null> {
+    return await Task.findOne({ where: { id } });
+  }
+
+  public static async deleteTask(id: number): Promise<void> {
+    await Task.destroy({ where: { id: +id } });
+  }
+
+  public static async updateTask(
+    id: number,
+    data: Parameters<typeof Task.update>[0],
+  ): Promise<void> {
+    await Task.update(data, { where: { id } });
   }
 }
 

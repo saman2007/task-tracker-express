@@ -42,50 +42,54 @@ export const toggleTaskPostController: Controller = async (req, res) => {
   }
 };
 
-export const deleteTaskPostController: Controller = (req, res) => {
+export const deleteTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   try {
-    Task.deleteTask(id, () => {
-      res.redirect("/tasks");
-    });
+    await Task.deleteTask(+id);
+
+    res.redirect("/tasks");
   } catch {
     res.redirect("/404");
   }
 };
 
-export const taskDetailsGetController: Controller = (req, res) => {
+export const taskDetailsGetController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
-  const task = Task.findTaskById(id).task;
+  try {
+    const task = await Task.getTask(+id);
 
-  if (!task) {
+    if (!task) throw new Error();
+
+    res.render("task-detail", {
+      pageTitle: task.title,
+      task: Task.toRenderingTask(task),
+    });
+  } catch (e) {
     return res.redirect("/404");
   }
-
-  res.render("task-detail", {
-    pageTitle: task.title,
-    task: Task.toRenderingTask(task),
-  });
 };
 
-export const editTaskGetController: Controller = (req, res) => {
+export const editTaskGetController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
-  const task = Task.findTaskById(id).task;
+  try {
+    const task = await Task.getTask(+id);
 
-  if (!task) {
-    return res.redirect("/404");
+    if (!task) throw new Error();
+
+    res.render("add-task", {
+      pageTitle: "Edit Task",
+      task,
+      editing: true,
+    });
+  } catch (error) {
+    res.redirect("/404");
   }
-
-  res.render("add-task", {
-    pageTitle: "Edit Task",
-    task,
-    editing: true,
-  });
 };
 
-export const editTaskPostController: Controller = (req, res) => {
+export const editTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   req.body.priority = +req.body.priority;
@@ -93,9 +97,9 @@ export const editTaskPostController: Controller = (req, res) => {
   const taskData: CreateTaskInput = req.body;
 
   try {
-    Task.editTask(id, taskData, () => {
-      res.redirect(`/tasks/${id}`);
-    });
+    await Task.updateTask(+id, taskData);
+    
+    res.redirect(`/tasks/${id}`);
   } catch (e) {
     res.redirect("/404");
   }
