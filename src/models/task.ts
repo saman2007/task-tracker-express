@@ -30,6 +30,8 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   declare isCompleted: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  declare createdDate: string;
+  declare createdTime: string;
 
   public static async getTasksStatistic(): Promise<
     NonAttribute<TasksStatistic>
@@ -48,7 +50,7 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
 
   public static async getTasks(
     priorityFilter?: string | number,
-  ): Promise<RenderingTaskItem[]> {
+  ): Promise<Task[]> {
     const priorityNumber =
       priorityFilter && PRIORITY_FILTERS.includes(priorityFilter.toString())
         ? +priorityFilter
@@ -59,7 +61,7 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
         ? null
         : (Priority[priorityNumber] as keyof typeof Priority);
 
-    let tasks: TaskItem[];
+    let tasks: Task[];
 
     if (priority) {
       tasks = await Task.findAll({
@@ -71,36 +73,16 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
       tasks = await Task.findAll();
     }
 
-    return Task.toRenderingTask(tasks);
+    return tasks;
   }
 
-  public static toRenderingTask(task: TaskItem[]): RenderingTaskItem[];
-  public static toRenderingTask(task: TaskItem): RenderingTaskItem;
-  public static toRenderingTask(
-    task: TaskItem | TaskItem[],
-  ): Array<RenderingTaskItem> | RenderingTaskItem {
-    if (Array.isArray(task)) {
-      return task.map((item) => ({
-        ...item,
-        date: getFormattedDate(item.createdAt),
-        time: getFormattedTime(item.createdAt),
-      }));
-    }
-
-    return {
-      ...task,
-      date: getFormattedDate(task.createdAt),
-      time: getFormattedTime(task.createdAt),
-    };
-  }
-
-  public static async getNewestTasks(): Promise<RenderingTaskItem[]> {
+  public static async getNewestTasks(): Promise<Task[]> {
     const newestTasks = await Task.findAll({
       limit: 3,
       order: [["createdAt", "DESC"]],
     });
 
-    return Task.toRenderingTask(newestTasks);
+    return newestTasks;
   }
 
   public static async toggleTask(id: number): Promise<void> {
@@ -109,8 +91,10 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
     });
   }
 
-  public static async getTask(id: number): Promise<TaskItem | null> {
-    return await Task.findOne({ where: { id } });
+  public static async getTask(id: number): Promise<Task | null> {
+    const task = await Task.findOne({ where: { id } });
+
+    return task;
   }
 
   public static async deleteTask(id: number): Promise<void> {
@@ -119,7 +103,7 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
 
   public static async updateTask(
     id: number,
-    data: Parameters<typeof Task.update>[0],
+    data: UpdateTaskInput,
   ): Promise<void> {
     await Task.update(data, { where: { id } });
   }
@@ -148,6 +132,18 @@ Task.init(
       allowNull: false,
       type: t.BOOLEAN,
       defaultValue: false,
+    },
+    createdDate: {
+      type: t.VIRTUAL,
+      get(): string {
+        return getFormattedDate(this.createdAt);
+      },
+    },
+    createdTime: {
+      type: t.VIRTUAL,
+      get(): string {
+        return getFormattedTime(this.createdAt);
+      },
     },
     createdAt: t.DATE,
     updatedAt: t.DATE,

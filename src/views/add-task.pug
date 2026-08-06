@@ -21,19 +21,19 @@ block content
           label(for="priority") Priority Level
           .priority-selector
             label.priority-option.low
-              input(type="radio", name="priority", value="0" checked=editing ? task.priority === 0 : false)
+              input(type="radio", name="priority", value="LOW" checked=editing ? task.priority === 0 : false)
               span.priority-card
                 span.badge-icon 🌱
                 span.badge-text Low
             
             label.priority-option.medium
-              input(type="radio", name="priority", value="1", checked=editing ? task.priority === 1 : true)
+              input(type="radio", name="priority", value="MEDIUM", checked=editing ? task.priority === 1 : true)
               span.priority-card
                 span.badge-icon ⚡
                 span.badge-text Medium
             
             label.priority-option.high
-              input(type="radio", name="priority", value="2", checked=editing ? task.priority === 2 : false)
+              input(type="radio", name="priority", value="HIGH", checked=editing ? task.priority === 2 : false)
               span.priority-card
                 span.badge-icon 🔥
                 span.badge-text High

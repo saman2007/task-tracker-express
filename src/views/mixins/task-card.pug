@@ -14,7 +14,7 @@ mixin taskCard(task)
     .task-card-footer
       .task-date
         span.date-icon 🗓️
-        span #{task.createdAt ? task.date + ' • ' + task.time : ''}
+        span #{task.createdAt ? task.createdDate + ' • ' + task.createdTime : ''}
       
       .task-actions
         form(action=`/tasks/${task.id}/toggle`, method="POST")

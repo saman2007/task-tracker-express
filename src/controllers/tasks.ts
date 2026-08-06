@@ -9,9 +9,11 @@ export const tasksGetController: Controller = async (req, res) => {
     return res.redirect("/404");
   }
 
+  const tasks = await Task.getTasks(priority);
+
   res.render("tasks", {
     pageTitle: "All Tasks",
-    tasks: await Task.getTasks(priority),
+    tasks,
     currentFilter: priority,
   });
 };
@@ -64,7 +66,7 @@ export const taskDetailsGetController: Controller = async (req, res) => {
 
     res.render("task-detail", {
       pageTitle: task.title,
-      task: Task.toRenderingTask(task),
+      task,
     });
   } catch (e) {
     return res.redirect("/404");
@@ -98,7 +100,7 @@ export const editTaskPostController: Controller = async (req, res) => {
 
   try {
     await Task.updateTask(+id, taskData);
-    
+
     res.redirect(`/tasks/${id}`);
   } catch (e) {
     res.redirect("/404");

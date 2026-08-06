@@ -1,4 +1,3 @@
-import Task from "../models/task";
 import { TaskItem } from "./types";
 
 export interface RenderingTaskItem extends TaskItem {
