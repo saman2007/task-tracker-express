@@ -63,15 +63,36 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
       tasks = await Task.findAll();
     }
 
-    return tasks.map((task) => Task.toRenderingTask(task));
+    return Task.toRenderingTask(tasks);
   }
 
-  public static toRenderingTask(task: TaskItem): RenderingTaskItem {
+  public static toRenderingTask(task: TaskItem[]): RenderingTaskItem[];
+  public static toRenderingTask(task: TaskItem): RenderingTaskItem;
+  public static toRenderingTask(
+    task: TaskItem | TaskItem[],
+  ): Array<RenderingTaskItem> | RenderingTaskItem {
+    if (Array.isArray(task)) {
+      return task.map((item) => ({
+        ...item,
+        date: getFormattedDate(item.createdAt),
+        time: getFormattedTime(item.createdAt),
+      }));
+    }
+
     return {
       ...task,
       date: getFormattedDate(task.createdAt),
       time: getFormattedTime(task.createdAt),
     };
+  }
+
+  public static async getNewestTasks(): Promise<RenderingTaskItem[]> {
+    const newestTasks = await Task.findAll({
+      limit: 3,
+      order: [["createdAt", "DESC"]],
+    });
+
+    return Task.toRenderingTask(newestTasks);
   }
 }
 
