@@ -20,25 +20,23 @@ export const addTaskGetController: Controller = (_, res) => {
   res.render("add-task", { pageTitle: "Add Task" });
 };
 
-export const addTaskPostController: Controller = (req, res) => {
+export const addTaskPostController: Controller = async (req, res) => {
   req.body.priority = +req.body.priority;
 
   const taskData: CreateTaskInput = req.body;
 
-  const task = new Task(taskData.title, taskData.note, taskData.priority);
+  await Task.create(taskData);
 
-  Task.addTask(task, (err) => {
-    res.redirect("/tasks");
-  });
+  res.redirect("/tasks");
 };
 
-export const toggleTaskPostController: Controller = (req, res) => {
+export const toggleTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   try {
-    Task.toggleTask(id, () => {
-      res.redirect(req.header("referer") || "/tasks");
-    });
+    await Task.toggleTask(+id);
+
+    res.redirect(req.header("referer") || "/tasks");
   } catch (error) {
     res.redirect("/404");
   }

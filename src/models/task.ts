@@ -94,6 +94,13 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
 
     return Task.toRenderingTask(newestTasks);
   }
+
+  public static async toggleTask(id: number): Promise<void> {
+    Task.update(
+      { isCompleted: sequelize.literal('NOT "isCompleted"') },
+      { where: { id: { [Op.eq]: id } } },
+    );
+  }
 }
 
 Task.init(
