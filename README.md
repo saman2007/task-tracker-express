@@ -63,17 +63,19 @@ Ensure you have the following installed on your machine:
    git clone https://github.com/saman2007/task-tracker-express 
    ```
 
-2. **Install dependencies:** `npm install`
-    * You can use any other package managers, such as `pnpm`, `yarn` or etc. 
+2. **Install dependencies:** Run `npm install` or `pnpm install` or `yarn install` Or command of any other package manager that you are using.
 
-3. **Initialize local data:**
-   In case that you want to see some example tasks, Copy content of the provided example JSON file in `src/data/tasks.example.json` and paste it to `src/data/tasks.json`(you may need to create the file first)  
-   To easily create your initial local data store, simply run this command in the root of the project:
-   `cp src/data/tasks.example.json src/data/tasks.json`
+2. **Database initialization:**
+   You must create a `mysql` database for this project.
 
-4. **Configure port(optional):** The server will be listened to port `3000` by default. But if you want to change it, create a `.env` file in the root of the project and set set the port you want, like this: `PORT=YOUR_PORT` 
+3. **Setting ENVs:**
+   You need to provide the credentials of the database you created and other settings for the project. For this, create a `.env` in the root of the project. Then take a look at `.env.example` to see the required and optional ENVs with their description. Provide those ENVs in `.env`.
 
-5. **Run in Development mode:** `npm run dev`
+4. **Configure port(optional):** The server will be listened to port `3000` by default. But if you want to change it, set the port you want like this: `PORT = YOUR_PORT` in `.env` file that you created in step 3.
+
+5. **Seeding data to database(optional):** There are some example data for tables in `src/data/*.sql` in case that you want to run the project and don't want to see the project empty. If you want to insert those data to your tables, you can manually run the `sql` files in your database or run `npm run db:seed` which will automatically insert all the example data to your database that you provided its credentials in `.env` file.  
+
+6. **Run in Development mode:** `npm run dev`
 
 Open your browser and visit `http://localhost:port` to interact with the application(port is by default `3000`).
 
@@ -88,7 +90,7 @@ The purpose of developing this project is to practice what I have learned during
 
 As I learn new tools and practices, this project will continue to evolve:
 
-- [ ] **Persistent Database:** Migrate local JSON file storage to a relational database (e.g., PostgreSQL with Drizzle ORM).
+- [x] **Persistent Database:** Migrate local JSON file storage to a relational database (e.g., PostgreSQL with Drizzle ORM).
 - [ ] **Authentication:** Implement user registration, login, and session management.
 - [ ] **REST API Endpoints:** Expose JSON API endpoints alongside server-rendered views.
 - [ ] **Filter & Search:** Add search capability by title/description and filter by task priority.
