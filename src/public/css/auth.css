@@ -107,18 +107,22 @@
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .form-input-icon {
     position: absolute;
     left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
     color: var(--text-muted);
     font-size: 1.1rem;
+    line-height: 1;
     pointer-events: none;
-}
-
-.form-input-wrap .form-control {
-    padding-left: 2.8rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .auth-form .form-control {
@@ -133,6 +137,10 @@
     color: var(--text-main);
     transition: all 0.25s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.01);
+}
+
+.auth-form .form-input-wrap .form-control {
+    padding-left: 2.9rem;
 }
 
 .auth-form .form-control:focus {
