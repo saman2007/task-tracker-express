@@ -7,6 +7,7 @@ export declare global {
       DB_PASSWORD: string;
       DB_HOST: string;
       DB_PORT: string;
+      SESSION_SECRET: string;
     }
   }
 }

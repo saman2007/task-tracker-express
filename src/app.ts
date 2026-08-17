@@ -2,6 +2,8 @@ import path from "path";
 
 import bodyParser from "body-parser";
 import express from "express";
+import session from "express-session";
+import ConnectSessionSequelize from "connect-session-sequelize";
 
 import "./utils/env";
 import dashboardRouter from "./routes/dashboard";
@@ -18,6 +20,19 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    // 30 days
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
+    resave: false,
+    saveUninitialized: false,
+    store: new (ConnectSessionSequelize(session.Store))({
+      db: sequelize,
+    }),
+    rolling: false,
+  }),
+);
 
 app.use(landingRouter);
 app.use(authRouter);
