@@ -9,6 +9,7 @@ import notFoundRouter from "./routes/notFound";
 import tasksRouter from "./routes/tasks";
 import { sequelize } from "./utils/db";
 import authRouter from "./routes/auth";
+import landingRouter from "./routes/landing";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(landingRouter);
 app.use(authRouter);
 app.use(dashboardRouter);
 app.use(tasksRouter);

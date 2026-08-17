@@ -1,0 +1,114 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/landing.css")
+
+block content
+  .landing-container
+    //- Hero Section
+    section.hero-section
+      .hero-content
+        .hero-badge
+          span.badge-icon ⚡
+          span.badge-text Minimalist Productivity
+        h1.hero-title
+          | Organize your work, 
+          span.title-highlight focus on what matters.
+        p.hero-subtitle
+          | A lightweight and focused task manager designed to help you stay organized, prioritize effectively, and complete your goals without distractions.
+        
+        .hero-actions
+          a.btn-primary.btn-hero-primary(href="/signup")
+            | Get Started Free
+            span.btn-arrow &rarr;
+          a.btn-hero-secondary(href="/dashboard")
+            | View Dashboard
+
+      //- Interactive Mock Preview
+      .hero-preview
+        .preview-card
+          .preview-card-header
+            .preview-dots
+              span.dot.dot-red
+              span.dot.dot-yellow
+              span.dot.dot-green
+            .preview-title Today's Focus
+          .preview-task-list
+            .preview-task-item.completed
+              .task-checkbox
+                span &#10003;
+              .task-info
+                p.task-name Complete project documentation
+                span.task-meta Due today &bull; Low Priority
+              span.preview-badge.badge-low Low
+            .preview-task-item.active
+              .task-checkbox
+              .task-info
+                p.task-name Refactor database seeders
+                span.task-meta Due tomorrow &bull; High Priority
+              span.preview-badge.badge-high High
+            .preview-task-item
+              .task-checkbox
+              .task-info
+                p.task-name Design responsive landing page
+                span.task-meta Due in 2 days &bull; Medium Priority
+              span.preview-badge.badge-medium Medium
+
+    //- Features Grid Section
+    section.features-section
+      .section-header
+        h2 Built for simplicity and speed
+        p Everything you need to manage your personal workload, nothing you don't.
+      
+      .features-grid
+        .feature-card
+          .feature-icon-wrapper
+            span.feature-icon 🎯
+          h3.feature-title Priority Categorization
+          p.feature-description
+            | Tag your tasks with High, Medium, or Low priority badges to immediately identify what requires your attention.
+
+        .feature-card
+          .feature-icon-wrapper
+            span.feature-icon ⏱️
+          h3.feature-title Deadline Tracking
+          p.feature-description
+            | Keep track of upcoming due dates with clear countdowns and never let a critical task slip through the cracks.
+
+        .feature-card
+          .feature-icon-wrapper
+            span.feature-icon 📊
+          h3.feature-title Clear Overview
+          p.feature-description
+            | Instant statistics for total, completed, and pending tasks so you can visualize your progress at a glance.
+
+    //- 3-Step Workflow Section
+    section.steps-section
+      .section-header
+        h2 How it works
+        p Start tracking your tasks in three simple steps.
+      
+      .steps-grid
+        .step-card
+          .step-number 01
+          h3.step-title Create your account
+          p.step-description Sign up in seconds with just your name, email, and password.
+        
+        .step-card
+          .step-number 02
+          h3.step-title Add your tasks
+          p.step-description Set title, description, due date, and priority level in a clean interface.
+
+        .step-card
+          .step-number 03
+          h3.step-title Accomplish goals
+          p.step-description Mark tasks as completed, edit details anytime, and stay ahead of your schedule.
+
+    //- Call to Action Section
+    section.cta-section
+      .cta-card
+        h2 Ready to boost your productivity?
+        p Join today and take control of your daily workflow.
+        .cta-actions
+          a.btn-primary.btn-cta(href="/signup") Create Free Account
+          a.btn-cta-secondary(href="/signin") Sign In
