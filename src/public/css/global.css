@@ -73,6 +73,72 @@ body {
     letter-spacing: -0.5px;
 }
 
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.nav-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.08);
+}
+
+.nav-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 0 0.2rem;
+}
+
+.btn-nav-signin {
+    color: var(--text-main);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-nav-signin:hover {
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.08);
+}
+
+.btn-nav-signup {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    color: #ffffff !important;
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.92rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-nav-signup:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+}
+
 .btn-primary {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: white !important;
@@ -92,6 +158,35 @@ body {
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0.85rem 1.25rem;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .nav-menu {
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+
+    .nav-divider {
+        display: none;
+    }
+
+    .nav-link,
+    .btn-nav-signin {
+        padding: 0.4rem 0.65rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-primary,
+    .btn-nav-signup {
+        padding: 0.45rem 0.85rem;
+        font-size: 0.85rem;
+    }
 }
 
 /* ===================================

@@ -17,7 +17,10 @@ html(lang="en", dir="ltr")
         a.nav-logo(href="/")
           span ⚡ TaskTracker
         nav.nav-menu
-          a.btn-primary(href="/tasks/add") + New Task
+          a.nav-link(href="/tasks") Tasks
+          .nav-divider
+          a.btn-nav-signin(href="/signin") Sign In
+          a.btn-nav-signup(href="/signup") Sign Up
 
     main.main-wrapper
       block content

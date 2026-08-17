@@ -1,0 +1,77 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/auth.css")
+
+block content
+  .auth-container
+    .auth-card
+      .auth-header
+        .auth-icon 🚀
+        h1 Create an Account
+        p Join TaskTracker today to organize your tasks and boost productivity.
+
+      form.auth-form(action="/signup", method="POST")
+        .form-group
+          label(for="name") Full Name
+          .form-input-wrap
+            span.form-input-icon 👤
+            input#name.form-control(
+              type="text", 
+              name="name", 
+              required=true, 
+              placeholder="Alex Johnson", 
+              autocomplete="name"
+            )
+
+        .form-group
+          label(for="email") Email Address
+          .form-input-wrap
+            span.form-input-icon ✉️
+            input#email.form-control(
+              type="email", 
+              name="email", 
+              required=true, 
+              placeholder="alex@example.com", 
+              autocomplete="email"
+            )
+
+        .form-row
+          .form-group
+            label(for="password") Password
+            .form-input-wrap
+              span.form-input-icon 🔑
+              input#password.form-control(
+                type="password", 
+                name="password", 
+                required=true, 
+                placeholder="••••••••", 
+                autocomplete="new-password"
+              )
+          .form-group
+            label(for="confirmPassword") Confirm Password
+            .form-input-wrap
+              span.form-input-icon 🔒
+              input#confirmPassword.form-control(
+                type="password", 
+                name="confirmPassword", 
+                required=true, 
+                placeholder="••••••••", 
+                autocomplete="new-password"
+              )
+
+        .auth-options
+          label.checkbox-label
+            input(type="checkbox", name="agreeTerms", required=true, value="true")
+            span I agree to the 
+              a.auth-link(href="#") Terms
+              |  &amp; 
+              a.auth-link(href="#") Privacy Policy
+
+        button.btn-primary.btn-auth-submit(type="submit")
+          span Create Account
+          span.btn-arrow &rarr;
+
+      .auth-footer
+        p Already have an account? 
+          a.auth-link(href="/signin") Sign in here

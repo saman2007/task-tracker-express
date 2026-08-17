@@ -1,0 +1,51 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/auth.css")
+
+block content
+  .auth-container
+    .auth-card
+      .auth-header
+        .auth-icon 🔐
+        h1 Welcome Back
+        p Sign in to your account to continue managing your tasks.
+
+      form.auth-form(action="/signin", method="POST")
+        .form-group
+          label(for="email") Email Address
+          .form-input-wrap
+            span.form-input-icon ✉️
+            input#email.form-control(
+              type="email", 
+              name="email", 
+              required=true, 
+              placeholder="alex@example.com", 
+              autocomplete="email"
+            )
+
+        .form-group
+          label(for="password") Password
+          .form-input-wrap
+            span.form-input-icon 🔑
+            input#password.form-control(
+              type="password", 
+              name="password", 
+              required=true, 
+              placeholder="••••••••", 
+              autocomplete="current-password"
+            )
+
+        .auth-options
+          label.checkbox-label
+            input(type="checkbox", name="rememberMe", value="true")
+            span Remember me
+          a.auth-link(href="#") Forgot password?
+
+        button.btn-primary.btn-auth-submit(type="submit")
+          span Sign In
+          span.btn-arrow &rarr;
+
+      .auth-footer
+        p Don't have an account? 
+          a.auth-link(href="/signup") Sign up here
