@@ -13,12 +13,12 @@ block content
 
       form.auth-form(action="/signup", method="POST")
         .form-group
-          label(for="name") Full Name
+          label(for="fullname") Full Name
           .form-input-wrap
             span.form-input-icon 👤
             input#name.form-control(
               type="text", 
-              name="name", 
+              name="fullname", 
               required=true, 
               placeholder="Alex Johnson", 
               autocomplete="name"

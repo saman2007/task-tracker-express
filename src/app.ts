@@ -12,6 +12,7 @@ import tasksRouter from "./routes/tasks";
 import { sequelize } from "./utils/db";
 import authRouter from "./routes/auth";
 import landingRouter from "./routes/landing";
+import { catchAllMiddleware } from "./middlewares/catchAll";
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.use(
     rolling: false,
   }),
 );
+
+app.use(catchAllMiddleware);
 
 app.use(landingRouter);
 app.use(authRouter);
