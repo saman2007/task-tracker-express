@@ -21,6 +21,8 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+//TODO: ADD BUNDLER
+app.use("/vendor/zod", express.static(path.join(process.cwd(), "node_modules", "zod")));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,

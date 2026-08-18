@@ -2,6 +2,13 @@ extends layouts/main-layout.pug
 
 block head-tags
   link(rel="stylesheet", href="/css/auth.css")
+  script(type="importmap").
+    {
+      "imports": {
+        "zod": "/vendor/zod/index.js"
+      }
+    }
+  script(type="module", src="/js/auth-validation.js")
 
 block content
   .auth-container
@@ -11,7 +18,7 @@ block content
         h1 Welcome Back
         p Sign in to your account to continue managing your tasks.
 
-      form.auth-form(action="/signin", method="POST")
+      form.auth-form(action="/signin", method="POST", novalidate=true)
         .form-group
           label(for="email") Email Address
           .form-input-wrap

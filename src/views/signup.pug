@@ -2,6 +2,13 @@ extends layouts/main-layout.pug
 
 block head-tags
   link(rel="stylesheet", href="/css/auth.css")
+  script(type="importmap").
+    {
+      "imports": {
+        "zod": "/vendor/zod/index.js"
+      }
+    }
+  script(type="module", src="/js/auth-validation.js")
 
 block content
   .auth-container
@@ -11,7 +18,7 @@ block content
         h1 Create an Account
         p Join TaskTracker today to organize your tasks and boost productivity.
 
-      form.auth-form(action="/signup", method="POST")
+      form.auth-form(action="/signup", method="POST", novalidate=true)
         .form-group
           label(for="fullname") Full Name
           .form-input-wrap
