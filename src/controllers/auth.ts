@@ -20,9 +20,11 @@ export const signInPostController: Controller = async (req, res) => {
     if (!user) return res.redirect("/signin");
 
     const isMatch = await bcrypt.compare(userData.password, user.password);
-    
+
     if (!isMatch) return res.redirect("/signin");
 
+    req.session.cookie.maxAge =
+      req.body.rememberMe === "true" ? req.session.cookie.maxAge : undefined;
     req.session.userId = user.id;
 
     req.session.save((err) => {
