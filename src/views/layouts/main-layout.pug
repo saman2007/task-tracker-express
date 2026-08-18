@@ -17,8 +17,29 @@ html(lang="en", dir="ltr")
         a.nav-logo(href="/")
           span ⚡ TaskTracker
         nav.nav-menu
-          a.btn-nav-signin(href="/signin") Sign In
-          a.btn-nav-signup(href="/signup") Sign Up
+          if isLoggedIn
+            a.nav-link(href="/tasks") Tasks
+            .profile-dropdown-container
+              button.profile-btn#profileDropdownBtn(type="button", aria-expanded="false", aria-haspopup="true", title=currentUser && currentUser.fullname ? currentUser.fullname : "Profile")
+                span.profile-avatar #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
+                svg.profile-arrow(width="12", height="12", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round")
+                  polyline(points="6 9 12 15 18 9")
+              .profile-dropdown-menu#profileDropdownMenu
+                if currentUser
+                  .profile-user-info
+                    p.profile-user-name #{currentUser.fullname}
+                    p.profile-user-email #{currentUser.email}
+                  .profile-dropdown-divider
+                a.profile-dropdown-item(href="#settings")
+                  span.dropdown-icon ⚙️
+                  span Settings
+                form.profile-logout-form(action="/logout", method="POST")
+                  button.profile-dropdown-item.logout-btn(type="submit")
+                    span.dropdown-icon 🚪
+                    span Log out
+          else
+            a.btn-nav-signin(href="/signin") Sign In
+            a.btn-nav-signup(href="/signup") Sign Up
 
     main.main-wrapper
       block content
@@ -33,3 +54,4 @@ html(lang="en", dir="ltr")
     +deleteModal()
 
     script(src="/js/delete-modal.js")
+    script(src="/js/profile-dropdown.js")

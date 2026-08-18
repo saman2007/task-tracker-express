@@ -10,9 +10,11 @@ import {
   editTaskGetController,
   editTaskPostController,
 } from "../controllers/tasks";
+import { privateRoute } from "../middlewares/auth";
 
 const tasksRouter = express.Router();
 
+tasksRouter.use("/tasks", privateRoute);
 tasksRouter.get("/tasks", tasksGetController);
 tasksRouter.get("/tasks/add", addTaskGetController);
 tasksRouter.post("/tasks/add", addTaskPostController);
