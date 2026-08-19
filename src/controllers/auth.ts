@@ -5,8 +5,10 @@ import { Controller } from "../types/types";
 import { signInSchema } from "../utils/validations/signInSchema.shared";
 import { signUpSchema } from "../utils/validations/signUpSchema.shared";
 
-export const signInGetController: Controller = (_, res) => {
-  res.render("signin", { pageTitle: "Sign In" });
+export const signInGetController: Controller = async (req, res) => {
+  const error = await req.getFlash("error");
+
+  res.render("signin", { pageTitle: "Sign In", error });
 };
 
 export const signInPostController: Controller = async (req, res) => {
@@ -17,11 +19,19 @@ export const signInPostController: Controller = async (req, res) => {
       where: { email: userData.email },
     });
 
-    if (!user) return res.redirect("/signin");
+    if (!user) {
+      await req.setFlash("error", "Email or password are incorrect.");
+
+      return res.redirect("/signin");
+    }
 
     const isMatch = await bcrypt.compare(userData.password, user.password);
 
-    if (!isMatch) return res.redirect("/signin");
+    if (!isMatch) {
+      await req.setFlash("error", "Email or password are incorrect.");
+
+      return res.redirect("/signin");
+    }
 
     req.session.cookie.maxAge =
       req.body.rememberMe === "true" ? req.session.cookie.maxAge : undefined;
@@ -35,12 +45,16 @@ export const signInPostController: Controller = async (req, res) => {
   } catch (error) {
     console.log(error);
 
+    await req.setFlash("error", "Something went wrong.");
+
     res.redirect("/signin");
   }
 };
 
-export const signUpGetController: Controller = (_, res) => {
-  res.render("signup", { pageTitle: "Sign Up" });
+export const signUpGetController: Controller = async (req, res) => {
+  const error = await req.getFlash("error");
+
+  res.render("signup", { pageTitle: "Sign Up", error });
 };
 
 export const signUpPostController: Controller = async (req, res) => {
@@ -51,7 +65,11 @@ export const signUpPostController: Controller = async (req, res) => {
       where: { email: userData.email },
     }));
 
-    if (userExists) return res.redirect("/signup");
+    if (userExists) {
+      await req.setFlash("error", "A user with this email already exists.");
+
+      return res.redirect("/signup");
+    }
 
     const user = await User.create({
       email: userData.email,
@@ -68,6 +86,8 @@ export const signUpPostController: Controller = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+
+    await req.setFlash("error", "Something went wrong.");
 
     res.redirect("/signup");
   }

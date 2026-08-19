@@ -84,6 +84,32 @@
     font-size: 0.95rem;
 }
 
+/* Flash Error Banner */
+.auth-flash-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.95rem;
+    margin-bottom: 1.25rem;
+    background: rgba(254, 242, 242, 0.85);
+    border: 1px solid rgba(239, 68, 68, 0.28);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.06);
+    color: #991b1b;
+    font-size: 0.86rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.auth-flash-banner .flash-icon {
+    color: var(--priority-high);
+    flex-shrink: 0;
+}
+
+.auth-flash-banner .flash-message {
+    flex-grow: 1;
+}
+
 /* Form Styles */
 .auth-form {
     display: flex;

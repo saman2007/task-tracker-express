@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  async-connect-flash:
+    specifier: ^1.0.5
+    version: 1.0.5
   bcrypt:
     specifier: ^6.0.0
     version: 6.0.0
@@ -614,6 +617,10 @@ packages:
 
   /assert-never@1.4.0:
     resolution: {integrity: sha512-5oJg84os6NMQNl27T9LnZkvvqzvAnHu03ShCnoj6bsJwS7L8AO4lf+C/XjK/nvzEqQB744moC6V128RucQd1jA==}
+    dev: false
+
+  /async-connect-flash@1.0.5:
+    resolution: {integrity: sha512-dUXiCgndkRIUuG80xtPNX9cfcEmhj8geiq9+KSGwNr65ZkuBc29/fHL/Bp7+7IJdz+LSfADalN/UWAJfU75RKg==}
     dev: false
 
   /aws-ssl-profiles@1.1.2:

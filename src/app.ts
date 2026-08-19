@@ -13,6 +13,7 @@ import { sequelize } from "./utils/db";
 import authRouter from "./routes/auth";
 import landingRouter from "./routes/landing";
 import { catchAllMiddleware } from "./middlewares/catchAll";
+import { promiseConnectFlash } from "async-connect-flash";
 
 const app = express();
 
@@ -22,7 +23,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 //TODO: ADD BUNDLER
-app.use("/vendor/zod", express.static(path.join(process.cwd(), "node_modules", "zod")));
+app.use(
+  "/vendor/zod",
+  express.static(path.join(process.cwd(), "node_modules", "zod")),
+);
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -36,6 +40,7 @@ app.use(
     rolling: false,
   }),
 );
+app.use(promiseConnectFlash());
 
 app.use(catchAllMiddleware);
 

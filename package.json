@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async-connect-flash": "^1.0.5",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.3.0",
     "connect-session-sequelize": "^8.0.6",
