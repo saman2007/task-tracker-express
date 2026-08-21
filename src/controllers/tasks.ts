@@ -44,10 +44,10 @@ export const deleteTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   try {
-    await req.user!.removeTask(+id);
+    await Task.deleteTask(+id, req.user!.id);
 
     res.redirect("/tasks");
-  } catch {
+  } catch (e) {
     res.redirect("/404");
   }
 };
