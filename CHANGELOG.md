@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-08-21
+
+### Added
+- Implemented secure user registration (`/signup`), login (`/signin`) and log out.
+- Added authorization to some routes.
+- Added relations between `User` and `Task` models.
+- Added responsive landing page (`/`).
+- Added interactive user avatar dropdown in navigation header with user profile details and logout action.
+- Updated `seed.sql` with 2 test users and 12 sample tasks (7 for user 1, 5 for user 2).
+- Enhanced seed runner script (`src/scripts/seed.ts`) to handle model associations and multi-statement SQL execution.
+- Added `SESSION_SECRET` as a required env to `.env.example` with explanations.
+
+### Changed
+- Moved Dashboard route from `GET /` to `GET /dashboard`.
+- Updated the way of getting, updating, editing and deleting tasks.
+- Updated `README.md`.
+
 ## [2.0.0] - 2026-08-06
 
 ### Added
