@@ -30,6 +30,9 @@ html(lang="en", dir="ltr")
                     p.profile-user-name #{currentUser.fullname}
                     p.profile-user-email #{currentUser.email}
                   .profile-dropdown-divider
+                a.profile-dropdown-item(href="/tasks/add")
+                  span.dropdown-icon ➕
+                  span Add Task
                 a.profile-dropdown-item(href="#settings")
                   span.dropdown-icon ⚙️
                   span Settings

@@ -2,6 +2,14 @@
    Dashboard Specific Styles
    =================================== */
 
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
 /* Stat Cards Grid */
 .stats-grid {
     display: grid;

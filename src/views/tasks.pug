@@ -9,6 +9,8 @@ block content
     .header-content
       h1 All Tasks
       p Manage, filter, and track all your ongoing and completed tasks.
+    a.btn-primary(href="/tasks/add")
+      span + Add Task
 
   .filter-bar
     a.filter-btn(href="/tasks", class=!currentFilter || currentFilter === '3' ? 'active' : '')

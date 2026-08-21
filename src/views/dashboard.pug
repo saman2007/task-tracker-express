@@ -6,9 +6,12 @@ block head-tags
   link(rel="stylesheet", href="/css/tasks.css")
 
 block content
-  .page-header
-    h1 Welcome Back! 👋
-    p Here is an overview of your current activities and progress.
+  .page-header.dashboard-header
+    .header-content
+      h1 Welcome Back! 👋
+      p Here is an overview of your current activities and progress.
+    a.btn-primary(href="/tasks/add")
+      span + Add Task
 
   .stats-grid
     .stat-card
