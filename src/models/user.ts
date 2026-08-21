@@ -1,11 +1,22 @@
 import {
   CreationOptional,
+  HasManyAddAssociationMixin,
+  HasManyAddAssociationsMixin,
+  HasManyCountAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  HasManyGetAssociationsMixin,
+  HasManyHasAssociationMixin,
+  HasManyHasAssociationsMixin,
+  HasManyRemoveAssociationMixin,
+  HasManyRemoveAssociationsMixin,
+  HasManySetAssociationsMixin,
   InferAttributes,
   InferCreationAttributes,
   Model,
   DataTypes as t,
 } from "sequelize";
 import { sequelize } from "../utils/db";
+import Task from "./task";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
@@ -14,6 +25,17 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare password: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare getTasks: HasManyGetAssociationsMixin<Task>;
+  declare addTask: HasManyAddAssociationMixin<Task, number>;
+  declare addTasks: HasManyAddAssociationsMixin<Task, number>;
+  declare setTasks: HasManySetAssociationsMixin<Task, number>;
+  declare removeTask: HasManyRemoveAssociationMixin<Task, number>;
+  declare removeTasks: HasManyRemoveAssociationsMixin<Task, number>;
+  declare hasTask: HasManyHasAssociationMixin<Task, number>;
+  declare hasTasks: HasManyHasAssociationsMixin<Task, number>;
+  declare countTasks: HasManyCountAssociationsMixin;
+  declare createTask: HasManyCreateAssociationMixin<Task, "userId">;
 }
 
 User.init(

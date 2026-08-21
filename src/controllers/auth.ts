@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 
-import User from "../models/user";
+import { User } from "../models/index";
 import { Controller } from "../types/types";
 import { signInSchema } from "../utils/validations/signInSchema.shared";
 import { signUpSchema } from "../utils/validations/signUpSchema.shared";

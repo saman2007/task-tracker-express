@@ -1,9 +1,9 @@
 import {
   CreationOptional,
+  ForeignKey,
   InferAttributes,
   InferCreationAttributes,
   Model,
-  NonAttribute,
   Op,
   DataTypes as t,
   Utils,
@@ -14,6 +14,7 @@ import { sequelize } from "../utils/db";
 import { TasksStatistic } from "../types/interfaces";
 import { PRIORITY_FILTERS } from "../utils/constants";
 import { getFormattedDate, getFormattedTime } from "../utils/utils";
+import User from "./user";
 
 export type SequelizeExpression = Utils.Literal | Utils.Fn | Utils.Col;
 export type UpdateTaskInput = {
@@ -32,13 +33,12 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   declare updatedAt: CreationOptional<Date>;
   declare createdDate: string;
   declare createdTime: string;
+  declare userId: ForeignKey<User["id"]>;
 
-  public static async getTasksStatistic(): Promise<
-    NonAttribute<TasksStatistic>
-  > {
-    const totalTasks = await Task.count();
-    const totalPendingTasks = await Task.count({
-      where: { isCompleted: { [Op.eq]: false } },
+  public static async getTasksStatistic(user: User): Promise<TasksStatistic> {
+    const totalTasks = await user.countTasks();
+    const totalPendingTasks = await user.countTasks({
+      where: { isCompleted: 0 },
     });
 
     return {
@@ -49,6 +49,7 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   }
 
   public static async getTasks(
+    user: User,
     priorityFilter?: string | number,
   ): Promise<Task[]> {
     const priorityNumber =
@@ -64,21 +65,21 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
     let tasks: Task[];
 
     if (priority) {
-      tasks = await Task.findAll({
+      tasks = await user.getTasks({
         where: {
           priority: { [Op.eq]: priority },
         },
         order: [["createdAt", "DESC"]],
       });
     } else {
-      tasks = await Task.findAll({ order: [["createdAt", "DESC"]] });
+      tasks = await user.getTasks({ order: [["createdAt", "DESC"]] });
     }
 
     return tasks;
   }
 
-  public static async getNewestTasks(): Promise<Task[]> {
-    const newestTasks = await Task.findAll({
+  public static async getNewestTasks(user: User): Promise<Task[]> {
+    const newestTasks = await user.getTasks({
       limit: 3,
       order: [["createdAt", "DESC"]],
     });
@@ -86,27 +87,35 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
     return newestTasks;
   }
 
-  public static async toggleTask(id: number): Promise<void> {
-    await Task.updateTask(id, {
-      isCompleted: sequelize.literal("NOT isCompleted"),
-    });
+  public static async toggleTask(id: number, userId: number): Promise<void> {
+    await Task.updateTask(
+      id,
+      {
+        isCompleted: sequelize.literal("NOT isCompleted"),
+      },
+      userId,
+    );
   }
 
-  public static async getTask(id: number): Promise<Task | null> {
-    const task = await Task.findOne({ where: { id } });
+  public static async getTask(
+    id: number,
+    userId: number,
+  ): Promise<Task | null> {
+    const task = await Task.findOne({ where: { id, userId } });
 
     return task;
   }
 
-  public static async deleteTask(id: number): Promise<void> {
-    await Task.destroy({ where: { id: +id } });
+  public static async deleteTask(id: number, userId: number): Promise<void> {
+    await Task.destroy({ where: { id, userId } });
   }
 
   public static async updateTask(
     id: number,
     data: UpdateTaskInput,
+    userId: number,
   ): Promise<void> {
-    await Task.update(data, { where: { id } });
+    await Task.update(data, { where: { id, userId } });
   }
 }
 

@@ -1,4 +1,4 @@
-import Task from "../models/task";
+import { Task } from "../models/index";
 import { Controller, CreateTaskInput } from "../types/types";
 import { PRIORITY_FILTERS } from "../utils/constants";
 
@@ -9,7 +9,7 @@ export const tasksGetController: Controller = async (req, res) => {
     return res.redirect("/404");
   }
 
-  const tasks = await Task.getTasks(priority);
+  const tasks = await Task.getTasks(req.user!, priority);
 
   res.render("tasks", {
     pageTitle: "All Tasks",
@@ -23,7 +23,7 @@ export const addTaskGetController: Controller = (_, res) => {
 };
 
 export const addTaskPostController: Controller = async (req, res) => {
-  await Task.create(req.body as CreateTaskInput);
+  await req.user!.createTask(req.body as CreateTaskInput);
 
   res.redirect("/tasks");
 };
@@ -32,7 +32,7 @@ export const toggleTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   try {
-    await Task.toggleTask(+id);
+    await Task.toggleTask(+id, req.user!.id);
 
     res.redirect(req.header("referer") || "/tasks");
   } catch (error) {
@@ -44,7 +44,7 @@ export const deleteTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   try {
-    await Task.deleteTask(+id);
+    await req.user!.removeTask(+id);
 
     res.redirect("/tasks");
   } catch {
@@ -56,7 +56,7 @@ export const taskDetailsGetController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   try {
-    const task = await Task.getTask(+id);
+    const task = await Task.getTask(+id, req.user!.id);
 
     if (!task) throw new Error();
 
@@ -73,7 +73,7 @@ export const editTaskGetController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   try {
-    const task = await Task.getTask(+id);
+    const task = await Task.getTask(+id, req.user!.id);
 
     if (!task) throw new Error();
 
@@ -91,7 +91,7 @@ export const editTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
   try {
-    await Task.updateTask(+id, req.body as CreateTaskInput);
+    await Task.updateTask(+id, req.body as CreateTaskInput, req.user!.id);
 
     res.redirect(`/tasks/${id}`);
   } catch (e) {
