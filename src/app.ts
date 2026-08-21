@@ -29,7 +29,7 @@ app.use(
 );
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET.split("-"),
     // 30 days
     cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
     resave: false,
