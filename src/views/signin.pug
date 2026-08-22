@@ -8,7 +8,7 @@ block head-tags
         "zod": "/vendor/zod/index.js"
       }
     }
-  script(type="module", src="/js/auth-validation.js")
+  script(type="module", src="/js/auth-validation.js")  
 
 block content
   .auth-container
@@ -18,13 +18,15 @@ block content
         h1 Welcome Back
         p Sign in to your account to continue managing your tasks.
 
-      if error && error.length > 0
-        .auth-flash-banner
-          svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
-            circle(cx="12", cy="12", r="10")
-            line(x1="12", y1="8", x2="12", y2="12")
-            line(x1="12", y1="16", x2="12.01", y2="16")
-          span.flash-message #{Array.isArray(error) ? error[0] : error}
+      if errors && errors.length > 0
+        div.flash-container
+          each error in errors
+            .auth-flash-banner
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
 
       form.auth-form(action="/signin", method="POST", novalidate=true)
         .form-group
@@ -36,7 +38,8 @@ block content
               name="email", 
               required=true, 
               placeholder="alex@example.com", 
-              autocomplete="email"
+              autocomplete="email",
+              value=oldInputs ? oldInputs.email : ""
             )
 
         .form-group
@@ -49,6 +52,7 @@ block content
               required=true, 
               placeholder="••••••••", 
               autocomplete="current-password"
+              value=oldInputs ? oldInputs.password : ""
             )
 
         .auth-options

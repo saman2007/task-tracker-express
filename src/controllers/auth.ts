@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import * as z from "zod";
 
 import { User } from "../models/index";
 import { Controller } from "../types/types";
@@ -12,9 +13,14 @@ import {
 } from "../utils/validations/signUpSchema.shared";
 
 export const signInGetController: Controller = async (req, res) => {
-  const error = await req.getFlash("error");
+  const [errors, oldInputs] = await Promise.all([
+    req.getFlash("errors"),
+    req.getFlash("oldInputs"),
+  ]);
 
-  res.render("signin", { pageTitle: "Sign In", error });
+  console.log(errors, oldInputs);
+
+  res.render("signin", { pageTitle: "Sign In", errors, oldInputs });
 };
 
 export const signInPostController: Controller = async (req, res, next) => {
@@ -23,9 +29,19 @@ export const signInPostController: Controller = async (req, res, next) => {
   try {
     userData = await signInSchema.parseAsync(req.body);
   } catch (error) {
-    await req.setFlash("error", "Wrong data sent.");
+    if (error instanceof z.ZodError) {
+      await Promise.all([
+        req.setFlash(
+          "errors",
+          error.issues.map(({ message }) => message),
+        ),
+        req.setFlash("oldInputs", req.body),
+      ]);
 
-    return res.redirect("/signin");
+      return res.redirect("/signin");
+    } else {
+      return next(error);
+    }
   }
 
   const user = await User.findOne({
@@ -33,7 +49,7 @@ export const signInPostController: Controller = async (req, res, next) => {
   });
 
   if (!user) {
-    await req.setFlash("error", "Email or password are incorrect.");
+    await req.setFlash("errors", ["Email or password are incorrect."]);
 
     return res.redirect("/signin");
   }
@@ -41,7 +57,7 @@ export const signInPostController: Controller = async (req, res, next) => {
   const isMatch = await bcrypt.compare(userData.password, user.password);
 
   if (!isMatch) {
-    await req.setFlash("error", "Email or password are incorrect.");
+    await req.setFlash("errors", ["Email or password are incorrect."]);
 
     return res.redirect("/signin");
   }
@@ -58,9 +74,14 @@ export const signInPostController: Controller = async (req, res, next) => {
 };
 
 export const signUpGetController: Controller = async (req, res) => {
-  const error = await req.getFlash("error");
+  const [errors, oldInputs] = await Promise.all([
+    req.getFlash("errors"),
+    req.getFlash("oldInputs"),
+  ]);
 
-  res.render("signup", { pageTitle: "Sign Up", error });
+  console.log(errors, oldInputs);
+
+  res.render("signup", { pageTitle: "Sign Up", errors, oldInputs });
 };
 
 export const signUpPostController: Controller = async (req, res, next) => {
@@ -69,9 +90,19 @@ export const signUpPostController: Controller = async (req, res, next) => {
   try {
     userData = await signUpSchema.parseAsync(req.body);
   } catch (error) {
-    await req.setFlash("error", "Wrong data sent.");
+    if (error instanceof z.ZodError) {
+      await Promise.all([
+        req.setFlash(
+          "errors",
+          error.issues.map(({ message }) => message),
+        ),
+        req.setFlash("oldInputs", req.body),
+      ]);
 
-    return res.redirect("/signup");
+      return res.redirect("/signup");
+    } else {
+      return next(error);
+    }
   }
 
   const userExists = !!(await User.findOne({
@@ -79,7 +110,10 @@ export const signUpPostController: Controller = async (req, res, next) => {
   }));
 
   if (userExists) {
-    await req.setFlash("error", "A user with this email already exists.");
+    await Promise.all([
+      req.setFlash("oldInputs", req.body),
+      req.setFlash("errors", ["A user with this email already exists."]),
+    ]);
 
     return res.redirect("/signup");
   }

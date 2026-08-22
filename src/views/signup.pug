@@ -18,13 +18,15 @@ block content
         h1 Create an Account
         p Join TaskTracker today to organize your tasks and boost productivity.
 
-      if error && error.length > 0
-        .auth-flash-banner
-          svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
-            circle(cx="12", cy="12", r="10")
-            line(x1="12", y1="8", x2="12", y2="12")
-            line(x1="12", y1="16", x2="12.01", y2="16")
-          span.flash-message #{Array.isArray(error) ? error[0] : error}
+      if errors && errors.length > 0
+        div.flash-container
+          each error in errors
+            .auth-flash-banner
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
 
       form.auth-form(action="/signup", method="POST", novalidate=true)
         .form-group
@@ -36,7 +38,8 @@ block content
               name="fullname", 
               required=true, 
               placeholder="Alex Johnson", 
-              autocomplete="name"
+              autocomplete="name",
+              value=oldInputs ? oldInputs.fullname : ""
             )
 
         .form-group
@@ -48,7 +51,8 @@ block content
               name="email", 
               required=true, 
               placeholder="alex@example.com", 
-              autocomplete="email"
+              autocomplete="email",
+              value=oldInputs ? oldInputs.email : ""
             )
 
         .form-row
@@ -61,7 +65,8 @@ block content
                 name="password", 
                 required=true, 
                 placeholder="••••••••", 
-                autocomplete="new-password"
+                autocomplete="new-password",
+                value=oldInputs ? oldInputs.password : ""
               )
           .form-group
             label(for="confirmPassword") Confirm Password
@@ -72,12 +77,13 @@ block content
                 name="confirmPassword", 
                 required=true, 
                 placeholder="••••••••", 
-                autocomplete="new-password"
+                autocomplete="new-password",
+                value=oldInputs ? oldInputs.confirmPassword : ""
               )
 
-        .auth-options
-          label.checkbox-label
-            input(type="checkbox", name="agreeTerms", required)
+        .form-group.auth-options
+          label.checkbox-label(for="agreeTerms")
+            input#agreeTerms(type="checkbox", name="agreeTerms", required, value="true", checked=oldInputs && !!oldInputs.agreeTerms)
             span I agree to the 
               a.auth-link(href="#") Terms
               |  &amp; 

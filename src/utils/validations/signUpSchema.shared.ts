@@ -13,7 +13,13 @@ export const signUpSchema = z
       .regex(/[0-9]/, {
         error: "Password must contain at least one number.",
       }),
-    confirmPassword: z.string(),
+    confirmPassword: z
+      .string()
+      .min(1, { message: "Please confirm your password." }),
+    agreeTerms: z.literal(
+      "true",
+      "You must agree to the terms and privacy policy.",
+    ),
   })
   .refine((data) => data.password === data.confirmPassword, {
     error: "Passwords don't match.",
