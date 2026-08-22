@@ -1,31 +1,94 @@
+```
 # Dependencies
 node_modules/
 
-# TypeScript build output
-dist/
-build/
-
-# Application data files
-src/data/*.json
-!src/data/tasks.example.json
-
 # Environment variables
 .env
-.env.local
-.env.development
-.env.production
+
+# Build artifacts
+*.js.map
+*.ts.map
+*.mjs.map
+*.cjs.map
+*.cts.map
+*.mts.map
+*.json.map
+*.d.ts
+*.d.cts
+*.d.mts
+*.min.js
+*.min.css
+*.bundle.js
+*.bundle.css
+dist/
+build/
+target/
+out/
+coverage/
+.nyc_output/
+.tmp/
+temp/
 
 # Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.python-version
+
+# Node.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 
-# OS and Editor files
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
-# Cache
-.cache/
+# Compression
+*.zip
+*.tar
+*.gz
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+
+# Sensitive files
+config/
+credentials/
+secrets/
+```

@@ -15,28 +15,23 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 3.5rem;
+    margin-bottom: 3rem;
 }
 
 .stat-card {
     background: var(--card-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--border-color);
-    padding: 2rem;
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid var(--border-light);
+    padding: 1.75rem;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-glass);
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: all var(--transition-slow) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Left accent bar on stat cards for LTR layout */
 .stat-card::before {
     content: '';
     position: absolute;
@@ -45,7 +40,17 @@
     width: 4px;
     height: 100%;
     background: var(--primary);
-    border-radius: 20px 0 0 20px;
+    border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+    transition: width var(--transition-base);
+}
+
+.stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-card:hover::before {
+    width: 6px;
 }
 
 .stat-card.success::before {
@@ -57,17 +62,25 @@
 }
 
 .stat-title {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .stat-number {
-    font-size: 2.8rem;
+    font-size: 3rem;
     font-weight: 900;
     color: var(--text-main);
     margin-top: 0.5rem;
     line-height: 1;
+    letter-spacing: -0.02em;
+    transition: color var(--transition-base);
+}
+
+.stat-card:hover .stat-number {
+    color: var(--primary);
 }
 
 /* Recent Tasks Section Header */
@@ -76,20 +89,30 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
 }
 
 .recent-section-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
+    color: var(--text-main);
 }
 
 .view-all-link {
     color: var(--primary);
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all var(--transition-fast);
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
 }
 
 .view-all-link:hover {
-    text-decoration: underline;
+    background: var(--primary-lighter);
+    transform: translateX(4px);
 }
