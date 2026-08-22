@@ -18,8 +18,6 @@ export const signInGetController: Controller = async (req, res) => {
     req.getFlash("oldInputs"),
   ]);
 
-  console.log(errors, oldInputs);
-
   res.render("signin", { pageTitle: "Sign In", errors, oldInputs });
 };
 
@@ -78,8 +76,6 @@ export const signUpGetController: Controller = async (req, res) => {
     req.getFlash("errors"),
     req.getFlash("oldInputs"),
   ]);
-
-  console.log(errors, oldInputs);
 
   res.render("signup", { pageTitle: "Sign Up", errors, oldInputs });
 };
