@@ -1,7 +1,7 @@
 import path from "path";
 
 import bodyParser from "body-parser";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import ConnectSessionSequelize from "connect-session-sequelize";
 
@@ -50,6 +50,14 @@ app.use(dashboardRouter);
 app.use(tasksRouter);
 app.use(notFoundRouter);
 
+app.use((err: any, _: Request, res: Response, next: NextFunction) => {
+  console.log("ERROR:", err);
+
+  if (res.headersSent) return next(err);
+
+  res.status(500).render("500", { pageTitle: "Error" });
+});
+
 console.log("Syncing DB...");
 
 sequelize
@@ -67,4 +75,6 @@ sequelize
   })
   .catch((err) => {
     console.log("Failed to sync DB. Error:", err);
+
+    process.exit(1);
   });

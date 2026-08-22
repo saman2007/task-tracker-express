@@ -12,6 +12,6 @@ export const privateRoute: Controller = (req, res, next) => {
   if (req.user) {
     next();
   } else {
-    res.redirect("/404");
+    res.redirect("/signin");
   }
 };

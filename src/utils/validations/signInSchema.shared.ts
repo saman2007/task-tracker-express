@@ -6,3 +6,5 @@ export const signInSchema = z
     password: z.string().min(1, { error: "Password is required." }),
   })
   .required();
+
+export type SignInSchemaData = z.infer<typeof signInSchema>;

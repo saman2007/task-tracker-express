@@ -114,8 +114,8 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
     id: number,
     data: UpdateTaskInput,
     userId: number,
-  ): Promise<void> {
-    await Task.update(data, { where: { id, userId } });
+  ): Promise<number> {
+    return (await Task.update(data, { where: { id, userId } }))[0];
   }
 }
 

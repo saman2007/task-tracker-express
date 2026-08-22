@@ -31,70 +31,66 @@ export const addTaskPostController: Controller = async (req, res) => {
 export const toggleTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
-  try {
-    await Task.toggleTask(+id, req.user!.id);
+  if (!+id) return res.redirect("/404");
 
-    res.redirect(req.header("referer") || "/tasks");
-  } catch (error) {
-    res.redirect("/404");
-  }
+  await Task.toggleTask(+id, req.user!.id);
+
+  res.redirect(req.header("referer") || "/tasks");
 };
 
 export const deleteTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
-  try {
-    await Task.deleteTask(+id, req.user!.id);
+  if (!+id) return res.redirect("/404");
 
-    res.redirect("/tasks");
-  } catch (e) {
-    res.redirect("/404");
-  }
+  await Task.deleteTask(+id, req.user!.id);
+
+  res.redirect("/tasks");
 };
 
 export const taskDetailsGetController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
-  try {
-    const task = await Task.getTask(+id, req.user!.id);
+  if (!+id) return res.redirect("/404");
 
-    if (!task) throw new Error();
+  const task = await Task.getTask(+id, req.user!.id);
 
-    res.render("task-detail", {
-      pageTitle: task.title,
-      task,
-    });
-  } catch (e) {
-    return res.redirect("/404");
-  }
+  if (!task) return res.redirect("/404");
+
+  res.render("task-detail", {
+    pageTitle: task.title,
+    task,
+  });
 };
 
 export const editTaskGetController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
-  try {
-    const task = await Task.getTask(+id, req.user!.id);
+  if (!+id) return res.redirect("/404");
 
-    if (!task) throw new Error();
+  const task = await Task.getTask(+id, req.user!.id);
 
-    res.render("add-task", {
-      pageTitle: "Edit Task",
-      task,
-      editing: true,
-    });
-  } catch (error) {
-    res.redirect("/404");
-  }
+  if (!task) return res.redirect("/404");
+
+  res.render("add-task", {
+    pageTitle: "Edit Task",
+    task,
+    editing: true,
+  });
 };
 
 export const editTaskPostController: Controller = async (req, res) => {
   const id = req.params.id as string;
 
-  try {
-    await Task.updateTask(+id, req.body as CreateTaskInput, req.user!.id);
+  if (!+id) return res.redirect("/404");
 
-    res.redirect(`/tasks/${id}`);
-  } catch (e) {
-    res.redirect("/404");
-  }
+  const affectedNumber = await Task.updateTask(
+    +id,
+    req.body as CreateTaskInput,
+    req.user!.id,
+  );
+
+  if (affectedNumber === 0) return res.redirect("/404");
+
+  res.redirect(`/tasks/${id}`);
 };
