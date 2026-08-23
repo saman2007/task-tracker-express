@@ -31,8 +31,8 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   declare isCompleted: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
-  declare createdDate: string;
-  declare createdTime: string;
+  declare createdDate: CreationOptional<string>;
+  declare createdTime: CreationOptional<string>;
   declare userId: ForeignKey<User["id"]>;
 
   public static async getTasksStatistic(user: User): Promise<TasksStatistic> {
