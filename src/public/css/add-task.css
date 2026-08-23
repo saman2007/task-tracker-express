@@ -59,6 +59,38 @@
     font-size: 0.95rem;
 }
 
+/* Flash Error Banner */
+.flash-container {
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+    margin-bottom: 1.25rem;
+}
+
+.auth-flash-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 0.95rem;
+    background: rgba(254, 242, 242, 0.85);
+    border: 1px solid rgba(239, 68, 68, 0.28);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.06);
+    color: #991b1b;
+    font-size: 0.86rem;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.auth-flash-banner .flash-icon {
+    color: var(--priority-high);
+    flex-shrink: 0;
+}
+
+.auth-flash-banner .flash-message {
+    flex-grow: 1;
+}
+
 /* Input Fields */
 .form-group {
     margin-bottom: 1.6rem;
@@ -209,3 +241,21 @@ textarea.form-control {
     background: #ffffff;
     color: var(--text-main);
 }
+
+/* Validation Feedback */
+.form-control.is-invalid {
+    border-color: var(--priority-high) !important;
+    background: rgba(254, 242, 242, 0.75) !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.form-error-msg {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--priority-high);
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-top: 0.35rem;
+    line-height: 1.3;
+}

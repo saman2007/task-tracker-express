@@ -2,6 +2,13 @@ extends layouts/main-layout.pug
 
 block head-tags
   link(rel="stylesheet", href="/css/add-task.css")
+  script(type="importmap").
+    {
+      "imports": {
+        "zod": "/vendor/zod/index.js"
+      }
+    }
+  script(type="module", src="/js/task-validation.js")
 
 block content
   .form-container
@@ -11,36 +18,53 @@ block content
         h1 #{editing ? "Edit your Task" : "Create New Task"}
         p #{editing ? "Here you can edit your task" : "Add a new task to your workspace and stay organized."}
 
-      form(action=editing ? `/tasks/${task.id}/edit` : "/tasks/add", method="POST")
+      if errors && errors.length > 0
+        div.flash-container
+          each error in errors
+            .auth-flash-banner
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+      form.task-form(action=editing ? `/tasks/${task.id}/edit` : "/tasks/add", method="POST", novalidate=true)
         .form-group
           label(for="title") Task Title
           .input-wrapper
-            input#title.form-control(type="text", name="title", required=true, placeholder="e.g., Complete Node.js module", autocomplete="off", value=editing ? task.title : "")
+            input#title.form-control(
+              type="text", 
+              name="title", 
+              required=true, 
+              placeholder="e.g., Complete Node.js module", 
+              autocomplete="off", 
+              value=oldInputs ? oldInputs.title : (editing ? task.title : "")
+            )
 
         .form-group
           label(for="priority") Priority Level
           .priority-selector
             label.priority-option.low
-              input(type="radio", name="priority", value="LOW" checked=editing ? task.priority === "LOW" : false)
+              input(type="radio", name="priority", value="LOW", checked=oldInputs ? oldInputs.priority === "LOW" : (editing ? task.priority === "LOW" : false))
               span.priority-card
                 span.badge-icon 🌱
                 span.badge-text Low
             
             label.priority-option.medium
-              input(type="radio", name="priority", value="MEDIUM", checked=editing ? task.priority === "MEDIUM" : true)
+              input(type="radio", name="priority", value="MEDIUM", checked=oldInputs ? oldInputs.priority === "MEDIUM" : (editing ? task.priority === "MEDIUM" : true))
               span.priority-card
                 span.badge-icon ⚡
                 span.badge-text Medium
             
             label.priority-option.high
-              input(type="radio", name="priority", value="HIGH", checked=editing ? task.priority === "HIGH" : false)
+              input(type="radio", name="priority", value="HIGH", checked=oldInputs ? oldInputs.priority === "HIGH" : (editing ? task.priority === "HIGH" : false))
               span.priority-card
                 span.badge-icon 🔥
                 span.badge-text High
 
         .form-group
           label(for="note") Notes & Details
-          textarea#note.form-control(name="note", rows="4", placeholder="Add extra details, sub-tasks, or context here...") #{editing ? task.note : ""}
+          textarea#note.form-control(name="note", rows="4", placeholder="Add extra details, sub-tasks, or context here...") #{oldInputs ? oldInputs.note : (editing ? task.note : "")}
 
         .form-actions
           button.btn-primary(type="submit")

@@ -8,5 +8,3 @@ export const taskSchema = z.object({
   ),
   note: z.string().min(1, "You must enter a note for your task."),
 });
-
-export type TaskSchemaData = z.infer<typeof taskSchema>;
