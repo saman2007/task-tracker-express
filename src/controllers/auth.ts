@@ -1,5 +1,8 @@
+import path from "path";
+
 import bcrypt from "bcrypt";
 import * as z from "zod";
+import pug from "pug";
 
 import { User } from "../models/index";
 import { Controller } from "../types/types";
@@ -11,6 +14,7 @@ import {
   signUpSchema,
   SignUpSchemaData,
 } from "../utils/validations/signUpSchema.shared";
+import { sendEmail } from "../utils/smtp";
 
 export const signInGetController: Controller = async (req, res) => {
   const [errors, oldInputs] = await Promise.all([
@@ -118,6 +122,19 @@ export const signUpPostController: Controller = async (req, res, next) => {
     email: userData.email,
     fullname: userData.fullname,
     password: await bcrypt.hash(userData.password, 10),
+  });
+
+  sendEmail({
+    fromName: "TaskTracker",
+    to: userData.email,
+    subject: "Welcome to Task Tracker! 🎉",
+    html: pug.renderFile(
+      path.join(__dirname, "..", "views", "emails", "welcome.pug"),
+      {
+        fullname: userData.fullname,
+        actionUrl: `${process.env.DEPLOY_URL}/dashboard`,
+      },
+    ),
   });
 
   req.session.userId = user.id;
