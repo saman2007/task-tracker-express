@@ -28,7 +28,7 @@ block content
                 line(x1="12", y1="16", x2="12.01", y2="16")
               span.flash-message #{error}
 
-      form.auth-form(action="/signup", method="POST", novalidate=true)
+      form.auth-form(action="/signup", method="POST", novalidate=true, data-schema="signup")
         .form-group
           label(for="fullname") Full Name
           .form-input-wrap

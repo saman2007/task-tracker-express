@@ -1,6 +1,8 @@
 import express from "express";
 import {
-  logoutController,
+  logoutPostController,
+  resetPasswordGetController,
+  resetPasswordRequestGetController,
   signInGetController,
   signInPostController,
   signUpGetController,
@@ -14,7 +16,8 @@ authRouter.get("/signin", publicRoute, signInGetController);
 authRouter.post("/signin", publicRoute, signInPostController);
 authRouter.get("/signup", publicRoute, signUpGetController);
 authRouter.post("/signup", publicRoute, signUpPostController);
-authRouter.post("/logout", logoutController);
-authRouter.get("/logout", logoutController);
+authRouter.post("/logout", logoutPostController);
+authRouter.get("/reset-password", resetPasswordRequestGetController);
+authRouter.get("/reset-password/:token", resetPasswordGetController);
 
 export default authRouter;

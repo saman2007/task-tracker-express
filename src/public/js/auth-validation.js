@@ -2,18 +2,47 @@ document.addEventListener("DOMContentLoaded", async () => {
   const form = document.querySelector(".auth-form");
   if (!form) return;
 
-  const action = form.getAttribute("action");
+  const action = form.getAttribute("action") || "";
+  const pathname = window.location.pathname || "";
+  const schemaType = form.dataset.schema;
   let schema = null;
 
   try {
-    if (action === "/signin") {
-      const mod = await import("/js/validations/signInSchema.shared.js");
+    if (
+      schemaType === "set-new-password" ||
+      (!form.querySelector('[name="email"]') && form.querySelector('[name="confirmPassword"]')) ||
+      pathname.startsWith("/reset-password/") ||
+      action.startsWith("/reset-password/")
+    ) {
+      const mod = await import("/js/validations/setNewPasswordSchema.shared.js");
 
-      schema = mod.signInSchema;
-    } else if (action === "/signup") {
+      schema = mod.setNewPasswordSchema;
+    } else if (
+      schemaType === "reset-password" ||
+      (!form.querySelector('[name="password"]') && form.querySelector('[name="email"]')) ||
+      action === "/reset-password" ||
+      pathname === "/reset-password"
+    ) {
+      const mod = await import("/js/validations/resetPasswordSchema.shared.js");
+
+      schema = mod.resetPasswordSchema;
+    } else if (
+      schemaType === "signup" ||
+      form.querySelector('[name="fullname"]') ||
+      action === "/signup" ||
+      pathname === "/signup"
+    ) {
       const mod = await import("/js/validations/signUpSchema.shared.js");
 
       schema = mod.signUpSchema;
+    } else if (
+      schemaType === "signin" ||
+      action === "/signin" ||
+      pathname === "/signin"
+    ) {
+      const mod = await import("/js/validations/signInSchema.shared.js");
+
+      schema = mod.signInSchema;
     }
   } catch (err) {
     console.error("Failed to load validation schema:", err);

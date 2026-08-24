@@ -146,10 +146,18 @@ export const signUpPostController: Controller = async (req, res, next) => {
   });
 };
 
-export const logoutController: Controller = (req, res, next) => {
+export const logoutPostController: Controller = (req, res, next) => {
   req.session.destroy((err) => {
     if (err) return next(new Error(err));
 
     res.redirect("/");
   });
+};
+
+export const resetPasswordRequestGetController: Controller = (_, res) => {
+  res.render("reset-password", { pageTitle: "Password Reset Request" });
+};
+
+export const resetPasswordGetController: Controller = (_, res) => {
+  res.render("set-new-password", { pageTitle: "Reset Password" });
 };

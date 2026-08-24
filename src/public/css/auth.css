@@ -116,6 +116,16 @@
     flex-grow: 1;
 }
 
+.auth-flash-banner.success {
+    background: rgba(236, 253, 245, 0.9);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #065f46;
+}
+
+.auth-flash-banner.success .flash-icon {
+    color: #10b981;
+}
+
 /* Form Styles */
 .auth-form {
     display: flex;
@@ -199,7 +209,7 @@
     justify-content: space-between;
     font-size: 0.88rem;
     margin-top: -0.25rem;
-    width: fit-content;
+    width: 100%;
 }
 
 .checkbox-label {
