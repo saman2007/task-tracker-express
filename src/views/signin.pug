@@ -28,6 +28,15 @@ block content
                 line(x1="12", y1="16", x2="12.01", y2="16")
               span.flash-message #{error}
 
+      if success && success.length > 0
+        div.flash-container
+          each msg in success
+            .auth-flash-banner.success
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                path(d="M22 11.08V12a10 10 0 1 1-5.93-9.14")
+                polyline(points="22 4 12 14.01 9 11.01")
+              span.flash-message #{msg}
+
       form.auth-form(action="/signin", method="POST", novalidate=true, data-schema="signin")
         .form-group
           label(for="email") Email Address

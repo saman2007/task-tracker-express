@@ -23,6 +23,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare fullname: string;
   declare email: string;
   declare password: string;
+  declare resetPasswordToken: CreationOptional<string | null>;
+  declare resetPasswordExpiration: CreationOptional<Date | null>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -44,6 +46,8 @@ User.init(
     fullname: { type: t.STRING(255, false), allowNull: false },
     email: { type: t.STRING(255, false), unique: true, allowNull: false },
     password: { type: t.TEXT, allowNull: false },
+    resetPasswordToken: { type: t.TEXT, allowNull: true },
+    resetPasswordExpiration: { type: t.DATE, allowNull: true },
     createdAt: t.DATE,
     updatedAt: t.DATE,
   },
