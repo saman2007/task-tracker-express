@@ -47,11 +47,14 @@ block content
       .avatar-section-body
         .avatar-wrapper
           .avatar-preview#avatarPreview
-            span #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
+            if avatar
+              img(src=avatar, alt=currentUser && currentUser.fullname ? currentUser.fullname : "Avatar")
+            else
+              span #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
           button.avatar-edit-btn#avatarEditBtn(type="button", title="Change Profile Picture", aria-label="Change Profile Picture")
             svg(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.2", stroke-linecap="round", stroke-linejoin="round")
               path(d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z")
-          input#avatarInput(type="file", accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml", style="display: none;")
+          input#avatarInput(type="file", accept="image/png,image/jpeg,image/jpg", style="display: none;")
           form#avatarForm(action="/settings/avatar", method="POST", enctype="multipart/form-data", style="display: none;")
             input#avatarCroppedFile(type="file", name="avatar")
 
@@ -59,7 +62,7 @@ block content
           h3 Profile Photo
           p Click the pen icon to select and crop a new image for your profile avatar.
           .avatar-badge-list
-            span.avatar-badge JPG, PNG, WebP or GIF
+            span.avatar-badge JPG, JPEG, PNG
             span.avatar-badge Max 5MB
             span.avatar-badge Square / Circle Crop
 

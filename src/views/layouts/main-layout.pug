@@ -21,7 +21,11 @@ html(lang="en", dir="ltr")
             a.nav-link(href="/tasks") Tasks
             .profile-dropdown-container
               button.profile-btn#profileDropdownBtn(type="button", aria-expanded="false", aria-haspopup="true", title=currentUser && currentUser.fullname ? currentUser.fullname : "Profile")
-                span.profile-avatar #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
+                span.profile-avatar
+                  if avatar
+                    img(src=avatar, alt=currentUser && currentUser.fullname ? currentUser.fullname : "Avatar")
+                  else
+                    | #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
                 svg.profile-arrow(width="12", height="12", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round")
                   polyline(points="6 9 12 15 18 9")
               .profile-dropdown-menu#profileDropdownMenu

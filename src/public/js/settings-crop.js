@@ -66,11 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
   avatarInput.addEventListener("change", (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
+    // Validate image format (PNG, JPG, JPEG only)
+    const validTypes = ["image/jpeg", "image/png", "image/jpg"];
 
-    // Validate image format
-    const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
     if (!validTypes.includes(file.type)) {
-      showAvatarAlert("Please select a valid image file (JPG, PNG, WebP, GIF, SVG).", "error");
+      showAvatarAlert("Please select a valid image file (PNG, JPG, JPEG).", "error");
       avatarInput.value = "";
       return;
     }
@@ -283,21 +283,22 @@ document.addEventListener("DOMContentLoaded", () => {
       navAvatar.innerHTML = `<img src="${croppedDataUrl}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
     }
 
-    // Prepare and submit file form to backend
+    // Prepare and submit native form to backend
     outputCanvas.toBlob((blob) => {
-      if (blob && avatarCroppedFile) {
-        try {
-          const file = new File([blob], "avatar.png", { type: "image/png" });
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(file);
-          avatarCroppedFile.files = dataTransfer.files;
-        } catch (err) {
-          console.error("Failed to set avatar file to input:", err);
-        }
+      if (!blob) {
+        closeCropModal();
+        showAvatarAlert("Failed to process cropped image.", "error");
+        return;
+      }
+
+      if (avatarCroppedFile) {
+        const file = new File([blob], "avatar.png", { type: "image/png" });
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        avatarCroppedFile.files = dataTransfer.files;
       }
 
       closeCropModal();
-      showAvatarAlert("Profile picture cropped and submitted successfully!", "success");
 
       if (avatarForm) {
         avatarForm.submit();

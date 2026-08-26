@@ -8,6 +8,7 @@ build/
 # Application data files
 src/data/*.json
 !src/data/tasks.example.json
+src/public/uploads
 
 # Environment variables
 .env
