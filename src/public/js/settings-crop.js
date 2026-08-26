@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const avatarEditBtn = document.getElementById("avatarEditBtn");
   const avatarPreview = document.getElementById("avatarPreview");
   const avatarFlashContainer = document.getElementById("avatarFlashContainer");
+  const avatarForm = document.getElementById("avatarForm");
+  const avatarCroppedFile = document.getElementById("avatarCroppedFile");
 
   // Modal elements
   const cropModal = document.getElementById("cropModal");
@@ -272,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const croppedDataUrl = outputCanvas.toDataURL("image/png");
 
-    // Update avatar UI preview
+    // Update avatar UI preview immediately
     avatarPreview.innerHTML = `<img src="${croppedDataUrl}" alt="Profile Picture">`;
 
     // Also update navbar avatar
@@ -281,7 +283,25 @@ document.addEventListener("DOMContentLoaded", () => {
       navAvatar.innerHTML = `<img src="${croppedDataUrl}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
     }
 
-    closeCropModal();
-    showAvatarAlert("Profile picture preview updated successfully! (Ready to sync on backend)", "success");
+    // Prepare and submit file form to backend
+    outputCanvas.toBlob((blob) => {
+      if (blob && avatarCroppedFile) {
+        try {
+          const file = new File([blob], "avatar.png", { type: "image/png" });
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          avatarCroppedFile.files = dataTransfer.files;
+        } catch (err) {
+          console.error("Failed to set avatar file to input:", err);
+        }
+      }
+
+      closeCropModal();
+      showAvatarAlert("Profile picture cropped and submitted successfully!", "success");
+
+      if (avatarForm) {
+        avatarForm.submit();
+      }
+    }, "image/png");
   });
 });
