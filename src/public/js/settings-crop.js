@@ -272,21 +272,15 @@ document.addEventListener("DOMContentLoaded", () => {
       outputResolution
     );
 
-    const croppedDataUrl = outputCanvas.toDataURL("image/png");
-
-    // Update avatar UI preview immediately
-    avatarPreview.innerHTML = `<img src="${croppedDataUrl}" alt="Profile Picture">`;
-
-    // Also update navbar avatar
-    const navAvatar = document.querySelector(".profile-avatar");
-    if (navAvatar) {
-      navAvatar.innerHTML = `<img src="${croppedDataUrl}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-    }
+    // Indicate submitting state on the button
+    cropApplyBtn.disabled = true;
+    cropApplyBtn.innerHTML = `<span>Saving...</span>`;
 
     // Prepare and submit native form to backend
     outputCanvas.toBlob((blob) => {
       if (!blob) {
-        closeCropModal();
+        cropApplyBtn.disabled = false;
+        cropApplyBtn.innerHTML = `<span>Apply & Save Crop</span><span>&check;</span>`;
         showAvatarAlert("Failed to process cropped image.", "error");
         return;
       }
@@ -297,8 +291,6 @@ document.addEventListener("DOMContentLoaded", () => {
         dataTransfer.items.add(file);
         avatarCroppedFile.files = dataTransfer.files;
       }
-
-      closeCropModal();
 
       if (avatarForm) {
         avatarForm.submit();

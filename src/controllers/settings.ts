@@ -88,3 +88,26 @@ export const uploadAvatarPostController: Controller = (req, res, next) => {
     }
   });
 };
+
+export const removeAvatarPostController: Controller = async (req, res) => {
+  if (req.user?.profileUrl) {
+    try {
+      const filePath = path.join(
+        process.cwd(),
+        "src",
+        "public",
+        req.user.profileUrl,
+      );
+
+      fs.access(filePath).then(() => fs.unlink(filePath));
+    } catch (error) {}
+  }
+
+  req.user!.profileUrl = null;
+
+  await req.user!.save();
+
+  await req.setFlash("avatarSuccess", ["Avatar removed successfully."]);
+
+  res.redirect("/settings");
+};

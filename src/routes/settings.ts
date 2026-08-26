@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  removeAvatarPostController,
   settingsGetController,
   uploadAvatarPostController,
 } from "../controllers/settings";
@@ -14,5 +15,6 @@ settingsRouter.post(
   privateRoute,
   uploadAvatarPostController,
 );
+settingsRouter.post("/settings/avatar/delete", removeAvatarPostController);
 
 export default settingsRouter;

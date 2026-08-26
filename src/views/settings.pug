@@ -54,6 +54,12 @@ block content
           button.avatar-edit-btn#avatarEditBtn(type="button", title="Change Profile Picture", aria-label="Change Profile Picture")
             svg(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.2", stroke-linecap="round", stroke-linejoin="round")
               path(d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z")
+          if avatar
+            form.avatar-delete-badge-form(action="/settings/avatar/delete", method="POST")
+              button.avatar-delete-btn(type="submit", title="Remove Profile Picture", aria-label="Remove Profile Picture", onclick="return confirm('Are you sure you want to remove your profile photo?');")
+                svg(width="15", height="15", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.2", stroke-linecap="round", stroke-linejoin="round")
+                  polyline(points="3 6 5 6 21 6")
+                  path(d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2")
           input#avatarInput(type="file", accept="image/png,image/jpeg,image/jpg", style="display: none;")
           form#avatarForm(action="/settings/avatar", method="POST", enctype="multipart/form-data", style="display: none;")
             input#avatarCroppedFile(type="file", name="avatar")
@@ -65,6 +71,14 @@ block content
             span.avatar-badge JPG, JPEG, PNG
             span.avatar-badge Max 5MB
             span.avatar-badge Square / Circle Crop
+          if avatar
+            .avatar-btn-row
+              form.avatar-delete-form(action="/settings/avatar/delete", method="POST")
+                button.btn-avatar-delete(type="submit", onclick="return confirm('Are you sure you want to remove your profile photo?');")
+                  svg(width="14", height="14", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                    polyline(points="3 6 5 6 21 6")
+                    path(d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2")
+                  span Remove Photo
 
     //- SECTION 2: PROFILE INFORMATION
     section.settings-card#profileInfoSection
