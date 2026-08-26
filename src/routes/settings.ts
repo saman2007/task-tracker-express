@@ -3,6 +3,7 @@ import express from "express";
 import {
   removeAvatarPostController,
   settingsGetController,
+  updatePasswordPostController,
   uploadAvatarPostController,
 } from "../controllers/settings";
 import { privateRoute } from "../middlewares/auth";
@@ -16,5 +17,6 @@ settingsRouter.post(
   uploadAvatarPostController,
 );
 settingsRouter.post("/settings/avatar/delete", removeAvatarPostController);
+settingsRouter.post("/settings/password", updatePasswordPostController);
 
 export default settingsRouter;

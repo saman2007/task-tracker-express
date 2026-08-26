@@ -3,20 +3,32 @@ import crypto from "crypto";
 import fs from "fs/promises";
 
 import multer from "multer";
+import * as z from "zod";
+import bcrypt from "bcrypt";
 
 import { Controller } from "../types/types";
+import {
+  updatePasswordSchema,
+  UpdatePasswordSchemaData,
+} from "../utils/validations/updatePasswordSchema.shared";
+import { hashPassword } from "../utils/utils";
 
 export const settingsGetController: Controller = async (req, res) => {
-  const [avatarErrors, avatarSuccess] = await Promise.all([
-    req.getFlash("avatarErrors"),
-    req.getFlash("avatarSuccess"),
-  ]);
+  const [avatarErrors, avatarSuccess, passwordErrors, passwordSuccess] =
+    await Promise.all([
+      req.getFlash("avatarErrors"),
+      req.getFlash("avatarSuccess"),
+      req.getFlash("passwordErrors"),
+      req.getFlash("passwordSuccess"),
+    ]);
 
   res.render("settings", {
     pageTitle: "Settings",
     currentUser: req.user,
     avatarErrors,
     avatarSuccess,
+    passwordErrors,
+    passwordSuccess,
   });
 };
 
@@ -110,4 +122,51 @@ export const removeAvatarPostController: Controller = async (req, res) => {
   await req.setFlash("avatarSuccess", ["Avatar removed successfully."]);
 
   res.redirect("/settings");
+};
+
+export const updatePasswordPostController: Controller = async (
+  req,
+  res,
+  next,
+) => {
+  let data: UpdatePasswordSchemaData;
+
+  try {
+    data = await updatePasswordSchema.parseAsync(req.body);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      await req.setFlash(
+        "passwordErrors",
+        error.issues.map(({ message }) => message),
+      );
+
+      return res.redirect(`/settings`);
+    } else {
+      return next(error);
+    }
+  }
+
+  const isMatch = await bcrypt.compare(
+    data.currentPassword,
+    req.user!.password,
+  );
+
+  if (!isMatch) {
+    console.log("test?!");
+    await req.setFlash("passwordErrors", [
+      "Your entered current password is incorrect.",
+    ]);
+
+    return res.redirect("/settings");
+  }
+
+  req.user!.password = await hashPassword(data.password);
+
+  await req.user!.save();
+
+  await req.setFlash("passwordSuccess", [
+    "Your password updated successfully.",
+  ]);
+
+  return res.redirect("/settings");
 };

@@ -24,6 +24,7 @@ import {
   setNewPasswordSchema,
   SetNewPasswordSchemaData,
 } from "../utils/validations/setNewPasswordSchema.shared";
+import { hashPassword } from "../utils/utils";
 
 export const signInGetController: Controller = async (req, res) => {
   const [errors, oldInputs, success] = await Promise.all([
@@ -131,7 +132,7 @@ export const signUpPostController: Controller = async (req, res, next) => {
   const user = await User.create({
     email: userData.email,
     fullname: userData.fullname,
-    password: await bcrypt.hash(userData.password, 10),
+    password: await hashPassword(userData.password),
   });
 
   sendEmail({
@@ -279,6 +280,7 @@ export const resetPasswordPostController: Controller = async (
 
   let data: SetNewPasswordSchemaData;
 
+  //TODO: refactor validation checks. Convert the checking logic to a separate middleware or something like that.
   try {
     data = await setNewPasswordSchema.parseAsync(req.body);
   } catch (error) {
@@ -322,7 +324,7 @@ export const resetPasswordPostController: Controller = async (
 
   user.resetPasswordExpiration = null;
   user.resetPasswordToken = null;
-  user.password = await bcrypt.hash(data.password, 10);
+  user.password = await hashPassword(data.password);
 
   await user.save();
 
