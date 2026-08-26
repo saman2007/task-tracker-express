@@ -1,0 +1,232 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/settings.css")
+  script(type="importmap").
+    {
+      "imports": {
+        "zod": "/vendor/zod/index.js"
+      }
+    }
+  script(src="/js/settings-crop.js")
+  script(type="module", src="/js/settings-validation.js")
+
+block content
+  .settings-container
+    .settings-header
+      h1 Account Settings
+      p Manage your personal details, profile image, and account security.
+
+    //- SECTION 1: PROFILE PICTURE
+    section.settings-card#profilePictureSection
+      .settings-card-header
+        .settings-card-icon 🖼️
+        .settings-card-title
+          h2 Profile Picture
+          p Update your avatar to personalize your account across the app.
+
+      //- Flash Messages for Section 1
+      div.flash-container#avatarFlashContainer
+        if avatarErrors && avatarErrors.length > 0
+          each error in avatarErrors
+            .auth-flash-banner
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+        if avatarSuccess && avatarSuccess.length > 0
+          each msg in avatarSuccess
+            .auth-flash-banner.success
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                path(d="M22 11.08V12a10 10 0 1 1-5.93-9.14")
+                polyline(points="22 4 12 14.01 9 11.01")
+              span.flash-message #{msg}
+
+      .avatar-section-body
+        .avatar-wrapper
+          .avatar-preview#avatarPreview
+            span #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
+          button.avatar-edit-btn#avatarEditBtn(type="button", title="Change Profile Picture", aria-label="Change Profile Picture")
+            svg(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.2", stroke-linecap="round", stroke-linejoin="round")
+              path(d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z")
+          input#avatarInput(type="file", accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml", style="display: none;")
+
+        .avatar-info
+          h3 Profile Photo
+          p Click the pen icon to select and crop a new image for your profile avatar.
+          .avatar-badge-list
+            span.avatar-badge JPG, PNG, WebP or GIF
+            span.avatar-badge Max 5MB
+            span.avatar-badge Square / Circle Crop
+
+    //- SECTION 2: PROFILE INFORMATION
+    section.settings-card#profileInfoSection
+      .settings-card-header
+        .settings-card-icon 👤
+        .settings-card-title
+          h2 Personal Information
+          p Update your displayed full name and associated email address.
+
+      //- Flash Messages for Section 2
+      div.flash-container
+        if profileErrors && profileErrors.length > 0
+          each error in profileErrors
+            .auth-flash-banner
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+        if profileSuccess && profileSuccess.length > 0
+          each msg in profileSuccess
+            .auth-flash-banner.success
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                path(d="M22 11.08V12a10 10 0 1 1-5.93-9.14")
+                polyline(points="22 4 12 14.01 9 11.01")
+              span.flash-message #{msg}
+
+      form.settings-form#profileInfoForm(action="/settings/profile", method="POST", novalidate=true)
+        .form-grid
+          .form-group
+            label(for="fullname") Full Name
+            .form-input-wrap
+              span.form-input-icon 👤
+              input#fullname.form-control(
+                type="text",
+                name="fullname",
+                required=true,
+                placeholder="e.g. Alex Morgan",
+                autocomplete="name",
+                value=currentUser ? currentUser.fullname : ""
+              )
+
+          .form-group
+            label(for="email") Email Address
+            .form-input-wrap
+              span.form-input-icon ✉️
+              input#email.form-control(
+                type="email",
+                name="email",
+                required=true,
+                placeholder="alex@example.com",
+                autocomplete="email",
+                value=currentUser ? currentUser.email : ""
+              )
+
+        .settings-form-actions
+          button.btn-primary.btn-settings-submit(type="submit")
+            span Save Profile
+            span.btn-arrow &rarr;
+
+    //- SECTION 3: PASSWORD & SECURITY
+    section.settings-card#passwordSection
+      .settings-card-header
+        .settings-card-icon 🔒
+        .settings-card-title
+          h2 Password & Security
+          p Ensure your account is using a strong and secure password.
+
+      //- Flash Messages for Section 3
+      div.flash-container
+        if passwordErrors && passwordErrors.length > 0
+          each error in passwordErrors
+            .auth-flash-banner
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+        if passwordSuccess && passwordSuccess.length > 0
+          each msg in passwordSuccess
+            .auth-flash-banner.success
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                path(d="M22 11.08V12a10 10 0 1 1-5.93-9.14")
+                polyline(points="22 4 12 14.01 9 11.01")
+              span.flash-message #{msg}
+
+      form.settings-form#passwordForm(action="/settings/password", method="POST", novalidate=true)
+        .form-group
+          label(for="currentPassword") Current Password
+          .form-input-wrap
+            span.form-input-icon 🔒
+            input#currentPassword.form-control(
+              type="password",
+              name="currentPassword",
+              required=true,
+              placeholder="Enter current password",
+              autocomplete="current-password"
+            )
+
+        .form-grid
+          .form-group
+            label(for="password") New Password
+            .form-input-wrap
+              span.form-input-icon 🔑
+              input#password.form-control(
+                type="password",
+                name="password",
+                required=true,
+                placeholder="Enter new password",
+                autocomplete="new-password"
+              )
+
+          .form-group
+            label(for="confirmPassword") Confirm New Password
+            .form-input-wrap
+              span.form-input-icon 🛡️
+              input#confirmPassword.form-control(
+                type="password",
+                name="confirmPassword",
+                required=true,
+                placeholder="Confirm new password",
+                autocomplete="new-password"
+              )
+
+        p.password-requirements
+          strong Tip: 
+          | Password must be at least 8 characters long and contain both letters and numbers.
+
+        .settings-form-actions
+          button.btn-primary.btn-settings-submit(type="submit")
+            span Update Password
+            span.btn-arrow &rarr;
+
+  //- INTERACTIVE IMAGE CROP MODAL
+  .crop-modal-overlay#cropModal(role="dialog", aria-modal="true", aria-labelledby="cropModalTitle")
+    .crop-modal-card
+      .crop-modal-header
+        h3#cropModalTitle
+          span ✂️
+          span Crop Profile Picture
+        button.crop-modal-close#cropModalClose(type="button", aria-label="Close Crop Modal") &times;
+
+      .crop-modal-body
+        .crop-stage-wrapper
+          .crop-stage#cropStage
+            img.crop-image-display#cropImage(src="", alt="Crop source")
+            .crop-box#cropBox
+              .crop-box-outline
+              .crop-box-circle-guide
+              .crop-handle.crop-handle-nw(data-handle="nw")
+              .crop-handle.crop-handle-ne(data-handle="ne")
+              .crop-handle.crop-handle-se(data-handle="se")
+              .crop-handle.crop-handle-sw(data-handle="sw")
+
+        .crop-controls
+          .crop-zoom-wrapper
+            span.crop-zoom-label
+              span 🔍
+              span Crop Area Size
+            input.crop-slider#cropSizeSlider(type="range", min="50", max="300", step="1", value="150", aria-label="Crop Area Size")
+
+      .crop-modal-footer
+        button.btn-secondary#cropCancelBtn(type="button") Cancel
+        button.btn-primary#cropApplyBtn(type="button")
+          span Apply & Save Crop
+          span &check;
+
+

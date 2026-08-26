@@ -12,6 +12,7 @@ import tasksRouter from "./routes/tasks";
 import { sequelize } from "./utils/db";
 import authRouter from "./routes/auth";
 import landingRouter from "./routes/landing";
+import settingsRouter from "./routes/settings";
 import { catchAllMiddleware } from "./middlewares/catchAll";
 import { promiseConnectFlash } from "async-connect-flash";
 
@@ -48,6 +49,7 @@ app.use(landingRouter);
 app.use(authRouter);
 app.use(dashboardRouter);
 app.use(tasksRouter);
+app.use(settingsRouter);
 app.use(notFoundRouter);
 
 app.use((err: any, _: Request, res: Response, next: NextFunction) => {
