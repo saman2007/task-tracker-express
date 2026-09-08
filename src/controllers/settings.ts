@@ -11,7 +11,7 @@ import {
   updatePasswordSchema,
   UpdatePasswordSchemaData,
 } from "../utils/validations/updatePasswordSchema.shared";
-import { hashPassword } from "../utils/utils";
+import { hashStr } from "../utils/utils";
 
 export const settingsGetController: Controller = async (req, res) => {
   const [avatarErrors, avatarSuccess, passwordErrors, passwordSuccess] =
@@ -160,7 +160,7 @@ export const updatePasswordPostController: Controller = async (
     return res.redirect("/settings");
   }
 
-  req.user!.password = await hashPassword(data.password);
+  req.user!.password = await hashStr(data.password);
 
   await req.user!.save();
 

@@ -15,7 +15,6 @@ import {
   signUpSchema,
   SignUpSchemaData,
 } from "../utils/validations/signUpSchema.shared";
-import { sendEmail } from "../utils/smtp";
 import {
   resetPasswordSchema,
   ResetPasswordSchemaData,
@@ -24,7 +23,8 @@ import {
   setNewPasswordSchema,
   SetNewPasswordSchemaData,
 } from "../utils/validations/setNewPasswordSchema.shared";
-import { hashPassword } from "../utils/utils";
+import { generateToken, hashStr } from "../utils/utils";
+import { sendWelcomeEmail } from "../utils/emailSenders";
 
 export const signInGetController: Controller = async (req, res) => {
   const [errors, oldInputs, success] = await Promise.all([
@@ -73,6 +73,16 @@ export const signInPostController: Controller = async (req, res, next) => {
     await req.setFlash("errors", ["Email or password are incorrect."]);
 
     return res.redirect("/signin");
+  }
+
+  if (!user.isAccountVerified) {
+    await req.setFlash("errors", [
+      "Your account isn't verified yet. Please check your inbox or request a new link.",
+    ]);
+
+    await req.setFlash("oldInputs", { email: user.email } as any);
+
+    return res.redirect(`/account/verify-account?email=${user.email}`);
   }
 
   req.session.cookie.maxAge =
@@ -129,32 +139,22 @@ export const signUpPostController: Controller = async (req, res, next) => {
     return res.redirect("/signup");
   }
 
+  const emailActionToken = await generateToken(32);
+
   const user = await User.create({
     email: userData.email,
     fullname: userData.fullname,
-    password: await hashPassword(userData.password),
+    password: await hashStr(userData.password),
+    emailActionToken: await hashStr(emailActionToken),
+    emailActionExp: new Date(Date.now() + 1000 * 60 * 60 * 24),
   });
 
-  sendEmail({
-    fromName: "TaskTracker",
-    to: userData.email,
-    subject: "Welcome to Task Tracker! 🎉",
-    html: pug.renderFile(
-      path.join(__dirname, "..", "views", "emails", "welcome.pug"),
-      {
-        fullname: userData.fullname,
-        actionUrl: `${process.env.DEPLOY_URL}/dashboard`,
-      },
-    ),
+  sendWelcomeEmail(user.email, {
+    fullname: user.fullname,
+    token: emailActionToken,
   });
 
-  req.session.userId = user.id;
-
-  req.session.save((err) => {
-    if (err) return next(new Error(err));
-
-    res.redirect("/dashboard");
-  });
+  res.redirect(`/account/verify-account?email=${user.email}&success=true`);
 };
 
 export const logoutPostController: Controller = (req, res, next) => {
@@ -229,19 +229,6 @@ export const resetPasswordRequestPostController: Controller = async (
     await req.setFlash("success", [
       "An email with reset password will be sent to you.",
     ]);
-
-    sendEmail({
-      fromName: "TaskTracker",
-      to: data.email,
-      subject: "Reset Password Link",
-      html: pug.renderFile(
-        path.join(__dirname, "..", "views", "emails", "reset-password.pug"),
-        {
-          resetUrl: process.env.DEPLOY_URL + `/reset-password/${token}`,
-          fullname: user.fullname,
-        },
-      ),
-    });
 
     res.redirect("/reset-password");
   });
@@ -324,7 +311,7 @@ export const resetPasswordPostController: Controller = async (
 
   user.resetPasswordExpiration = null;
   user.resetPasswordToken = null;
-  user.password = await hashPassword(data.password);
+  user.password = await hashStr(data.password);
 
   await user.save();
 

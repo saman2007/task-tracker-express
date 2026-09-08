@@ -1,0 +1,52 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/auth.css")
+
+block content
+  .auth-container
+    .auth-card
+      .auth-header
+        .auth-icon ✉️
+        h1 Verify Your Account
+        p Please verify your email address to activate your account.
+
+      if errors && errors.length > 0
+        div.flash-container
+          each error in errors
+            .auth-flash-banner
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+      if success && success.length > 0
+        div.flash-container
+          each msg in success
+            .auth-flash-banner.success
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                path(d="M22 11.08V12a10 10 0 1 1-5.93-9.14")
+                polyline(points="22 4 12 14.01 9 11.01")
+              span.flash-message #{msg}
+      if sentSuccess
+        div(style="background: rgba(99, 102, 241, 0.06); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.75rem; text-align: center;")
+          p(style="margin: 0 0 0.5rem 0; font-size: 0.95rem; color: var(--text-main); line-height: 1.5;")
+            | We've sent a verification link to your email
+            if email
+              | : #[strong(style="color: var(--primary); word-break: break-all;") #{email}]
+            | .
+          p(style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;")
+            | Please click the link in your email to complete your registration. If you don't see it, check your spam folder.
+
+      form.auth-form(action="/account/resend-verification", method="POST")
+        input(type="hidden", name="email", value=email)
+
+        button.btn-primary.btn-auth-submit(type="submit")
+          span Resend Verification Link
+          span.btn-arrow &rarr;
+
+      .auth-footer
+        p Already verified or want to sign in? 
+          a.auth-link(href="/signin") Back to Sign In
+

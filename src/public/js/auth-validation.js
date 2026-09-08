@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       schema = mod.setNewPasswordSchema;
     } else if (
       schemaType === "reset-password" ||
-      (!form.querySelector('[name="password"]') && form.querySelector('[name="email"]')) ||
+      (!form.querySelector('[name="password"]') && form.querySelector('[name="email"]') && (action === "/reset-password" || pathname === "/reset-password")) ||
       action === "/reset-password" ||
       pathname === "/reset-password"
     ) {

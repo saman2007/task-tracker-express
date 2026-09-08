@@ -9,7 +9,7 @@ export const publicRoute: Controller = (req, res, next) => {
 };
 
 export const privateRoute: Controller = (req, res, next) => {
-  if (req.user) {
+  if (req.user && req.user.isAccountVerified) {
     next();
   } else {
     res.redirect("/signin");

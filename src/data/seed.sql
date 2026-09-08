@@ -2,12 +2,13 @@
 -- Table: users
 -- Test Password for seeded users: Password123 (bcrypt hash: $2b$10$gq3Q9qlDOfB.TkuPReybIu55KNydMG5cdH2Wk3jQtzi0xaJ02vULm)
 
-INSERT INTO `users` (`id`, `fullname`, `email`, `password`, `createdAt`, `updatedAt`) VALUES
+INSERT INTO `users` (`id`, `fullname`, `email`, `password`, `isAccountVerified`, `createdAt`, `updatedAt`) VALUES
 (
   1,
   'Alex Morgan',
   'alex.morgan@example.com',
   '$2b$10$gq3Q9qlDOfB.TkuPReybIu55KNydMG5cdH2Wk3jQtzi0xaJ02vULm',
+  true,
   '2026-08-01 09:00:00',
   CURRENT_TIMESTAMP
 ),
@@ -16,6 +17,7 @@ INSERT INTO `users` (`id`, `fullname`, `email`, `password`, `createdAt`, `update
   'Sarah Connor',
   'sarah.connor@example.com',
   '$2b$10$gq3Q9qlDOfB.TkuPReybIu55KNydMG5cdH2Wk3jQtzi0xaJ02vULm',
+  true,
   '2026-08-01 09:30:00',
   CURRENT_TIMESTAMP
 );
