@@ -55,13 +55,13 @@ block content
             svg(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.2", stroke-linecap="round", stroke-linejoin="round")
               path(d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z")
           if avatar
-            form.avatar-delete-badge-form(action="/settings/avatar/delete", method="POST")
+            form.avatar-delete-badge-form(action="/settings/delete-avatar", method="POST")
               button.avatar-delete-btn(type="submit", title="Remove Profile Picture", aria-label="Remove Profile Picture", onclick="return confirm('Are you sure you want to remove your profile photo?');")
                 svg(width="15", height="15", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.2", stroke-linecap="round", stroke-linejoin="round")
                   polyline(points="3 6 5 6 21 6")
                   path(d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2")
           input#avatarInput(type="file", accept="image/png,image/jpeg,image/jpg", style="display: none;")
-          form#avatarForm(action="/settings/avatar", method="POST", enctype="multipart/form-data", style="display: none;")
+          form#avatarForm(action="/settings/update-avatar", method="POST", enctype="multipart/form-data", style="display: none;")
             input#avatarCroppedFile(type="file", name="avatar")
 
         .avatar-info
@@ -73,7 +73,7 @@ block content
             span.avatar-badge Square / Circle Crop
           if avatar
             .avatar-btn-row
-              form.avatar-delete-form(action="/settings/avatar/delete", method="POST")
+              form.avatar-delete-form(action="/settings/delete-avatar", method="POST")
                 button.btn-avatar-delete(type="submit", onclick="return confirm('Are you sure you want to remove your profile photo?');")
                   svg(width="14", height="14", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
                     polyline(points="3 6 5 6 21 6")
@@ -107,7 +107,7 @@ block content
                 polyline(points="22 4 12 14.01 9 11.01")
               span.flash-message #{msg}
 
-      form.settings-form#profileInfoForm(action="/settings/profile", method="POST", novalidate=true)
+      form.settings-form#profileInfoForm(action="/settings/update-profile", method="POST", novalidate=true)
         .form-grid
           .form-group
             label(for="fullname") Full Name
@@ -167,7 +167,7 @@ block content
                 polyline(points="22 4 12 14.01 9 11.01")
               span.flash-message #{msg}
 
-      form.settings-form#passwordForm(action="/settings/password", method="POST", novalidate=true)
+      form.settings-form#passwordForm(action="/settings/update-password", method="POST", novalidate=true)
         .form-group
           label(for="currentPassword") Current Password
           .form-input-wrap

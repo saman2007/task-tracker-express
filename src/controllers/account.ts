@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
+import * as z from "zod";
 
 import { User } from "../models";
 import { Controller } from "../types/types";
 import { generateToken, hashStr } from "../utils/utils";
 import { sendAccountVerifyLinkEmail } from "../utils/emailSenders";
-import { verifyAccountSchema } from "../utils/validations/verifyAccountSchema.shared";
 
 export const verifyAccountGetController: Controller = async (req, res) => {
   const token = req.query.token as string;
@@ -14,7 +14,7 @@ export const verifyAccountGetController: Controller = async (req, res) => {
     return res.redirect("/404");
   }
 
-  if (!verifyAccountSchema.safeParse({ email }).success) {
+  if (!z.email().safeParse(email).success) {
     return res.redirect("/404");
   }
 
@@ -76,13 +76,13 @@ export const resendVerificationPostController: Controller = async (
   req,
   res,
 ) => {
-  const result = verifyAccountSchema.safeParse(req.body);
+  const result = z.email().safeParse(req.body.email as string);
 
   if (!result.success) {
     return res.redirect("/404");
   }
 
-  const { email } = result.data;
+  const email = result.data;
 
   const token = await generateToken(32);
 
@@ -114,4 +114,63 @@ export const resendVerificationPostController: Controller = async (
   sendAccountVerifyLinkEmail(email, { token });
 
   res.redirect(`/account/verify-account?success=true&email=${email}`);
+};
+
+export const changeEmailPostController: Controller = async (req, res) => {
+  const result = z.email().safeParse(req.query.email);
+
+  if (!result.success) {
+    await req.setFlash(
+      "profileErrors",
+      result.error.issues.map(({ message }) => message),
+    );
+
+    return res.redirect("/settings");
+  }
+
+  const email = req.query.email as string;
+  const token = req.query.token as string;
+
+  if (email !== req.user!.email) {
+    await req.setFlash("profileErrors", [
+      "You must log in to the account that you want to change its email and then open change email verification link.",
+    ]);
+
+    return res.redirect("/settings");
+  }
+
+  const hashedToken = req.user!.emailActionToken;
+
+  if (!hashedToken || !token || !(await bcrypt.compare(token, hashedToken))) {
+    await req.setFlash("profileErrors", ["Invalid token passed."]);
+
+    return res.redirect("/settings");
+  }
+
+  if (req.user!.emailActionExp! < new Date()) {
+    await req.setFlash("profileErrors", [
+      "Token is expired. Change your email again and then update your profile to get a new verify email.",
+    ]);
+
+    req.user!.newEmail = null;
+    req.user!.emailActionToken = null;
+    req.user!.emailActionExp = null;
+
+    await req.user!.save();
+
+    return res.redirect("/settings");
+  }
+
+  req.user!.email = req.user!.newEmail!;
+  req.user!.emailActionToken = null;
+  req.user!.emailActionExp = null;
+  req.user!.newEmail = null;
+
+  await req.user!.save();
+
+  await req.setFlash("profileSuccess", [
+    "Your accounts email changed successfully!",
+  ]);
+
+  return res.redirect("/settings");
 };

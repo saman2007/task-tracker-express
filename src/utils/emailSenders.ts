@@ -46,3 +46,23 @@ export const sendWelcomeEmail: EmailSender<{
     ),
   });
 };
+
+export const sendChangeEmailLink: EmailSender<{
+  token: string;
+  fullname: string;
+  email: string;
+}> = (to, { token, fullname, email }) => {
+  sendEmail({
+    fromName: "TaskTracker",
+    to,
+    subject: "Confirm your new email address",
+    html: pug.renderFile(
+      path.join(__dirname, "..", "views", "emails", "change-email.pug"),
+      {
+        fullname,
+        changeEmailUrl: `${process.env.DEPLOY_URL}/account/change-email?token=${token}&email=${email}`,
+        expiresIn: "1 hour",
+      },
+    ),
+  });
+};

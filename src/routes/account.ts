@@ -1,9 +1,11 @@
 import express from "express";
+
 import {
+  changeEmailPostController,
   resendVerificationPostController,
   verifyAccountGetController,
 } from "../controllers/account";
-import { publicRoute } from "../middlewares/auth";
+import { privateRoute, publicRoute } from "../middlewares/auth";
 
 const accountRouter = express.Router();
 
@@ -16,6 +18,11 @@ accountRouter.post(
   "/account/resend-verification",
   publicRoute,
   resendVerificationPostController,
+);
+accountRouter.get(
+  "/account/change-email",
+  privateRoute,
+  changeEmailPostController,
 );
 
 export default accountRouter;

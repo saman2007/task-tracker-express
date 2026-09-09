@@ -18,8 +18,8 @@ export const getFormattedTime = (date: Date): string => {
   });
 };
 
-export const hashStr = (password: string) => {
-  return bcrypt.hash(password, 10);
+export const hashStr = (str: string) => {
+  return bcrypt.hash(str, 10);
 };
 
 export const generateToken = (bytes: number): Promise<string> => {

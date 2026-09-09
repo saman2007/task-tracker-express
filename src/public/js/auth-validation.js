@@ -10,22 +10,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     if (
       schemaType === "set-new-password" ||
-      (!form.querySelector('[name="email"]') && form.querySelector('[name="confirmPassword"]')) ||
+      (!form.querySelector('[name="email"]') &&
+        form.querySelector('[name="confirmPassword"]')) ||
       pathname.startsWith("/reset-password/") ||
       action.startsWith("/reset-password/")
     ) {
-      const mod = await import("/js/validations/setNewPasswordSchema.shared.js");
+      const mod =
+        await import("/js/validations/setNewPasswordSchema.shared.js");
 
       schema = mod.setNewPasswordSchema;
     } else if (
       schemaType === "reset-password" ||
-      (!form.querySelector('[name="password"]') && form.querySelector('[name="email"]') && (action === "/reset-password" || pathname === "/reset-password")) ||
+      (!form.querySelector('[name="password"]') &&
+        form.querySelector('[name="email"]') &&
+        (action === "/reset-password" || pathname === "/reset-password")) ||
       action === "/reset-password" ||
       pathname === "/reset-password"
     ) {
-      const mod = await import("/js/validations/resetPasswordSchema.shared.js");
+      const z = await import("zod");
 
-      schema = mod.resetPasswordSchema;
+      schema = z
+        .object({
+          email: z.email(),
+        })
+        .required();
     } else if (
       schemaType === "signup" ||
       form.querySelector('[name="fullname"]') ||
@@ -134,7 +142,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       e.preventDefault();
 
       const firstInvalid = form.querySelector(".is-invalid");
-      
+
       if (firstInvalid) {
         firstInvalid.focus();
       }

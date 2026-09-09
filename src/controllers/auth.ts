@@ -1,9 +1,7 @@
-import path from "path";
 import crypto from "crypto";
 
 import bcrypt from "bcrypt";
 import * as z from "zod";
-import pug from "pug";
 
 import { User } from "../models/index";
 import { Controller } from "../types/types";
@@ -15,10 +13,6 @@ import {
   signUpSchema,
   SignUpSchemaData,
 } from "../utils/validations/signUpSchema.shared";
-import {
-  resetPasswordSchema,
-  ResetPasswordSchemaData,
-} from "../utils/validations/resetPasswordSchema.shared";
 import {
   setNewPasswordSchema,
   SetNewPasswordSchemaData,
@@ -196,27 +190,21 @@ export const resetPasswordRequestPostController: Controller = async (
   res,
   next,
 ) => {
-  let data: ResetPasswordSchemaData;
+  const result = z.email().safeParse(req.body.email);
 
-  try {
-    data = await resetPasswordSchema.parseAsync(req.body);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      await Promise.all([
-        req.setFlash(
-          "errors",
-          error.issues.map(({ message }) => message),
-        ),
-        req.setFlash("oldInputs", req.body),
-      ]);
-
-      return res.redirect("/reset-password");
-    } else {
-      return next(error);
-    }
+  if (!result.success) {
+    await Promise.all([
+      req.setFlash(
+        "errors",
+        result.error.issues.map(({ message }) => message),
+      ),
+      req.setFlash("oldInputs", req.body),
+    ]);
   }
 
-  const user = await User.findOne({ where: { email: data.email } });
+  const email = req.body.email;
+
+  const user = await User.findOne({ where: { email } });
 
   if (!user) {
     await req.setFlash("errors", ["No user with this email exists."]);
