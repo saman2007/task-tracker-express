@@ -85,14 +85,22 @@ export const signInPostController: Controller = async (req, res, next) => {
     return res.redirect(`/account/verify-account?email=${user.email}`);
   }
 
-  req.session.cookie.maxAge =
-    req.body.rememberMe === "true" ? req.session.cookie.maxAge : undefined;
-  req.session.userId = user.id;
-
-  req.session.save((err) => {
+  req.session.regenerate((err) => {
     if (err) return next(new Error(err));
 
-    res.redirect("/dashboard");
+    if (req.body.rememberMe === "true") {
+      req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30;
+    } else {
+      req.session.cookie.maxAge = undefined;
+    }
+
+    req.session.userId = user.id;
+
+    req.session.save((err) => {
+      if (err) return next(new Error(err));
+
+      res.redirect("/dashboard");
+    });
   });
 };
 

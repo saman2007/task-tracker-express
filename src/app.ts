@@ -32,8 +32,11 @@ app.use(
 app.use(
   session({
     secret: process.env.SESSION_SECRET.split("-"),
-    // 30 days
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
     resave: false,
     saveUninitialized: false,
     store: new (ConnectSessionSequelize(session.Store))({
