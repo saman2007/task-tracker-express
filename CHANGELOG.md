@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2026-09-10
+
+### Added
+- Settings page (`/settings`)
+- Avatar upload and crop
+- Password update feature
+- Account verification after creating an account by sending a verification link to the user's email
+- Changing email functionality by sending verification link to user's new email
+- Profile info update feature
+
+### Fixed
+- An issue with the 'Remember Me' feature during sign-in that was related to modifying session cookie
+
 ## [3.2.0] - 2026-08-25
 
 ### Added

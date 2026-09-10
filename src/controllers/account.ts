@@ -169,7 +169,7 @@ export const changeEmailPostController: Controller = async (req, res) => {
   await req.user!.save();
 
   await req.setFlash("profileSuccess", [
-    "Your accounts email changed successfully!",
+    "Your account's email changed successfully!",
   ]);
 
   return res.redirect("/settings");
