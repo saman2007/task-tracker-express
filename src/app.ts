@@ -1,7 +1,7 @@
 import path from "path";
 
 import bodyParser from "body-parser";
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import session from "express-session";
 import ConnectSessionSequelize from "connect-session-sequelize";
 
@@ -12,8 +12,11 @@ import tasksRouter from "./routes/tasks";
 import { sequelize } from "./utils/db";
 import authRouter from "./routes/auth";
 import landingRouter from "./routes/landing";
+import settingsRouter from "./routes/settings";
 import { catchAllMiddleware } from "./middlewares/catchAll";
 import { promiseConnectFlash } from "async-connect-flash";
+import accountRouter from "./routes/account";
+import focusRouter from "./routes/focus";
 
 const app = express();
 
@@ -30,8 +33,11 @@ app.use(
 app.use(
   session({
     secret: process.env.SESSION_SECRET.split("-"),
-    // 30 days
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 30 },
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
     resave: false,
     saveUninitialized: false,
     store: new (ConnectSessionSequelize(session.Store))({
@@ -48,7 +54,18 @@ app.use(landingRouter);
 app.use(authRouter);
 app.use(dashboardRouter);
 app.use(tasksRouter);
+app.use(settingsRouter);
+app.use(focusRouter);
+app.use(accountRouter);
 app.use(notFoundRouter);
+
+app.use((err: any, _: Request, res: Response, next: NextFunction) => {
+  console.log("ERROR:", err);
+
+  if (res.headersSent) return next(err);
+
+  res.status(500).render("500", { pageTitle: "Error" });
+});
 
 console.log("Syncing DB...");
 
@@ -67,4 +84,6 @@ sequelize
   })
   .catch((err) => {
     console.log("Failed to sync DB. Error:", err);
+
+    process.exit(1);
   });

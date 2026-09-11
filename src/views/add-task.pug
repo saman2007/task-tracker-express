@@ -1,49 +1,91 @@
 extends layouts/main-layout.pug
+include mixins/icons.pug
 
 block head-tags
   link(rel="stylesheet", href="/css/add-task.css")
+  script(type="importmap").
+    {
+      "imports": {
+        "zod": "/vendor/zod/index.js"
+      }
+    }
+  script(type="module", src="/js/task-validation.js")
 
 block content
   .form-container
     .form-card
       .form-header
-        .form-icon 🎯
-        h1 #{editing ? "Edit your Task" : "Create New Task"}
-        p #{editing ? "Here you can edit your task" : "Add a new task to your workspace and stay organized."}
+        .form-icon
+          +icon('target', 28)
 
-      form(action=editing ? `/tasks/${task.id}/edit` : "/tasks/add", method="POST")
+        h1 #{editing ? "Edit your Task" : "Create New Task"}
+        p #{editing ? "Update your task details below." : "Add a new task to your workspace and stay organized."}
+
+      if errors && errors.length > 0
+        div.flash-container
+          each error in errors
+            .auth-flash-banner(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+      form.task-form(
+        action=editing ? `/tasks/${task.id}/edit` : "/tasks/add"
+        method="POST"
+        novalidate=true
+      )
         .form-group
           label(for="title") Task Title
-          .input-wrapper
-            input#title.form-control(type="text", name="title", required=true, placeholder="e.g., Complete Node.js module", autocomplete="off", value=editing ? task.title : "")
+          input#title.form-control(
+            type="text"
+            name="title"
+            required=true
+            placeholder="e.g., Complete Node.js module"
+            autocomplete="off"
+            value=editing ? task.title : ""
+            maxlength="120"
+            dir="auto"
+          )
 
         .form-group
-          label(for="priority") Priority Level
+          label Priority Level
           .priority-selector
             label.priority-option.low
-              input(type="radio", name="priority", value="LOW" checked=editing ? task.priority === "LOW" : false)
+              input(type="radio", name="priority", value="LOW", checked=editing ? task.priority === "LOW" : false)
               span.priority-card
-                span.badge-icon 🌱
+                span.badge-icon
+                  +icon('leaf', 20)
                 span.badge-text Low
-            
+
             label.priority-option.medium
               input(type="radio", name="priority", value="MEDIUM", checked=editing ? task.priority === "MEDIUM" : true)
               span.priority-card
-                span.badge-icon ⚡
+                span.badge-icon
+                  +icon('zap', 20)
                 span.badge-text Medium
-            
+
             label.priority-option.high
               input(type="radio", name="priority", value="HIGH", checked=editing ? task.priority === "HIGH" : false)
               span.priority-card
-                span.badge-icon 🔥
+                span.badge-icon
+                  +icon('flame', 20)
                 span.badge-text High
 
         .form-group
           label(for="note") Notes & Details
-          textarea#note.form-control(name="note", rows="4", placeholder="Add extra details, sub-tasks, or context here...") #{editing ? task.note : ""}
+          textarea#note.form-control(
+            name="note"
+            rows="5"
+            placeholder="Add extra details, sub-tasks, or context here..."
+            maxlength="1000"
+            dir="auto"
+          ) #{editing ? task.note : ""}
 
         .form-actions
           button.btn-primary(type="submit")
-            span #{editing ? "Edit Task" : "Create Task"}
-            span.btn-arrow &rarr;
+            span #{editing ? "Save Changes" : "Create Task"}
+            span.btn-arrow →
+
           a.btn-secondary(href=editing ? `/tasks/${task.id}` : "/tasks") Cancel

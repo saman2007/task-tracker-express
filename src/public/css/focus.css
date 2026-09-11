@@ -1,0 +1,1190 @@
+/* =========================================================
+   focus.css — Focus Timer, Activity Logs & Analytics
+   Strictly aligned with TaskTracker Neo-Brutalist Design System
+   ========================================================= */
+
+.focus-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1rem 3.5rem;
+}
+
+.focus-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.focus-header-content h1 {
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.focus-header-content p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.focus-stats-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.95rem;
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-xs);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.stat-pill-num {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--brand-strong);
+}
+
+/* =========================================================
+   Balanced Layout Architecture
+   Top Row: Timer & Activity Logs side-by-side
+   Bottom Row: Full-width Analytics & Distribution Chart
+   ========================================================= */
+.focus-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.focus-top-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 980px) {
+  .focus-top-row {
+    grid-template-columns: 1.15fr 1fr;
+    align-items: stretch;
+  }
+}
+
+/* =========================================================
+   Timer Card
+   ========================================================= */
+.timer-card {
+  background: var(--surface);
+  border: var(--border-w-lg) solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+  position: relative;
+  overflow: visible; /* allows custom dropdown to pop smoothly */
+  display: flex;
+  flex-direction: column;
+}
+
+.timer-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.mode-pills {
+  display: inline-flex;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  padding: 3px;
+  gap: 3px;
+}
+
+.mode-pill-btn {
+  padding: 0.45rem 0.95rem;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  user-select: none;
+}
+
+.mode-pill-btn:hover {
+  color: var(--text);
+}
+
+.mode-pill-btn.active {
+  background: var(--brand);
+  color: var(--brand-contrast);
+  box-shadow: var(--shadow-xs);
+}
+
+.sound-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.sound-toggle-btn:hover {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.sound-toggle-btn.muted {
+  opacity: 0.55;
+}
+
+/* =========================================================
+   Custom Neo-Brutalist Task Dropdown Selector
+   ========================================================= */
+.timer-task-selector {
+  margin-bottom: 1.8rem;
+  position: relative;
+  z-index: 50;
+}
+
+.timer-task-selector label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 0.45rem;
+}
+
+.custom-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.8rem 1rem;
+  background: var(--surface);
+  color: var(--text);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  text-align: left;
+  user-select: none;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.custom-select-trigger:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.custom-select-trigger:focus-visible,
+.custom-select-container.open .custom-select-trigger {
+  outline: none;
+  border-color: var(--border);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+  background: var(--surface-2);
+}
+
+.selected-task-content {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  overflow: hidden;
+  flex: 1;
+}
+
+.selected-icon {
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.selected-priority-badge {
+  padding: 0.15rem 0.5rem;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.selected-text {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.select-chevron {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform var(--transition), color var(--transition);
+}
+
+.custom-select-container.open .select-chevron {
+  transform: rotate(180deg);
+  color: var(--text);
+}
+
+/* Custom Dropdown Menu */
+.custom-select-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: var(--border-w-lg) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  animation: dropdownPop 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes dropdownPop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.custom-select-container.open .custom-select-dropdown {
+  display: flex;
+}
+
+/* Search input inside dropdown */
+.custom-select-search-wrap {
+  padding: 0.55rem 0.75rem;
+  background: var(--surface-2);
+  border-bottom: var(--border-w) solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.custom-select-search {
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  background: var(--surface);
+  color: var(--text);
+  border: var(--border-w) solid var(--border);
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  font-size: 0.84rem;
+  font-weight: 700;
+  outline: none;
+}
+
+.custom-select-search:focus {
+  border-color: var(--brand-strong);
+}
+
+/* Options List */
+.custom-select-options {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.custom-select-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  transition: var(--transition);
+  border: 1.5px solid transparent;
+  user-select: none;
+}
+
+.custom-select-option:hover,
+.custom-select-option.focused {
+  background: var(--brand-soft);
+  color: var(--text);
+  transform: translateX(2px);
+  border-color: var(--border);
+}
+
+.custom-select-option.selected {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.option-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.priority-pill {
+  padding: 0.15rem 0.5rem;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.option-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.option-check {
+  color: var(--text);
+  opacity: 0;
+  flex-shrink: 0;
+  transition: opacity var(--transition);
+}
+
+.custom-select-option.selected .option-check {
+  opacity: 1;
+}
+
+.custom-select-no-results {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* Big Clock Display Area */
+.timer-display-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.2rem 1rem;
+  margin-bottom: 1.8rem;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-sm);
+  position: relative;
+  box-shadow: inset 2px 2px 0 0 var(--border);
+}
+
+.timer-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.85rem;
+  background: var(--brand);
+  color: var(--brand-contrast);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+}
+
+.timer-status-badge.paused {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.timer-status-badge.break {
+  background: var(--info);
+  color: #fff;
+}
+
+.timer-digits {
+  font-family: var(--font-mono);
+  font-size: clamp(3.2rem, 8vw, 4.8rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+  user-select: none;
+}
+
+/* Steppers */
+.timer-steppers {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.1rem;
+}
+
+.stepper-btn {
+  padding: 0.25rem 0.65rem;
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: 1px 1px 0 0 var(--border);
+  font-size: 0.78rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.stepper-btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 0 var(--border);
+  background: var(--brand-soft);
+}
+
+.stepper-btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+.stepper-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Linear Progress Bar Track */
+.timer-progress-wrap {
+  width: 100%;
+  max-width: 440px;
+}
+
+.timer-progress-track {
+  width: 100%;
+  height: 12px;
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.timer-progress-fill {
+  height: 100%;
+  background: var(--brand);
+  width: 0%;
+  transition: width 0.3s linear, background-color var(--transition);
+}
+
+.timer-progress-fill.break {
+  background: var(--info);
+}
+
+/* Controls */
+.timer-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.btn-timer-main {
+  min-width: 155px;
+  padding: 0.9rem 1.6rem;
+  font-size: 1.05rem;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.btn-timer-secondary {
+  padding: 0.9rem 1.3rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* =========================================================
+   Activity & Time Logs Card (Top Right)
+   ========================================================= */
+.logs-card {
+  background: var(--surface);
+  border: var(--border-w-lg) solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 1.8rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.logs-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  border-bottom: var(--border-w) solid var(--surface-2);
+  padding-bottom: 0.85rem;
+}
+
+.logs-card-header h2 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.logs-count-badge {
+  padding: 0.2rem 0.65rem;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+/* Mini Quick-Stats Strip inside logs card */
+.logs-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.log-stat-box {
+  padding: 0.65rem 0.75rem;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  text-align: center;
+  box-shadow: 1px 1px 0 0 var(--border);
+}
+
+.log-stat-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.log-stat-val {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.logs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  flex: 1;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.log-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0.95rem;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: 1px 1px 0 0 var(--border);
+  transition: transform var(--transition);
+}
+
+.log-item:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 0 var(--border);
+}
+
+.log-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  overflow: hidden;
+}
+
+.log-mode-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+.log-mode-icon.focus {
+  background: var(--brand);
+  color: var(--brand-contrast);
+}
+
+.log-mode-icon.break {
+  background: var(--info);
+  color: #fff;
+}
+
+.log-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  overflow: hidden;
+}
+
+.log-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.log-timestamp {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.log-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.log-duration {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+}
+
+.log-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition), transform var(--transition);
+}
+
+.log-delete-btn:hover {
+  color: var(--danger);
+  transform: scale(1.1);
+}
+
+.logs-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+
+.logs-empty p {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.logs-pro-tip {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: var(--border-w) solid var(--surface-2);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tip-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-soft);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  box-shadow: 1px 1px 0 0 var(--border);
+}
+
+.tip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.tip-title {
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.tip-content p {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+/* =========================================================
+   Activity Distribution Chart Card (Bottom Row, Full-Width)
+   ========================================================= */
+:root {
+  --chart-0: var(--brand);
+  --chart-1: var(--priority-low);
+  --chart-2: var(--info);
+  --chart-3: var(--accent);
+  --chart-4: var(--priority-medium);
+  --chart-5: var(--priority-high);
+}
+
+.chart-card.full-width-analytics {
+  background: var(--surface);
+  border: var(--border-w-lg) solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 2.2rem;
+}
+
+.chart-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  border-bottom: var(--border-w) solid var(--surface-2);
+  padding-bottom: 1rem;
+}
+
+.chart-card-header h2 {
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.chart-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-top: 0.2rem;
+}
+
+/* 2-Column Split inside Analytics Card */
+.analytics-split-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 880px) {
+  .analytics-split-grid {
+    grid-template-columns: 1.15fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+}
+
+/* =========================================================
+   Sleek 7-Day Focus Rhythm Bar Chart
+   ========================================================= */
+.barchart-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.barchart-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.barchart-target-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* Chart Canvas with Clean Dotted Guideline & Solid Baseline */
+.barchart-canvas {
+  position: relative;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem 0.5rem 0;
+  margin-bottom: 0.75rem;
+}
+
+/* 2.0h Target Guideline Line */
+.barchart-target-guide {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1.5px dashed var(--border);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.barchart-target-guide-tag {
+  position: absolute;
+  right: 6px;
+  top: -18px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* Columns Row */
+.barchart-columns-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.65rem;
+  height: 100%;
+  border-bottom: var(--border-w-lg) solid var(--border);
+  position: relative;
+  z-index: 2;
+  padding-bottom: 0;
+}
+
+.barchart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* Sleek Architectural Bar Column (No heavy pill container!) */
+.barchart-bar-stem {
+  width: clamp(22px, 3.5vw, 32px);
+  min-height: 4px;
+  background: var(--brand);
+  border: var(--border-w) solid var(--border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 2px 0 0 0 var(--border);
+  cursor: pointer;
+  position: relative;
+  transition: transform var(--transition), background-color var(--transition), box-shadow var(--transition);
+}
+
+.barchart-bar-stem:hover {
+  transform: translateY(-4px);
+  box-shadow: 3px 0 0 0 var(--border);
+}
+
+.barchart-bar-stem.empty {
+  height: 4px !important;
+  background: var(--surface-3);
+  opacity: 0.65;
+  box-shadow: none;
+  cursor: default;
+}
+
+.barchart-bar-stem.empty:hover {
+  transform: none;
+}
+
+.barchart-bar-stem.target-reached {
+  background: var(--priority-low);
+}
+
+/* Floating Tooltip */
+.barchart-tooltip {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 0.25rem 0.55rem;
+  background: var(--border);
+  color: var(--surface);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+
+.barchart-bar-stem:hover .barchart-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Baseline Day Labels */
+.barchart-labels-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-top: 0.65rem;
+  padding: 0;
+}
+
+.barchart-day-label {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.barchart-day-label.today {
+  color: var(--text);
+  font-weight: 900;
+}
+
+/* Legend */
+.barchart-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  padding-top: 0.85rem;
+  border-top: var(--border-w) solid var(--surface-2);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.legend-dot-brand {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--brand);
+  border: 1px solid var(--border);
+}
+
+.legend-dot-target {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--priority-low);
+  border: 1px solid var(--border);
+}
+
+/* =========================================================
+   Time Spent by Task (Refined & Crisper)
+   ========================================================= */
+.task-dist-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.task-dist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.task-dist-header h3 {
+  font-size: 0.84rem;
+  font-weight: 900;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Sleek Segmented Progress Track */
+.dist-bar-stacked {
+  display: flex;
+  height: 12px;
+  width: 100%;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 1px 1px 0 0 var(--border);
+}
+
+.dist-segment {
+  height: 100%;
+  border-right: 1.5px solid var(--border);
+  transition: width 0.4s ease;
+  position: relative;
+}
+
+.dist-segment:last-child {
+  border-right: none;
+}
+
+/* Tight, Crisp Task Breakdown Rows */
+.dist-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.dist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0.65rem;
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: 1px 1px 0 0 var(--border);
+  transition: transform var(--transition);
+}
+
+.dist-item:hover {
+  transform: translateX(2px);
+}
+
+.dist-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow: hidden;
+  flex: 1;
+}
+
+.dist-color-box {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.dist-task-title {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dist-item-right {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.dist-time {
+  color: var(--text);
+}
+
+.dist-pct-badge {
+  padding: 0.1rem 0.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+}

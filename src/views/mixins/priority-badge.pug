@@ -1,8 +1,13 @@
+include icons.pug
+
 mixin priority-badge(priority)
-   span.badge(class=`badge-${priority}`)
-     if priority === "HIGH"
-       | 🔥 High
-     else if priority === "MEDIUM"
-       | ⚡ Medium
-     else if priority === "LOW"
-       | 🌱 Low
+  span.badge(class=`badge-${priority}`, aria-label=`Priority: ${String(priority).toLowerCase()}`)
+    if priority === "HIGH"
+      +icon('flame', 12)
+      span High
+    else if priority === "MEDIUM"
+      +icon('zap', 12)
+      span Medium
+    else
+      +icon('leaf', 12)
+      span Low

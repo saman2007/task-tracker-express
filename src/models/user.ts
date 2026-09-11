@@ -21,8 +21,15 @@ import Task from "./task";
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
   declare fullname: string;
+  declare profileUrl: CreationOptional<string | null>;
   declare email: string;
   declare password: string;
+  declare resetPasswordToken: CreationOptional<string | null>;
+  declare resetPasswordExpiration: CreationOptional<Date | null>;
+  declare isAccountVerified: CreationOptional<boolean>;
+  declare emailActionToken: CreationOptional<string | null>;
+  declare newEmail: CreationOptional<string | null>;
+  declare emailActionExp: CreationOptional<Date | null>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -43,7 +50,18 @@ User.init(
     id: { autoIncrement: true, primaryKey: true, type: t.INTEGER },
     fullname: { type: t.STRING(255, false), allowNull: false },
     email: { type: t.STRING(255, false), unique: true, allowNull: false },
+    profileUrl: { type: t.STRING(255, false), allowNull: true },
     password: { type: t.TEXT, allowNull: false },
+    resetPasswordToken: { type: t.TEXT, allowNull: true },
+    resetPasswordExpiration: { type: t.DATE, allowNull: true },
+    isAccountVerified: {
+      type: t.BOOLEAN,
+      defaultValue: false,
+      allowNull: false,
+    },
+    emailActionToken: { type: t.TEXT, allowNull: true },
+    newEmail: { type: t.STRING(255, false), allowNull: true },
+    emailActionExp: { type: t.DATE, allowNull: true },
     createdAt: t.DATE,
     updatedAt: t.DATE,
   },

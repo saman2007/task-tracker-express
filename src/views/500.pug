@@ -1,0 +1,26 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/500.css")
+
+block content
+  .error-container
+    .error-card
+      .error-code 500
+      .error-badge
+        span.badge-dot
+        span Internal Server Error
+      
+      h1 Oops! Something Went Wrong
+      p We are experiencing an internal server issue. Please try refreshing the page or check back later.
+      
+      .error-actions
+        a.btn-primary(href="/dashboard")
+          svg(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+            line(x1="19", y1="12", x2="5", y2="12")
+            polyline(points="12 19 5 12 12 5")
+          span Back to Dashboard
+        
+        a.btn-secondary(href="javascript:location.reload()")
+          span Refresh Page
+          span.btn-arrow ↻

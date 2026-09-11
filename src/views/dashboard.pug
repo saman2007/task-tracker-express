@@ -1,5 +1,6 @@
 extends layouts/main-layout.pug
 include mixins/task-card.pug
+include mixins/icons.pug
 
 block head-tags
   link(rel="stylesheet", href="/css/dashboard.css")
@@ -8,27 +9,53 @@ block head-tags
 block content
   .page-header.dashboard-header
     .header-content
-      h1 Welcome Back! 👋
-      p Here is an overview of your current activities and progress.
+      h1
+        span#greetingText Welcome Back
+      p Here's an overview of your current activities and progress.
+
     a.btn-primary(href="/tasks/add")
       span + Add Task
+      span.btn-arrow →
+
+  - const total = totalTasks || 0;
+  - const done = completedCount || 0;
+  - const percent = total > 0 ? Math.round((done / total) * 100) : 0;
 
   .stats-grid
     .stat-card
+      .stat-icon-wrapper
+        span.stat-icon
+          +icon('check-square', 22)
+      span.stat-number #{total}
       span.stat-title Total Tasks
-      span.stat-number #{totalTasks || 0}
-      
+
     .stat-card.success
+      .stat-icon-wrapper
+        span.stat-icon
+          +icon('check', 22)
+      span.stat-number #{done}
       span.stat-title Completed
-      span.stat-number(style="color: var(--priority-low);") #{completedCount || 0}
-      
+
     .stat-card.warning
+      .stat-icon-wrapper
+        span.stat-icon
+          +icon('clock', 22)
+      span.stat-number #{pendingCount || 0}
       span.stat-title Pending
-      span.stat-number(style="color: var(--priority-high);") #{pendingCount || 0}
+
+  .progress-card
+    .progress-head
+      span.progress-label Completion Rate
+      span.progress-value #{percent}%
+    .progress-track
+      if percent > 0
+        .progress-fill(style=`width: ${percent}%`)
 
   .recent-section-header
     h2 Recent Tasks
-    a.view-all-link(href="/tasks") View All Tasks &rarr;
+    a.view-all-link(href="/tasks")
+      span View All Tasks
+      span.view-arrow →
 
   if recentTasks && recentTasks.length > 0
     .tasks-grid
@@ -36,5 +63,10 @@ block content
         +taskCard(task)
   else
     .empty-state
-      p No tasks found!
-      a.btn-primary(href="/tasks/add", style="display: inline-block; margin-top: 1.5rem;") Create Your First Task
+      .empty-state-icon
+        +icon('tasks', 48)
+      h2 No tasks yet
+      p Start your journey by creating your first task.
+      a.btn-primary(href="/tasks/add")
+        span + Create Your First Task
+        span.btn-arrow →

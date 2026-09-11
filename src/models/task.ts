@@ -31,8 +31,8 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
   declare isCompleted: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
-  declare createdDate: string;
-  declare createdTime: string;
+  declare createdDate: CreationOptional<string>;
+  declare createdTime: CreationOptional<string>;
   declare userId: ForeignKey<User["id"]>;
 
   public static async getTasksStatistic(user: User): Promise<TasksStatistic> {
@@ -114,8 +114,8 @@ class Task extends Model<InferAttributes<Task>, InferCreationAttributes<Task>> {
     id: number,
     data: UpdateTaskInput,
     userId: number,
-  ): Promise<void> {
-    await Task.update(data, { where: { id, userId } });
+  ): Promise<number> {
+    return (await Task.update(data, { where: { id, userId } }))[0];
   }
 }
 

@@ -1,0 +1,266 @@
+extends layouts/main-layout.pug
+include mixins/icons.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/settings.css")
+  script(type="importmap").
+    {
+      "imports": {
+        "zod": "/vendor/zod/index.js"
+      }
+    }
+  script(src="/js/settings-crop.js")
+  script(type="module", src="/js/settings-validation.js")
+
+block content
+  .settings-container
+    .page-header.settings-header
+      .header-content
+        h1 Account Settings
+        p Manage your personal details, profile picture, and security credentials.
+
+    //- SECTION 1: PROFILE PICTURE
+    section.settings-card#profilePictureSection
+      .settings-card-header
+        .settings-card-icon
+          svg(width="22", height="22", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+            rect(x="3", y="3", width="18", height="18", rx="2", ry="2")
+            circle(cx="8.5", cy="8.5", r="1.5")
+            polyline(points="21 15 16 10 5 21")
+        .settings-card-title
+          h2 Profile Picture
+          p Update your avatar to personalize your account across the workspace.
+
+      //- Flash Messages for Section 1
+      div.flash-container#avatarFlashContainer
+        if avatarErrors && avatarErrors.length > 0
+          each error in avatarErrors
+            .auth-flash-banner(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+        if avatarSuccess && avatarSuccess.length > 0
+          each msg in avatarSuccess
+            .auth-flash-banner.success(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                polyline(points="20 6 9 17 4 12")
+              span.flash-message #{msg}
+
+      .avatar-section-body
+        .avatar-wrapper
+          .avatar-preview#avatarPreview
+            if avatar
+              img(src=avatar, alt=currentUser && currentUser.fullname ? currentUser.fullname : "Avatar")
+            else
+              span #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
+          button.avatar-edit-btn#avatarEditBtn(type="button", title="Change Profile Picture", aria-label="Change Profile Picture")
+            svg(width="15", height="15", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+              path(d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z")
+          if avatar
+            form.avatar-delete-badge-form(action="/settings/delete-avatar", method="POST")
+              button.avatar-delete-btn(type="submit", title="Remove Profile Picture", aria-label="Remove Profile Picture", onclick="return confirm('Are you sure you want to remove your profile photo?');")
+                svg(width="14", height="14", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                  polyline(points="3 6 5 6 21 6")
+                  path(d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2")
+          input#avatarInput(type="file", accept="image/png,image/jpeg,image/jpg", style="display: none;")
+          form#avatarForm(action="/settings/update-avatar", method="POST", enctype="multipart/form-data", style="display: none;")
+            input#avatarCroppedFile(type="file", name="avatar")
+
+        .avatar-info
+          h3 Profile Photo
+          p Click the edit icon to select and crop a new image for your profile avatar.
+          .avatar-badge-list
+            span.avatar-badge JPG, PNG
+            span.avatar-badge Max 5MB
+            span.avatar-badge Square Crop
+          if avatar
+            .avatar-btn-row
+              form.avatar-delete-form(action="/settings/delete-avatar", method="POST")
+                button.btn-avatar-delete(type="submit", onclick="return confirm('Are you sure you want to remove your profile photo?');")
+                  +icon('trash', 14)
+                  span Remove Photo
+
+    //- SECTION 2: PROFILE INFORMATION
+    section.settings-card#profileInfoSection
+      .settings-card-header
+        .settings-card-icon
+          svg(width="22", height="22", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+            path(d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2")
+            circle(cx="12", cy="7", r="4")
+        .settings-card-title
+          h2 Personal Information
+          p Update your displayed full name and associated email address.
+
+      //- Flash Messages for Section 2
+      div.flash-container
+        if profileErrors && profileErrors.length > 0
+          each error in profileErrors
+            .auth-flash-banner(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+        if profileSuccess && profileSuccess.length > 0
+          each msg in profileSuccess
+            .auth-flash-banner.success(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                polyline(points="20 6 9 17 4 12")
+              span.flash-message #{msg}
+
+      form.settings-form#profileInfoForm(action="/settings/update-profile", method="POST", novalidate=true)
+        .form-grid
+          .form-group
+            label(for="fullname") Full Name
+            .form-input-wrap
+              svg.form-input-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                path(d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2")
+                circle(cx="12", cy="7", r="4")
+              input#fullname.form-control(
+                type="text",
+                name="fullname",
+                required=true,
+                placeholder="e.g. Alex Morgan",
+                autocomplete="name",
+                value=currentUser ? currentUser.fullname : "",
+                dir="auto"
+              )
+
+          .form-group
+            label(for="email") Email Address
+            .form-input-wrap
+              svg.form-input-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                path(d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z")
+                polyline(points="22,6 12,13 2,6")
+              input#email.form-control(
+                type="email",
+                name="email",
+                required=true,
+                placeholder="alex@example.com",
+                autocomplete="email",
+                value=currentUser ? currentUser.email : ""
+              )
+
+        .settings-form-actions
+          button.btn-primary.btn-settings-submit(type="submit")
+            span Save Profile
+            span.btn-arrow →
+
+    //- SECTION 3: PASSWORD & SECURITY
+    section.settings-card#passwordSection
+      .settings-card-header
+        .settings-card-icon
+          svg(width="22", height="22", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+            rect(x="3", y="11", width="18", height="11", rx="2", ry="2")
+            path(d="M7 11V7a5 5 0 0 1 10 0v4")
+        .settings-card-title
+          h2 Password & Security
+          p Ensure your account is protected with a strong, distinct password.
+
+      //- Flash Messages for Section 3
+      div.flash-container
+        if passwordErrors && passwordErrors.length > 0
+          each error in passwordErrors
+            .auth-flash-banner(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{error}
+
+        if passwordSuccess && passwordSuccess.length > 0
+          each msg in passwordSuccess
+            .auth-flash-banner.success(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                polyline(points="20 6 9 17 4 12")
+              span.flash-message #{msg}
+
+      form.settings-form#passwordForm(action="/settings/update-password", method="POST", novalidate=true)
+        .form-group
+          label(for="currentPassword") Current Password
+          .form-input-wrap
+            svg.form-input-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+              rect(x="3", y="11", width="18", height="11", rx="2", ry="2")
+              path(d="M7 11V7a5 5 0 0 1 10 0v4")
+            input#currentPassword.form-control(
+              type="password",
+              name="currentPassword",
+              required=true,
+              placeholder="Enter current password",
+              autocomplete="current-password"
+            )
+
+        .form-grid
+          .form-group
+            label(for="password") New Password
+            .form-input-wrap
+              svg.form-input-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                path(d="M21 2l-2 2m-1.5 1.5L10 13m-2 2H4v4h4v-2l1-1m2-2l2-2m2-2l2-2")
+                circle(cx="7.5", cy="16.5", r="1.5")
+                circle(cx="16.5", cy="7.5", r="4.5")
+              input#password.form-control(
+                type="password",
+                name="password",
+                required=true,
+                placeholder="Enter new password",
+                autocomplete="new-password"
+              )
+
+          .form-group
+            label(for="confirmPassword") Confirm New Password
+            .form-input-wrap
+              svg.form-input-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                rect(x="3", y="11", width="18", height="11", rx="2", ry="2")
+                path(d="M7 11V7a5 5 0 0 1 10 0v4")
+                circle(cx="12", cy="16", r="1")
+              input#confirmPassword.form-control(
+                type="password",
+                name="confirmPassword",
+                required=true,
+                placeholder="Confirm new password",
+                autocomplete="new-password"
+              )
+
+        p.password-requirements
+          strong Tip:&nbsp;
+          | Password must be at least 8 characters long and contain both letters and numbers.
+
+        .settings-form-actions
+          button.btn-primary.btn-settings-submit(type="submit")
+            span Update Password
+            span.btn-arrow →
+
+  //- INTERACTIVE IMAGE CROP MODAL
+  .crop-modal-overlay#cropModal(role="dialog", aria-modal="true", aria-labelledby="cropModalTitle")
+    .crop-modal-card
+      .crop-modal-header
+        h3#cropModalTitle
+          span Crop Profile Picture
+        button.crop-modal-close#cropModalClose(type="button", aria-label="Close Crop Modal") &times;
+
+      .crop-modal-body
+        .crop-stage-wrapper
+          .crop-stage#cropStage
+            img.crop-image-display#cropImage(src="", alt="Crop source")
+            .crop-box#cropBox
+              .crop-box-outline
+              .crop-box-circle-guide
+              .crop-handle.crop-handle-nw(data-handle="nw")
+              .crop-handle.crop-handle-ne(data-handle="ne")
+              .crop-handle.crop-handle-se(data-handle="se")
+              .crop-handle.crop-handle-sw(data-handle="sw")
+
+        .crop-controls
+          .crop-zoom-wrapper
+            span.crop-zoom-label Crop Area Size
+            input.crop-slider#cropSizeSlider(type="range", min="50", max="300", step="1", value="150", aria-label="Crop Area Size")
+
+      .crop-modal-footer
+        button.btn-secondary#cropCancelBtn(type="button") Cancel
+        button.btn-primary#cropApplyBtn(type="button")
+          span Apply & Save Crop
+          span.btn-arrow →

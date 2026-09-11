@@ -1,60 +1,188 @@
 include ../mixins/delete-modal.pug
+include ../mixins/icons.pug
 
 doctype html
 html(lang="en", dir="ltr")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title #{pageTitle} | Task Tracker
-    
+    meta(name="description", content="TaskTracker — a bold, neo-brutalist task manager.")
+
+    //- Theme MUST be set before first paint (localStorage + cookie fallback)
+    script.
+      (function () {
+        function readTheme() {
+          try {
+            var s = localStorage.getItem('tasktracker-theme');
+            if (s === 'dark' || s === 'light') return s;
+          } catch (e) {}
+          var m = document.cookie.match(/(?:^|;\s*)tt-theme=(dark|light)/);
+          if (m) return m[1];
+          return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', readTheme());
+      })();
+      
+    //- Brand favicon
+    link(rel="icon", type="image/svg+xml", href="/favicon.svg")
+
+    //- Mobile browser bar follows the theme
+    meta#metaThemeColor(name="theme-color", content="#f3eee3")
+
+    //- Social sharing
+    meta(property="og:title", content="TaskTracker")
+    meta(property="og:description", content="A bold, neo-brutalist task manager. Track tasks with bold clarity.")
+    meta(property="og:type", content="website")
+    meta(property="og:image", content="/favicon.svg")
+
+    //- Fonts
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
+    link(href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Vazirmatn:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap", rel="stylesheet")
+
+    title #{pageTitle} | TaskTracker
+
     link(rel="stylesheet", href="/css/global.css")
-    
+
     block head-tags
 
   body
+    a.skip-link(href="#mainContent") Skip to content
+    canvas#bgCanvas.bg-canvas(aria-hidden="true")
+
     header.navbar
       .nav-container
         a.nav-logo(href="/")
-          span ⚡ TaskTracker
+          +icon('bolt', 18)
+          span.logo-text TaskTracker
+
         nav.nav-menu
           if isLoggedIn
-            a.nav-link(href="/tasks") Tasks
+            a.nav-link(href="/dashboard", aria-label="Dashboard", class=(currentPath === '/dashboard' ? 'active' : ''))
+              +icon('dashboard', 16)
+              span Dashboard
+
+            a.nav-link(href="/tasks", aria-label="Tasks", class=(currentPath && currentPath.startsWith('/tasks') ? 'active' : ''))
+              +icon('tasks', 16)
+              span Tasks
+
+            a.nav-link(href="/focus", aria-label="Focus Sessions", class=(currentPath && currentPath.startsWith('/focus') ? 'active' : ''))
+              +icon('clock', 16)
+              span Focus
+            .nav-divider
+
+            button.nav-theme-toggle#themeToggle(type="button", aria-label="Toggle theme", title="Switch theme")
+              span.theme-icon-light
+                +icon('sun', 18)
+              span.theme-icon-dark
+                +icon('moon', 18)
+
+            .nav-divider
+
             .profile-dropdown-container
-              button.profile-btn#profileDropdownBtn(type="button", aria-expanded="false", aria-haspopup="true", title=currentUser && currentUser.fullname ? currentUser.fullname : "Profile")
-                span.profile-avatar #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
-                svg.profile-arrow(width="12", height="12", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round")
+              button.profile-btn#profileDropdownBtn(
+                type="button"
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-controls="profileDropdownMenu"
+                title=currentUser && currentUser.fullname ? currentUser.fullname : "Profile"
+              )
+                if currentUser && currentUser.profileUrl
+                  img.profile-avatar.profile-avatar-img(src=currentUser.profileUrl, alt=currentUser.fullname)
+                else
+                  span.profile-avatar #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
+                span.profile-name #{currentUser && currentUser.fullname ? currentUser.fullname.split(' ')[0] : 'User'}
+                svg.profile-arrow(width="14", height="14", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
                   polyline(points="6 9 12 15 18 9")
-              .profile-dropdown-menu#profileDropdownMenu
+
+              .profile-dropdown-menu#profileDropdownMenu(role="menu")
                 if currentUser
                   .profile-user-info
-                    p.profile-user-name #{currentUser.fullname}
+                    p.profile-user-name(dir="auto") #{currentUser.fullname}
                     p.profile-user-email #{currentUser.email}
                   .profile-dropdown-divider
-                a.profile-dropdown-item(href="/tasks/add")
-                  span.dropdown-icon ➕
+
+                a.profile-dropdown-item(href="/tasks/add", role="menuitem")
+                  +icon('plus', 16)
                   span Add Task
-                a.profile-dropdown-item(href="#settings")
-                  span.dropdown-icon ⚙️
+
+                a.profile-dropdown-item(href="/settings", role="menuitem")
+                  +icon('settings', 16)
                   span Settings
+
+                .profile-dropdown-divider
+
                 form.profile-logout-form(action="/logout", method="POST")
-                  button.profile-dropdown-item.logout-btn(type="submit")
-                    span.dropdown-icon 🚪
+                  button.profile-dropdown-item.logout-btn(type="submit", role="menuitem")
+                    +icon('logout', 16)
                     span Log out
           else
-            a.btn-nav-signin(href="/signin") Sign In
-            a.btn-nav-signup(href="/signup") Sign Up
+            button.nav-theme-toggle#themeToggle(type="button", aria-label="Toggle theme", title="Switch theme")
+              span.theme-icon-light
+                +icon('sun', 18)
+              span.theme-icon-dark
+                +icon('moon', 18)
 
-    main.main-wrapper
+            .nav-divider
+
+            a.btn-nav-signin(href="/signin") Sign In
+            a.btn-nav-signup(href="/signup")
+              span Sign Up
+              span.btn-arrow →
+
+    main.main-wrapper#mainContent
       block content
 
-    footer(style="text-align: center; color: #94a3b8; padding: 2rem 0; margin-top: 3rem;")
-      p 
-        span(style="color: var(--primary); font-size: 18px;") #{"<"}
-        |Created by 
-        a(href="https://github.com/saman2007" style="color: var(--primary); text-decoration: none;" target="blank") samii_dev with  
-        span(style="color: var(--primary); font-size: 18px;") &hearts; #{"/>"}
-    
+    footer.app-footer
+      .footer-container
+        .footer-top
+          .footer-brand
+            a.footer-logo(href="/")
+              +icon('bolt', 16)
+              span TaskTracker
+            p.footer-tagline Track tasks with bold clarity.
+
+          .footer-links
+            a.footer-link(href="https://github.com/saman2007", target="_blank", rel="noopener noreferrer")
+              span.footer-icon
+                +icon('github', 16)
+              span samii_dev
+
+            button.footer-top-btn#backToTopBtn(type="button", aria-label="Back to top", title="Back to top")
+              +icon('arrow-up', 16)
+
+        .footer-divider
+
+        .footer-bottom
+          p.footer-copy © #{new Date().getFullYear()} TaskTracker — Long May The Sunshine(Antoush)
+
+          p.footer-credit
+            | Crafted with&nbsp;
+            span.heart
+              +icon('heart', 14)
+            | &nbsp;by&nbsp;
+            a.footer-author(href="https://github.com/saman2007", target="_blank", rel="noopener noreferrer") samii_dev
+
     +deleteModal()
 
+    .toast-container#toastContainer(aria-live="polite")
+
+    script.
+      (function () {
+        var btn = document.getElementById('backToTopBtn');
+        if (btn) {
+          btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+      })();
+
+    script(src="/js/theme-toggle.js")
+    script(src="/js/toast.js")
+    script(src="/js/greeting.js")
+    script(src="/js/reveal.js")
     script(src="/js/delete-modal.js")
     script(src="/js/profile-dropdown.js")
+    script(src="/js/ambient-bg.js?v=2.2")

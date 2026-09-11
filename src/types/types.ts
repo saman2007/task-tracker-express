@@ -16,9 +16,9 @@ export enum Priority {
 
 export type TaskItem = Omit<InferAttributes<Task>, "updatedAt">;
 
-export type CreateTaskInput = Omit<
+export type CreateTaskInput = Pick<
   TaskItem,
-  "id" | "createdAt" | "isCompleted"
+  "title" | "priority" | "note"
 >;
 
 export type FSCallback = (err: NodeJS.ErrnoException | null) => void;

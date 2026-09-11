@@ -5,26 +5,31 @@ block head-tags
 
 block content
   .landing-container
-    //- Hero Section
+    //- ============ HERO SECTION ============
     section.hero-section
       .hero-content
         .hero-badge
-          span.badge-icon ⚡
+          span.badge-dot
           span.badge-text Minimalist Productivity
+        
         h1.hero-title
-          | Organize your work, 
+          | Organize your work,
+          br
           span.title-highlight focus on what matters.
+        
         p.hero-subtitle
-          | A lightweight and focused task manager designed to help you stay organized, prioritize effectively, and complete your goals without distractions.
+          | A lightweight, focused task manager designed to help you stay organized,
+          | prioritize effectively, and complete your goals — without distractions.
         
         .hero-actions
           a.btn-primary.btn-hero-primary(href="/signup")
-            | Get Started Free
-            span.btn-arrow &rarr;
-          a.btn-cta-secondary(href="/signin") 
-            | Sign In
-
-      //- Interactive Mock Preview
+            span Get Started Free
+            span.btn-arrow →
+          
+          a.btn-secondary.btn-hero-secondary(href="/signin")
+            span Sign In
+      
+      //- Interactive Preview Card
       .hero-preview
         .preview-card
           .preview-card-header
@@ -32,29 +37,33 @@ block content
               span.dot.dot-red
               span.dot.dot-yellow
               span.dot.dot-green
-            .preview-title Today's Focus
+            span.preview-title Today's Focus
+          
           .preview-task-list
             .preview-task-item.completed
               .task-checkbox
-                span &#10003;
+                svg(width="12", height="12", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="3", stroke-linecap="round", stroke-linejoin="round")
+                  polyline(points="20 6 9 17 4 12")
               .task-info
                 p.task-name Complete project documentation
-                span.task-meta Due today &bull; Low Priority
-              span.preview-badge.badge-low Low
+                span.task-meta Due today • Low
+              span.preview-badge.badge-low LOW
+            
             .preview-task-item.active
               .task-checkbox
               .task-info
                 p.task-name Refactor database seeders
-                span.task-meta Due tomorrow &bull; High Priority
-              span.preview-badge.badge-high High
+                span.task-meta Tomorrow • High
+              span.preview-badge.badge-high HIGH
+            
             .preview-task-item
               .task-checkbox
               .task-info
                 p.task-name Design responsive landing page
-                span.task-meta Due in 2 days &bull; Medium Priority
-              span.preview-badge.badge-medium Medium
+                span.task-meta In 2 days • Medium
+              span.preview-badge.badge-medium MEDIUM
 
-    //- Features Grid Section
+    //- ============ FEATURES SECTION ============
     section.features-section
       .section-header
         h2 Built for simplicity and speed
@@ -63,26 +72,40 @@ block content
       .features-grid
         .feature-card
           .feature-icon-wrapper
-            span.feature-icon 🎯
+            span.feature-icon
+              svg(width="24", height="24", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                circle(cx="12", cy="12", r="6")
+                circle(cx="12", cy="12", r="2")
           h3.feature-title Priority Categorization
           p.feature-description
-            | Tag your tasks with High, Medium, or Low priority badges to immediately identify what requires your attention.
+            | Tag tasks as High, Medium, or Low to instantly identify what
+            | demands your immediate attention.
 
         .feature-card
           .feature-icon-wrapper
-            span.feature-icon ⏱️
+            span.feature-icon
+              svg(width="24", height="24", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round")
+                circle(cx="12", cy="12", r="10")
+                polyline(points="12 6 12 12 16 14")
           h3.feature-title Deadline Tracking
           p.feature-description
-            | Keep track of upcoming due dates with clear countdowns and never let a critical task slip through the cracks.
+            | Keep track of upcoming due dates with clear indicators, and
+            | never let a critical task slip through the cracks.
 
         .feature-card
           .feature-icon-wrapper
-            span.feature-icon 📊
+            span.feature-icon
+              svg(width="24", height="24", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round")
+                line(x1="18", y1="20", x2="18", y2="10")
+                line(x1="12", y1="20", x2="12", y2="4")
+                line(x1="6", y1="20", x2="6", y2="14")
           h3.feature-title Clear Overview
           p.feature-description
-            | Instant statistics for total, completed, and pending tasks so you can visualize your progress at a glance.
+            | Instant statistics for total, completed, and pending tasks so
+            | you can visualize your progress at a glance.
 
-    //- 3-Step Workflow Section
+    //- ============ STEPS SECTION ============
     section.steps-section
       .section-header
         h2 How it works
@@ -90,25 +113,35 @@ block content
       
       .steps-grid
         .step-card
-          .step-number 01
+          span.step-number 01
           h3.step-title Create your account
-          p.step-description Sign up in seconds with just your name, email, and password.
+          p.step-description
+            | Sign up in seconds with just your name, email, and password.
         
         .step-card
-          .step-number 02
+          span.step-number 02
           h3.step-title Add your tasks
-          p.step-description Set title, description, due date, and priority level in a clean interface.
-
+          p.step-description
+            | Set title, notes, and priority level in a clean interface.
+        
         .step-card
-          .step-number 03
+          span.step-number 03
           h3.step-title Accomplish goals
-          p.step-description Mark tasks as completed, edit details anytime, and stay ahead of your schedule.
+          p.step-description
+            | Mark tasks as completed, edit anytime, and stay ahead of schedule.
 
-    //- Call to Action Section
+    //- ============ CTA SECTION ============
     section.cta-section
       .cta-card
+        .cta-badge
+          span Ready when you are
         h2 Ready to boost your productivity?
         p Join today and take control of your daily workflow.
+        
         .cta-actions
-          a.btn-primary.btn-cta(href="/signup") Create Free Account
-          a.btn-cta-secondary(href="/signin") Sign In
+          a.btn-primary.btn-cta(href="/signup")
+            span Create Free Account
+            span.btn-arrow →
+          
+          a.btn-secondary.btn-cta-secondary(href="/signin")
+            span Sign In

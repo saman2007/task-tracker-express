@@ -6,8 +6,10 @@ export const catchAllMiddleware: Controller = async (req, res, next) => {
 
   if (userId) {
     const user = (await User.findOne({ where: { id: userId } })) as User;
+
     if (user) {
       res.locals.isLoggedIn = true;
+      res.locals.avatar = user.profileUrl;
       req.user = user;
       res.locals.currentUser = user;
     } else {

@@ -1,0 +1,535 @@
+/* =========================================================
+   settings.css — Account Settings Page (Neo-Brutalism)
+   ========================================================= */
+
+.settings-container {
+  max-width: 820px;
+  margin: 0 auto 3rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.settings-header {
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- Section Cards ---------- */
+.settings-card {
+  background: var(--surface);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 2rem 2.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.settings-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.settings-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-xs);
+  background: var(--brand);
+  color: var(--brand-contrast);
+  border: var(--border-w) solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-xs);
+}
+
+/* Icon wiggle on card hover — identical to .stat-card:hover .stat-icon-wrapper */
+.settings-card:hover .settings-card-icon {
+  animation: wiggle 0.4s ease;
+}
+
+.settings-card-title h2 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+  line-height: 1.2;
+}
+
+.settings-card-title p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Flash Messages */
+.flash-container {
+  margin-bottom: 1rem;
+}
+
+.auth-flash-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-xs);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.auth-flash-banner.success {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.flash-icon {
+  flex-shrink: 0;
+}
+
+.flash-message {
+  flex: 1;
+}
+
+/* ---------- Avatar Section ---------- */
+.avatar-section-body {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  flex-shrink: 0;
+}
+
+.avatar-preview {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: var(--border-w-lg) solid var(--border);
+  background: var(--brand);
+  color: var(--brand-contrast);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  box-shadow: var(--shadow-sm);
+  user-select: none;
+}
+
+.avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-edit-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--brand-strong);
+  color: var(--brand-contrast);
+  border: var(--border-w) solid var(--border);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--transition);
+}
+.avatar-edit-btn:hover {
+  transform: scale(1.1);
+}
+
+.avatar-delete-btn:hover {
+  transform: scale(1.1);
+}
+
+.avatar-info h3 {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.avatar-info p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+  line-height: 1.5;
+}
+
+.avatar-badge-list {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.avatar-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--surface-2);
+  color: var(--text);
+  box-shadow: 1px 1px 0 0 var(--shadow-color);
+}
+
+.btn-avatar-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-xs);
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.btn-avatar-delete:hover {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+/* ---------- Form Controls & Input Integration ---------- */
+.settings-form .form-group {
+  margin-bottom: 1.35rem;
+}
+
+.settings-form .form-group label {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.settings-form .form-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.settings-form .form-input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.18s ease;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.settings-form .form-input-wrap .form-control {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.82rem 1.1rem 0.82rem 2.85rem;
+  background: var(--surface);
+  color: var(--text);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow-sm);
+  outline: none;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+  transition: var(--transition);
+}
+
+/* Black & White Theme with Tactile Shadow Animations */
+.settings-form .form-control:hover {
+  background: var(--surface);
+  border-color: var(--border);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-md);
+}
+
+.settings-form .form-input-wrap:hover .form-input-icon {
+  color: var(--text);
+  transform: translateY(-50%) translate(-1px, -1px);
+}
+
+.settings-form .form-control:focus {
+  background: var(--surface);
+  border-color: var(--border);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+}
+
+.settings-form .form-input-wrap:focus-within .form-input-icon {
+  color: var(--text);
+  transform: translateY(-50%) translate(-2px, -2px);
+}
+.settings-form .form-control:focus-visible {
+  outline: none;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.settings-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.btn-settings-submit {
+  min-width: 170px;
+}
+
+.password-requirements {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 0.65rem;
+  line-height: 1.5;
+}
+
+.password-requirements strong {
+  color: var(--text);
+}
+/* ---------- Interactive Crop Modal ---------- */
+.crop-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 14, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.crop-modal-overlay.active {
+  display: grid;
+}
+
+.crop-modal-card {
+  background: var(--surface);
+  border: var(--border-w-lg) solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  width: min(100%, 540px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.crop-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem;
+  border-bottom: var(--border-w) solid var(--border);
+  background: var(--surface-2);
+}
+
+.crop-modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.crop-modal-close {
+  font-size: 1.5rem;
+  line-height: 1;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 900;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-xs);
+}
+
+.crop-modal-close:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.crop-modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.crop-stage-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.crop-stage {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  background: #000000;
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  user-select: none;
+  touch-action: none;
+}
+
+.crop-image-display {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.crop-box {
+  position: absolute;
+  cursor: move;
+  box-sizing: border-box;
+  border: 2px solid var(--brand);
+}
+
+.crop-box-outline {
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+
+.crop-box-circle-guide {
+  position: absolute;
+  inset: 0;
+  border: 1.5px dashed rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.crop-handle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--brand);
+  border: 2px solid #000000;
+}
+
+.crop-handle-nw {
+  top: -6px;
+  left: -6px;
+  cursor: nw-resize;
+}
+
+.crop-handle-ne {
+  top: -6px;
+  right: -6px;
+  cursor: ne-resize;
+}
+
+.crop-handle-se {
+  bottom: -6px;
+  right: -6px;
+  cursor: se-resize;
+}
+
+.crop-handle-sw {
+  bottom: -6px;
+  left: -6px;
+  cursor: sw-resize;
+}
+
+.crop-controls {
+  width: 100%;
+  padding: 0 0.5rem;
+}
+
+.crop-zoom-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.crop-zoom-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.crop-slider {
+  flex: 1;
+  accent-color: var(--brand-strong);
+}
+
+.crop-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.2rem 1.5rem;
+  border-top: var(--border-w) solid var(--border);
+  background: var(--surface-2);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .settings-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .avatar-section-body {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.25rem;
+  }
+
+  .avatar-badge-list {
+    justify-content: center;
+  }
+
+  .crop-stage {
+    width: 260px;
+    height: 260px;
+  }
+}
