@@ -14,19 +14,24 @@ block content
   .auth-container
     .auth-card
       .auth-header
-        .auth-icon 🔐
+        .auth-icon
+          svg(width="26", height="26", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+            rect(x="3", y="11", width="18", height="11", rx="2", ry="2")
+            path(d="M7 11V7a5 5 0 0 1 10 0v4")
+        
         h1 Welcome Back
-        p Sign in to your account to continue managing your tasks.
+        p Sign in to continue managing your tasks.
 
-      if errors && errors.length > 0
+      if (errors && errors.length > 0) || (error && error.length > 0)
         div.flash-container
-          each error in errors
-            .auth-flash-banner
-              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+          - const errorList = errors && errors.length > 0 ? errors : (Array.isArray(error) ? error : [error]);
+          each err in errorList
+            .auth-flash-banner(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
                 circle(cx="12", cy="12", r="10")
                 line(x1="12", y1="8", x2="12", y2="12")
                 line(x1="12", y1="16", x2="12.01", y2="16")
-              span.flash-message #{error}
+              span.flash-message #{err}
 
       if success && success.length > 0
         div.flash-container
@@ -41,25 +46,29 @@ block content
         .form-group
           label(for="email") Email Address
           .form-input-wrap
-            span.form-input-icon ✉️
+            svg.form-input-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+              path(d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z")
+              polyline(points="22,6 12,13 2,6")
             input#email.form-control(
-              type="email", 
-              name="email", 
-              required=true, 
-              placeholder="alex@example.com", 
-              autocomplete="email",
+              type="email"
+              name="email"
+              required=true
+              placeholder="alex@example.com"
+              autocomplete="email"
               value=oldInputs ? oldInputs.email : ""
             )
 
         .form-group
           label(for="password") Password
           .form-input-wrap
-            span.form-input-icon 🔑
+            svg.form-input-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+              rect(x="3", y="11", width="18", height="11", rx="2", ry="2")
+              path(d="M7 11V7a5 5 0 0 1 10 0v4")
             input#password.form-control(
-              type="password", 
-              name="password", 
-              required=true, 
-              placeholder="••••••••", 
+              type="password"
+              name="password"
+              required=true
+              placeholder="••••••••"
               autocomplete="current-password"
               value=oldInputs ? oldInputs.password : ""
             )
@@ -68,12 +77,15 @@ block content
           label.checkbox-label
             input(type="checkbox", name="rememberMe", value="true")
             span Remember me
+          
           a.auth-link(href="/reset-password") Forgot password?
 
         button.btn-primary.btn-auth-submit(type="submit")
           span Sign In
-          span.btn-arrow &rarr;
+          span.btn-arrow →
 
       .auth-footer
-        p Don't have an account? 
+        p
+          | Don't have an account?
+          |
           a.auth-link(href="/signup") Sign up here

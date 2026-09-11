@@ -1,0 +1,234 @@
+extends layouts/main-layout.pug
+
+block head-tags
+  link(rel="stylesheet", href="/css/focus.css")
+
+block content
+  .focus-container
+    //- Header with stats summary
+    .focus-header
+      .focus-header-content
+        h1 Focus & Pomodoro
+        p Deep work sessions with automatic time logs and activity distribution analytics.
+      
+      .focus-stats-strip
+        .stat-pill
+          span Total Focus
+          span.stat-pill-num#statTotalHours #{stats.totalHours}h
+        .stat-pill
+          span Today
+          span.stat-pill-num#statTodayHours #{stats.todayHours}h
+        .stat-pill
+          span Sessions
+          span.stat-pill-num#statSessionsCount #{stats.completedCount}
+
+    //- Main Layout: Balanced Top Row + Full-Width Bottom Analytics
+    .focus-layout
+      //- Top Row: Timer & Activity Logs side-by-side
+      .focus-top-row
+        //- 1. Active Timer Card
+        .timer-card
+          .timer-card-header
+            .mode-pills
+              button.mode-pill-btn.active(type="button", data-mode="focus") Focus (25m)
+              button.mode-pill-btn(type="button", data-mode="shortBreak") Short Break (5m)
+              button.mode-pill-btn(type="button", data-mode="longBreak") Long Break (15m)
+
+            button.sound-toggle-btn#soundToggle(type="button", title="Toggle sound chimes")
+              +icon('bell', 15)
+              span Sound
+
+          //- Custom Neo-Brutalist Task Selector
+          .timer-task-selector
+            label(for="customSelectTrigger") Current Task to Focus On
+            .custom-select-container#taskCustomSelect
+              button.custom-select-trigger#customSelectTrigger(type="button", aria-haspopup="listbox", aria-expanded="false")
+                .selected-task-content#selectedTaskContent
+                  span.selected-icon: +icon('bolt', 14)
+                  span.selected-text General Focus (No task linked)
+                svg.select-chevron(width="14", height="14", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round")
+                  polyline(points="6 9 12 15 18 9")
+              
+              .custom-select-dropdown#customSelectDropdown(role="listbox")
+                .custom-select-search-wrap
+                  input.custom-select-search#customSelectSearch(type="text", placeholder="Filter tasks...", autocomplete="off")
+                
+                .custom-select-options#customSelectOptions
+                  .custom-select-option.selected(data-value="", data-title="General Focus (No task linked)", data-priority="", role="option", aria-selected="true")
+                    span.option-icon: +icon('bolt', 14)
+                    span.option-title General Focus (No task linked)
+                    svg.option-check(width="14", height="14", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="3", stroke-linecap="round", stroke-linejoin="round")
+                      polyline(points="20 6 9 17 4 12")
+                  
+                  if tasks && tasks.length > 0
+                    each task in tasks
+                      .custom-select-option(
+                        data-value=task.id,
+                        data-title=task.title,
+                        data-priority=task.priority,
+                        role="option",
+                        aria-selected="false"
+                      )
+                        span.priority-pill(class=`badge-${task.priority}`) #{task.priority}
+                        span.option-title #{task.title}
+                        svg.option-check(width="14", height="14", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="3", stroke-linecap="round", stroke-linejoin="round")
+                          polyline(points="20 6 9 17 4 12")
+
+              //- Hidden input preserving exact value for form/ajax submission
+              input#focusTaskSelect(type="hidden", name="taskId", value="")
+
+          //- Big Clock Display Area
+          .timer-display-area
+            .timer-status-badge#timerStatus Ready
+            .timer-digits#timerDigits 25:00
+
+            //- Steppers
+            .timer-steppers
+              button.stepper-btn(type="button", data-delta="-5", title="Subtract 5 minutes") -5m
+              button.stepper-btn(type="button", data-delta="-1", title="Subtract 1 minute") -1m
+              button.stepper-btn(type="button", data-delta="1", title="Add 1 minute") +1m
+              button.stepper-btn(type="button", data-delta="5", title="Add 5 minutes") +5m
+
+            //- Linear Progress Bar
+            .timer-progress-wrap
+              .timer-progress-track
+                .timer-progress-fill#timerProgressFill
+
+          //- Controls
+          .timer-controls
+            button.btn-primary.btn-timer-main#btnTimerStart(type="button")
+              +icon('zap', 18)
+              span Start Session
+            
+            button.btn-primary.btn-timer-main#btnTimerPause(type="button", style="display: none;")
+              span Pause
+
+            button.btn-secondary.btn-timer-secondary#btnTimerStop(type="button")
+              +icon('check', 16)
+              span Stop & Save
+
+            button.btn-secondary.btn-timer-secondary#btnTimerReset(type="button")
+              span Reset
+
+        //- 2. Activity & Time Logs Card (Matching height on the right)
+        .logs-card
+          .logs-card-header
+            div
+              h2 Activity & Time Logs
+              p.chart-subtitle Today's sessions & focus history
+            span.logs-count-badge#logsCountBadge #{sessions ? sessions.length : 0}
+
+          //- Mini Quick-Stats Strip
+          .logs-quick-stats
+            .log-stat-box
+              span.log-stat-label Today
+              span.log-stat-val#logsTodayVal #{stats.todayHours}h
+            .log-stat-box
+              span.log-stat-label Sessions
+              span.log-stat-val#logsSessionsVal #{stats.completedCount}
+            .log-stat-box
+              span.log-stat-label All Time
+              span.log-stat-val#logsTotalVal #{stats.totalHours}h
+
+          .logs-list#logsList
+            if sessions && sessions.length > 0
+              each s in sessions
+                - const isFocus = s.mode === 'focus';
+                - const modeLabel = isFocus ? 'Focus' : s.mode === 'shortBreak' ? 'Short Break' : 'Long Break';
+                - const modeClass = isFocus ? 'focus' : 'break';
+                .log-item(id=`log-item-${s.id}`)
+                  .log-left
+                    .log-mode-icon(class=modeClass)
+                      +icon('clock', 16)
+                    .log-meta
+                      .log-title #{s.taskTitle || 'General Focus'}
+                      .log-timestamp #{s.createdDate || 'Recent'} • #{modeLabel}
+                  .log-right
+                    span.log-duration #{s.durationMinutes}m
+                    button.log-delete-btn(type="button", data-id=s.id, title="Delete log")
+                      +icon('trash', 14)
+            else
+              .logs-empty
+                +icon('clock', 36)
+                p No focus sessions recorded yet. Start a 25-minute timer to log your first session!
+
+          .logs-pro-tip
+            .tip-icon: +icon('zap', 16)
+            .tip-content
+              span.tip-title Deep Work Tip
+              p 25 minutes of high focus followed by 5 minutes of rest prevents mental fatigue and preserves momentum.
+
+      //- Bottom Row: Full-Width Activity Analytics Card
+      .chart-card.full-width-analytics
+        .chart-card-header
+          div
+            h2 Activity Analytics & Time Distribution
+            p.chart-subtitle 7-Day Focus Rhythm & Task Breakdown
+
+        .analytics-split-grid
+          //- Left: 7-Day Focus Rhythm Bar Chart
+          .barchart-wrap
+            .barchart-label-row
+              span 7-Day Focus Rhythm
+              .barchart-target-badge Target: 2.0h / day
+
+            .barchart-canvas
+              - const maxMinutes = Math.max(...dailyDistribution.map(d => d.minutes), 120);
+              - const targetLineBottom = Math.round((120 / maxMinutes) * 100);
+              .barchart-target-guide(style=`bottom: ${targetLineBottom}%;`)
+                span.barchart-target-guide-tag 2.0h Target
+
+              .barchart-columns-row
+                each day, idx in dailyDistribution
+                  - const isTargetMet = day.minutes >= 120;
+                  - const pct = day.minutes > 0 ? Math.max(6, Math.round((day.minutes / maxMinutes) * 100)) : 0;
+                  .barchart-col
+                    .barchart-bar-stem(
+                      id=`bar-fill-${idx}`,
+                      class=(day.minutes === 0 ? 'empty' : (isTargetMet ? 'target-reached' : '')),
+                      style=(day.minutes > 0 ? `height: ${pct}%;` : ''),
+                      title=`${day.dayLabel} (${day.date}): ${day.minutes}m`
+                    )
+                      .barchart-tooltip(id=`bar-val-${idx}`) #{day.minutes}m (#{day.minutes > 0 ? (day.minutes / 60).toFixed(1) + 'h' : '0h'})
+
+            .barchart-labels-row
+              each day, idx in dailyDistribution
+                - const isToday = idx === dailyDistribution.length - 1;
+                span.barchart-day-label(class=(isToday ? 'today' : '')) #{day.dayLabel}
+
+            .barchart-legend-row
+              .legend-item
+                span.legend-dot-brand
+                span Regular Focus
+              .legend-item
+                span.legend-dot-target
+                span Target Reached (&ge; 2.0h)
+
+          //- Right: Task Distribution Breakdown
+          .task-dist-wrap
+            .task-dist-header
+              h3 Time Spent by Task
+            .dist-bar-stacked#taskDistStackedBar
+              if taskDistribution && taskDistribution.length > 0
+                each item in taskDistribution
+                  .dist-segment(
+                    style=`width: ${item.percentage}%; background-color: ${item.color};`,
+                    title=`${item.taskTitle}: ${item.percentage}% (${item.minutes}m)`
+                  )
+              else
+                .dist-segment(style="width: 100%; background-color: var(--surface-3);", title="No focus time logged yet")
+
+            .dist-list#taskDistList
+              if taskDistribution && taskDistribution.length > 0
+                each item in taskDistribution
+                  .dist-item
+                    .dist-item-left
+                      span.dist-color-box(style=`background-color: ${item.color};`)
+                      span.dist-task-title #{item.taskTitle}
+                    .dist-item-right
+                      span.dist-time #{item.minutes}m
+                      span.dist-pct-badge #{item.percentage}%
+              else
+                p.chart-subtitle(style="text-align: center; padding: 1.5rem 0;") No task focus distribution yet.
+
+  script(src="/js/focus-timer.js")

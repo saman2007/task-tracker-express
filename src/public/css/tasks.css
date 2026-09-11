@@ -1,55 +1,55 @@
-/* ===================================
-   Tasks List Page Specific Styles
-   =================================== */
+/* =========================================================
+   tasks.css — Tasks List Page
+   ========================================================= */
 
-/* Page Header Layout */
 .tasks-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
   flex-wrap: wrap;
-  gap: 1rem;
+  margin-bottom: 1.75rem;
 }
 
-/* Priority Filter Bar */
 .filter-bar {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2.25rem;
   flex-wrap: wrap;
 }
 
 .filter-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1rem;
-  border-radius: 30px;
-  border: 1px solid var(--border-color);
-  background: var(--card-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--surface);
   color: var(--text-muted);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.83rem;
+  font-weight: 900;
   text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: all 0.25s ease;
+  white-space: nowrap;
+  transition: var(--transition);
 }
 
 .filter-btn:hover {
-  background: #ffffff;
-  color: var(--text-main);
+  color: var(--text);
+  background: var(--surface-2);
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-md);
 }
 
 .filter-btn.active {
-  background: var(--primary);
-  color: #ffffff;
-  border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  background: var(--brand);
+  color: var(--brand-contrast);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
 }
 
-/* Modern Task Cards Grid */
 .tasks-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -57,87 +57,69 @@
   align-items: stretch;
 }
 
-/* Task Card Component (Clickable Container) */
 .task-card {
   position: relative;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  padding: 1.4rem 1.5rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 1.35rem 1.5rem;
+  background: var(--surface);
+  border: var(--border-w-lg) solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
   overflow: hidden;
-  min-width: 0;
 }
 
 .task-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.12);
-  cursor: pointer;
+  transform: translate(-3px, -3px);
+  box-shadow: var(--shadow-lg);
 }
 
-/* Stretched Link Effect for Entire Card */
+.task-card.completed {
+  background: var(--surface-2);
+  opacity: 0.92;
+}
+
+.task-card.completed:hover {
+  opacity: 1;
+}
+
+.task-card.completed .task-title,
+.task-card.completed .task-note {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  color: var(--text-muted);
+}
+
+.task-card.completed .badge {
+  opacity: 0.75;
+  filter: grayscale(0.2);
+}
+
 .task-card-link {
+  display: block;
   text-decoration: none;
   color: inherit;
-  display: block;
 }
 
 .task-card-link::after {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   z-index: 1;
 }
 
 .task-card-link:hover .task-title {
-  color: var(--primary);
+  color: var(--info);
 }
 
-/* Completed Task State - Clean & Modern */
-.task-card.completed {
-  background: rgba(241, 245, 249, 0.55);
-  border-color: rgba(203, 213, 225, 0.6);
-  box-shadow: none;
-}
-
-.task-card.completed:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.04);
-}
-
-.task-card.completed .task-title {
-  text-decoration: line-through;
-  text-decoration-color: #94a3b8;
-  text-decoration-thickness: 2px;
-  color: #64748b;
-}
-
-.task-card.completed .task-note {
-  text-decoration: line-through;
-  color: #94a3b8;
-}
-
-.task-card.completed .badge {
-  opacity: 0.6;
-  filter: grayscale(0.3);
-}
-
-/* Card Header Section */
 .task-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 0.75rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.7rem;
   min-width: 0;
 }
 
@@ -146,115 +128,179 @@
   min-width: 0;
 }
 
-/* Title - Truncate after 2 lines */
 .task-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #0f172a;
+  font-size: 1.05rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--text);
   line-height: 1.4;
-  overflow-wrap: break-word;
-  word-break: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  transition: color 0.2s ease;
+  transition: color var(--transition);
 }
 
-/* Note - Truncate after 3 lines */
 .task-note {
-  color: #475569;
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-  white-space: pre-line;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  margin-bottom: 1.4rem;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  font-weight: 600;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Card Footer & Elevated Buttons */
 .task-card-footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(226, 232, 240, 0.7);
-  padding-top: 0.9rem;
+  justify-content: space-between;
+  gap: 0.8rem;
   margin-top: auto;
+  padding-top: 0.9rem;
+  border-top: var(--border-w) solid var(--border);
 }
 
 .task-date {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.8rem;
-  color: #94a3b8;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
-/* Action Buttons Layer (Above the stretched link) */
 .task-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  flex-shrink: 0;
   position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 .task-actions form {
-  display: inline-block;
+  display: inline-flex;
+  margin: 0;
 }
 
-.btn-action {
-  border: none;
+.task-actions .btn-action {
+  min-height: 36px;
+  padding: 0 0.7rem;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 640px) {
+  .tasks-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .task-card-footer {
+    flex-wrap: wrap;
+  }
+
+  .task-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .filter-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+}
+
+/* =========================================================
+   Mobile: clean filter scroll + comfy cards
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .filter-bar {
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .task-card {
+    padding: 1.1rem 1.15rem;
+  }
+
+  .tasks-header .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+/* =========================================================
+   Task Cards v3 — DONE stamp + date chip
+   ========================================================= */
+
+/* Date becomes a proper chip */
+.task-date {
+  background: var(--surface-2);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xs);
+  padding: 0.3rem 0.65rem;
+}
+
+/* Rotated "DONE" stamp on completed cards */
+.task-card.completed::after {
+  content: "DONE ✓";
+  position: absolute;
+  top: 36%;
+  right: 12px;
+  transform: rotate(10deg);
+  padding: 0.2rem 0.6rem;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: var(--priority-low);
+  border: 3px solid var(--priority-low);
   border-radius: 8px;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Priority-colored icon wiggle on hover */
+.task-card:hover .badge {
+  animation: wiggle 0.4s ease;
+}
+
+/* Remove the overlay stamp (it clashed with RTL text) */
+.task-card.completed::after {
+  content: none;
+}
+
+/* Done chip sits safely in the footer row */
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.done-chip {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-}
-
-.btn-toggle {
-    background: #d1fae5;
-    color: #059669;
-    height: 2rem;
-}
-
-.btn-toggle:hover {
-    background: #10b981;
-    color: #ffffff;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-}
-
-.btn-undo {
-  background: #e0e7ff;
-  height: 2rem;
-  color: var(--primary);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-}
-
-.btn-undo:hover {
-  background: var(--primary);
-  color: #ffffff;
-}
-
-.btn-delete {
-  background: #fee2e2;
-  height: 2rem;
-  color: var(--priority-high);
-  padding: 0.4rem 0.6rem;
-}
-
-.btn-delete:hover {
-  background: var(--priority-high);
-  color: #ffffff;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  background: var(--priority-low-bg);
+  color: var(--priority-low);
+  border: var(--border-w) solid var(--priority-low-border);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-xs);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }

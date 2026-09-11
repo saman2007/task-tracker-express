@@ -35,7 +35,7 @@ export const sendWelcomeEmail: EmailSender<{
   sendEmail({
     fromName: "TaskTracker",
     to: to,
-    subject: "Welcome to Task Tracker! 🎉",
+    subject: "Welcome to Task Tracker!",
     html: pug.renderFile(
       path.join(__dirname, "..", "views", "emails", "welcome.pug"),
       {

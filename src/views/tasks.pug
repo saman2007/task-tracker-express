@@ -1,5 +1,6 @@
 extends layouts/main-layout.pug
 include mixins/task-card.pug
+include mixins/icons.pug
 
 block head-tags
   link(rel="stylesheet", href="/css/tasks.css")
@@ -9,22 +10,33 @@ block content
     .header-content
       h1 All Tasks
       p Manage, filter, and track all your ongoing and completed tasks.
-    a.btn-primary(href="/tasks/add")
-      span + Add Task
 
-  .filter-bar
-    a.filter-btn(href="/tasks", class=!currentFilter || currentFilter === '3' ? 'active' : '')
-      span.filter-icon 📂
-      span All Tasks
-    a.filter-btn(href="/tasks?priority=2", class=currentFilter === '2' ? 'active' : '')
-      span.filter-icon 🔥
-      span High
-    a.filter-btn(href="/tasks?priority=1", class=currentFilter === '1' ? 'active' : '')
-      span.filter-icon ⚡
-      span Medium
-    a.filter-btn(href="/tasks?priority=0", class=currentFilter === '0' ? 'active' : '')
-      span.filter-icon 🌱
-      span Low
+    a.btn-primary(href="/tasks/add")
+      +icon('plus', 16)
+      span Add Task
+
+  .filter-toolbar
+    nav.filter-bar(aria-label="Filter tasks by priority")
+      a.filter-btn(href="/tasks", class=!currentFilter || currentFilter === '3' ? 'active' : '')
+        +icon('layers', 14)
+        span All Tasks
+
+      a.filter-btn(href="/tasks?priority=2", class=currentFilter === '2' ? 'active' : '')
+        +icon('flame', 14)
+        span High
+
+      a.filter-btn(href="/tasks?priority=1", class=currentFilter === '1' ? 'active' : '')
+        +icon('zap', 14)
+        span Medium
+
+      a.filter-btn(href="/tasks?priority=0", class=currentFilter === '0' ? 'active' : '')
+        +icon('leaf', 14)
+        span Low
+
+    span.filter-count
+      +icon('tasks', 14)
+      span #{(tasks || []).length} #{(tasks || []).length === 1 ? 'task' : 'tasks'}
+
 
   if tasks && tasks.length > 0
     .tasks-grid
@@ -32,11 +44,26 @@ block content
         +taskCard(task)
   else
     .empty-state
-      .empty-icon 🚀
-      h2 No tasks found
+      .empty-state-icon
+        if currentFilter && currentFilter !== '3'
+          svg(width="64", height="64", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="1.5", stroke-linecap="round", stroke-linejoin="round")
+            circle(cx="11", cy="11", r="8")
+            line(x1="21", y1="21", x2="16.65", y2="16.65")
+        else
+          svg(width="64", height="64", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="1.5", stroke-linecap="round", stroke-linejoin="round")
+            rect(x="3", y="4", width="18", height="18", rx="2")
+            line(x1="16", y1="2", x2="16", y2="6")
+            line(x1="8", y1="2", x2="8", y2="6")
+            line(x1="3", y1="10", x2="21", y2="10")
+      
       if currentFilter && currentFilter !== '3'
+        h2 No matching tasks
         p No tasks match the selected priority filter.
-        a.btn-secondary(href="/tasks", style="display: inline-block; margin-top: 1rem;") Clear Filter
+        a.btn-secondary(href="/tasks")
+          span Clear Filter
       else
-        p You haven't added any tasks yet.
-        a.btn-primary(href="/tasks/add", style="display: inline-block; margin-top: 1.5rem;") + Create First Task
+        h2 Your task list is empty
+        p Create your first task and start tracking.
+        a.btn-primary(href="/tasks/add")
+          span + Create First Task
+          span.btn-arrow →
