@@ -8,7 +8,7 @@ block head-tags
         "zod": "/vendor/zod/index.js"
       }
     }
-  script(type="module", src="/js/auth-validation.js")
+  script(type="module", src="/js/auth-validation.js")  
 
 block content
   .auth-container
@@ -22,15 +22,27 @@ block content
         h1 Welcome Back
         p Sign in to continue managing your tasks.
 
-      if error && error.length > 0
-        .auth-flash-banner(role="alert")
-          svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
-            circle(cx="12", cy="12", r="10")
-            line(x1="12", y1="8", x2="12", y2="12")
-            line(x1="12", y1="16", x2="12.01", y2="16")
-          span.flash-message #{Array.isArray(error) ? error[0] : error}
+      if (errors && errors.length > 0) || (error && error.length > 0)
+        div.flash-container
+          - const errorList = errors && errors.length > 0 ? errors : (Array.isArray(error) ? error : [error]);
+          each err in errorList
+            .auth-flash-banner(role="alert")
+              svg.flash-icon(width="18", height="18", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2.5", stroke-linecap="round", stroke-linejoin="round", aria-hidden="true")
+                circle(cx="12", cy="12", r="10")
+                line(x1="12", y1="8", x2="12", y2="12")
+                line(x1="12", y1="16", x2="12.01", y2="16")
+              span.flash-message #{err}
 
-      form.auth-form(action="/signin", method="POST", novalidate=true)
+      if success && success.length > 0
+        div.flash-container
+          each msg in success
+            .auth-flash-banner.success
+              svg.flash-icon(width="16", height="16", viewBox="0 0 24 24", fill="none", stroke="currentColor", stroke-width="2", stroke-linecap="round", stroke-linejoin="round")
+                path(d="M22 11.08V12a10 10 0 1 1-5.93-9.14")
+                polyline(points="22 4 12 14.01 9 11.01")
+              span.flash-message #{msg}
+
+      form.auth-form(action="/signin", method="POST", novalidate=true, data-schema="signin")
         .form-group
           label(for="email") Email Address
           .form-input-wrap
@@ -43,6 +55,7 @@ block content
               required=true
               placeholder="alex@example.com"
               autocomplete="email"
+              value=oldInputs ? oldInputs.email : ""
             )
 
         .form-group
@@ -57,6 +70,7 @@ block content
               required=true
               placeholder="••••••••"
               autocomplete="current-password"
+              value=oldInputs ? oldInputs.password : ""
             )
 
         .auth-options

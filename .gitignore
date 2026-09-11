@@ -2,6 +2,10 @@
 # Dependencies
 node_modules/
 
+# Application data and uploads
+src/data/*.json
+!src/data/tasks.example.json
+src/public/uploads
 # Environment variables
 .env
 

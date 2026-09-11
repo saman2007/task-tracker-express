@@ -44,7 +44,7 @@ block content
             required=true
             placeholder="e.g., Complete Node.js module"
             autocomplete="off"
-            value=editing ? task.title : ""
+            value=oldInputs ? oldInputs.title : (editing ? task.title : "")
             maxlength="120"
             dir="auto"
           )
@@ -53,21 +53,21 @@ block content
           label Priority Level
           .priority-selector
             label.priority-option.low
-              input(type="radio", name="priority", value="LOW", checked=editing ? task.priority === "LOW" : false)
+              input(type="radio", name="priority", value="LOW", checked=oldInputs ? oldInputs.priority === "LOW" : (editing ? task.priority === "LOW" : false))
               span.priority-card
                 span.badge-icon
                   +icon('leaf', 20)
                 span.badge-text Low
 
             label.priority-option.medium
-              input(type="radio", name="priority", value="MEDIUM", checked=editing ? task.priority === "MEDIUM" : true)
+              input(type="radio", name="priority", value="MEDIUM", checked=oldInputs ? oldInputs.priority === "MEDIUM" : (editing ? task.priority === "MEDIUM" : true))
               span.priority-card
                 span.badge-icon
                   +icon('zap', 20)
                 span.badge-text Medium
 
             label.priority-option.high
-              input(type="radio", name="priority", value="HIGH", checked=editing ? task.priority === "HIGH" : false)
+              input(type="radio", name="priority", value="HIGH", checked=oldInputs ? oldInputs.priority === "HIGH" : (editing ? task.priority === "HIGH" : false))
               span.priority-card
                 span.badge-icon
                   +icon('flame', 20)
@@ -81,7 +81,7 @@ block content
             placeholder="Add extra details, sub-tasks, or context here..."
             maxlength="1000"
             dir="auto"
-          ) #{editing ? task.note : ""}
+          ) #{oldInputs ? oldInputs.note : (editing ? task.note : "")}
 
         .form-actions
           button.btn-primary(type="submit")

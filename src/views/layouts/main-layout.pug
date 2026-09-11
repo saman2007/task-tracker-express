@@ -89,8 +89,8 @@ html(lang="en", dir="ltr")
                 aria-controls="profileDropdownMenu"
                 title=currentUser && currentUser.fullname ? currentUser.fullname : "Profile"
               )
-                if currentUser && currentUser.profileUrl
-                  img.profile-avatar.profile-avatar-img(src=currentUser.profileUrl, alt=currentUser.fullname)
+                if (currentUser && currentUser.profileUrl) || avatar
+                  img.profile-avatar.profile-avatar-img(src=currentUser && currentUser.profileUrl ? currentUser.profileUrl : avatar, alt=currentUser && currentUser.fullname ? currentUser.fullname : "Avatar")
                 else
                   span.profile-avatar #{currentUser && currentUser.fullname ? currentUser.fullname.trim().charAt(0).toUpperCase() : 'U'}
                 span.profile-name #{currentUser && currentUser.fullname ? currentUser.fullname.split(' ')[0] : 'User'}

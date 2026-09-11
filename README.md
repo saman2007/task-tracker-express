@@ -94,7 +94,16 @@ Ensure you have the following installed on your machine:
 5. **Seeding data to database(optional):** There are some example data for tables in `src/data/*.sql` in case that you want to run the project and don't want to see the project empty. If you want to insert those data to your tables, you can manually run each query from top to bottom from `sql` file in your database. Or run `npm run db:seed` which will automatically add all the example data to your database tables that you provided its credentials in `.env` file.  
 - **NOTE:** When you run the seed script, your database will be synced with the models, with `force: true` using `sequelize`. This option will first drop created tables for models and will replace all your data with the seed data. So run the command with caution.
 
-6. **Run in Development mode:** `npm run dev`
+6. **Configuring Email SMTP:** I use EmailJS service to send emails, because I found it easy and free to use. Here is how you can set up your EmailJS service:  
+   1. Create an account on [EmailJS](https://www.emailjs.com/).
+   2. Go to Email Services > Add New Service, and add your service from there. I used Gmail from Personal Services. Store your service id in the `.env` file as explained in `.env.example` file.
+   3. Go to Email Templates > Create New Template. Choose a template from the menu, which we will customize.
+   4. Go to your created template. From the content tab, change the value of in these inputs: `Subject`, `Content`, `To Email`, `From Name` to these values: `{{subject}}`, `{{{html}}}`, `{{to}}`, `{{fromName}}`. Enable the `Use Default Email Address` checkbox and leave other fields empty.
+   5. Now go to the Settings tab and change the value of Template ID to `main-template`. Then save the changes.
+   6. From the sidebar, go to Account > Security and enable `Allow EmailJS API for non-browser applications.` and `Use Private Key (recommended)` checkboxes. From the General tab, get your public and private keys and store them in the `.env` file as explained in `.env.example`.
+   7. You are done! Note that the emails may be sent to the spam folder of the destination email.
+
+7. **Run in Development mode:** `npm run dev`
 
 Open your browser and visit `http://localhost:port` to interact with the application(port is by default `3000`).
 

@@ -52,12 +52,19 @@
   font-weight: 600;
 }
 
+/* Flash Error Banner */
+.flash-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+  margin-bottom: 1.25rem;
+}
+
 .auth-flash-banner {
   display: flex;
   align-items: center;
   gap: 0.65rem;
   padding: 0.7rem 0.95rem;
-  margin-bottom: 1.25rem;
   background: var(--danger-soft);
   border: var(--border-w) solid var(--danger);
   border-radius: var(--radius-xs);
@@ -76,6 +83,16 @@
   flex-grow: 1;
 }
 
+.auth-flash-banner.success {
+  background: var(--priority-low-bg);
+  border-color: var(--priority-low-border);
+  box-shadow: 3px 3px 0 0 var(--priority-low-border);
+  color: var(--priority-low);
+}
+
+.auth-flash-banner.success .flash-icon {
+  color: var(--priority-low);
+}
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -128,6 +145,7 @@
   gap: 1rem;
   font-size: 0.88rem;
   margin-top: -0.2rem;
+  width: 100%;
 }
 
 .checkbox-label {
